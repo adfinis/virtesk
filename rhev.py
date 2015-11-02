@@ -217,19 +217,13 @@ class rhev:
                 ).safe_substitute(
                     suffix=ip_address_suffix
                 ),
-                netmask=current_vdi['netmask'],
                 netmask_as_suffix=current_vdi['netmask_suffix'],
-                dns1=current_vdi['dns1'],
-                dns2=current_vdi['dns2'],
-                dns_domain=current_vdi['dns_domain'],
-                DomainJoinUserDomain=current_vdi['domain_join']['user_domain'],
-                DomainJoinUserPW=current_vdi['domain_join']['password'],
-                DomainJoinUserName=current_vdi['domain_join']['username'],
-                JoinDomain=current_vdi['domain_join']['domain'],
                 ComputerName=computerName,
-                vlan=current_vdi['vlan'],
+                #vlan=current_vdi['vlan'],
+		network_name=current_vdi['network_name'],
                 template=current_vm['template_name'],
                 description=current_vm['description'],
+                cluster=current_vm['cluster'],
                 default_gw=current_vdi['default_gateway'],
                 autounattend_templatefile=configuration_array['autounattend_templatefile'],
                 scripttime=self.scripttime_string,
@@ -251,12 +245,10 @@ class rhev:
             ca_file=config['ca_file'],
             persistent_auth=False
         )
-        self.VDI_CLUSTER = self.api.clusters.get(name="VDI")
-        self.ISO_DOMAIN = self.api.storagedomains.get("ISO_DOMAIN")
 
     def create_standalone_vm(self, vmconfig):
         vm_name = vmconfig['rhev_vm_name']
-        vm_cluster = self.VDI_CLUSTER
+        vm_cluster = self.api.clusters.get(name=vmconfig['cluster'])
         vm_template = self.api.templates.get(name=vmconfig['template'])
         assert not vm_template is None, "assert not vm_template is None"
         vm_os = ovirtsdk.xml.params.OperatingSystem(
@@ -324,7 +316,16 @@ class rhev:
         vm_name = vmconfig['rhev_vm_name']
         nic_name = "nic0"
         nic_interface = "virtio"
-        nic_network_name = "br_v" + str(vmconfig['vlan'])
+        #nic_network_name = "br_v" + str(vmconfig['vlan'])
+        nic_network_name = vmconfig['network_name']
+
+	existing_nics = vm.nics.list()
+	if len(existing_nics) > 0:
+		self.logger.info("Remove existing networks from VM {} ...".format(vm_name))
+		for existing_nic in existing_nics:
+			existing_nic.delete()
+		vm.update()
+		self.logger.info("Remove existing networks from VM {} ... done".format(vm_name))
 
         self.logger.info("Adding network '%s' to VM '%s'" % (nic_network_name, vm_name))
 
@@ -363,8 +364,7 @@ class rhev:
         self.logger.info("Running sysprep for VM '%s'" % vmconfig['rhev_vm_name'])
         self.create_iso(vmconfig)
         self.attach_iso(vmconfig)
-        self.start_vm(vmconfig)
-
+        self.start_vm(vmconfig) 
     def attach_iso(self, vmconfig):
         iso = self.ISO_DOMAIN.files.get(vmconfig['autounattend_filename'])
         self.logger.info("Attaching ISO image '%s' for VM '%s'" % (
