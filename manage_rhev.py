@@ -41,9 +41,9 @@ import os
 import pprint
 
 # Project imports
-import adsy_rhev_tools.lib.rhev_manager as adsy_rhev_manager
-import adsy_rhev_tools.lib.constants as constants
-import adsy_rhev_tools.lib.utils as rhev_utils
+import rhev_manager as adsy_rhev_manager
+import constants as constants
+import utils as rhev_utils
 
 try:
     # Commandline argument parsing

@@ -58,7 +58,6 @@ class rhev:
         assert(base_configuration)
 
         self.api = None
-        self.secrets_configuration = None
         self.connect_configuration = {}
         self.ISO_DOMAIN = None
         self.VDI_CLUSTER = None
@@ -75,7 +74,6 @@ class rhev:
 
         try:
             self.initialize_logging()
-            self.read_secrets_configuration()
             self.read_connect_configuration()
             self.connect(self.connect_configuration)
 
@@ -98,26 +96,8 @@ class rhev:
                 )
             )
 
-    def read_secrets_configuration(self):
-        if self.secrets_configuration is None:
-            path = self.base_configuration['general']['secrets_configuration_file']
-            path = os.path.expanduser(path)
-
-            try:
-                self.secrets_configuration = configobj.ConfigObj(
-                    path,
-                    file_error=True
-                )
-            except (configobj.ConfigObjError, IOError), e:
-                raise Exception(
-                    'Could not read "{0}": {1}'.format(
-                        path, e
-                    )
-                )
-
     def read_connect_configuration(self, section=None):
         config = self.connect_configuration
-        self.read_secrets_configuration()
 
         if section is None:
             section = self.base_configuration['general']['connect']
@@ -139,10 +119,11 @@ class rhev:
         config['ca_file'] = ca_file
 
         config['username'] = section['username']
-        password_key = section['password_key']
-        config['password'] = self.secrets_configuration['default'][password_key]
-        config['isofolder'] = section['isofolder']
-        config['remoteshell'] = section['remoteshell'].split()
+        #password_key = section['password_key']
+        #config['password'] = self.base_configuration['general']['connect']['password']
+        config['password'] = section['password']
+        #config['isofolder'] = section['isofolder']
+        #config['remoteshell'] = section['remoteshell'].split()
 
     def dumpconnectinfo(self, section=None):
         self.read_connect_configuration(section=section)
@@ -264,9 +245,9 @@ class rhev:
 
     def connect(self, config):
         self.api = ovirtsdk.api.API(
-            config['url'],
-            config['username'],
-            config['password'],
+            url=config['url'],
+            username=config['username'],
+            password=config['password'],
             ca_file=config['ca_file'],
             persistent_auth=False
         )

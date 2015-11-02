@@ -39,7 +39,7 @@ import subprocess
 import string
 
 # Project imports
-import adsy_rhev_tools.lib.constants as constants
+import constants as constants
 
 try:
     # Set python path

@@ -69,7 +69,7 @@ try:
 
 
     # Initialize RHEV manager
-    rhev_manager = adsy_rhev_manager.RhevManager.getInstance(
+    rhev_manager = adsy_rhev_manager.RhevManager(
         config_file
     )
 

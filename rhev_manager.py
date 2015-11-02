@@ -39,12 +39,12 @@ import logging.config
 import configobj
 
 # Project imports
-import singletonmixin
+#import singletonmixin
 import rhev
 import constants
 
 
-class RhevManager(singletonmixin.Singleton):
+class RhevManager():
     def __init__(self, configuration_file):
         assert(configuration_file)
 
