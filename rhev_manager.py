@@ -171,7 +171,7 @@ class RhevManager():
 
                 # Add NIC and initiate sysprep
                 for vm in vms_for_classroom:
-                    #self.rhev_lib.add_vm_nic(vm)
+                    self.rhev_lib.add_vm_nic(vm)
                     #self.rhev_lib.enable_usb(vm)
                     self.rhev_lib.sysprep_vm(vm,temp_dir)
                     self.logger.info('Waiting for sysprep to finish')

@@ -485,10 +485,11 @@ class rhev:
             subprocess.check_call("dd if=/dev/zero of={} bs=1440K count=1".format(floppypath), shell=True)
             logging.debug("Creating msdos filesystem on floppy image {}".format(floppypath))
             subprocess.check_call("mkfs.msdos {}".format(floppypath), shell=True)
-            with open("{}/sysprep.inf".format(temp_dir), "w") as text_file:
+	    sysprep_path = "{}/sysprep.inf".format(temp_dir)
+            with open(sysprep_path, "w") as text_file:
                     text_file.write(content)
             logging.debug("Copy file into floppy image {} using mtools".format(floppypath))
-            subprocess.check_call("mcopy -i {} sysprep.inf ::/".format(floppypath), shell=True)
+            subprocess.check_call("mcopy -i {} {} ::/".format(floppypath, sysprep_path), shell=True)
             logging.debug("Listing floppy image content of {}".format(floppypath))
             subprocess.check_call("mdir -i {} ::/".format(floppypath), shell=True)
    	    vmconfig['floppyname'] = floppyname
