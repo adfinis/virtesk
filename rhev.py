@@ -96,27 +96,34 @@ class rhev:
                 )
             )
 
+    def get_configfile_absolutepath(self, filename):
+	path = os.path.expanduser(filename)
+
+	if not os.path.isabs(path):
+            path = os.path.join(self.config_file_dir, path)
+
+	# Fail early:
+	# Check if path exists? raise an exception otherwise.
+	os.stat(path)
+
+	return path
+
+
     def read_connect_configuration(self, section=None):
         config = self.connect_configuration
+
+	self.config_file_dir = os.path.dirname(
+                self.base_configuration['general']['config_file']
+
+        )
 
         if section is None:
             section = self.base_configuration['general']['connect']
 
         config['url'] = section['url']
 
-        # Get CA file
-        # The file gets tilde expanded and, if it is a relative path,
-        # interpreted as a path relative to the main configuration file.
-        ca_file  = os.path.expanduser(section['ca_file'])
-
-        if not os.path.isabs(ca_file):
-            config_file_dir = os.path.dirname(
-                self.base_configuration['general']['config_file']
-            )
-            ca_file = os.path.join(config_file_dir, ca_file)
-
-        os.stat(ca_file)
-        config['ca_file'] = ca_file
+        # Get CA file path
+        config['ca_file']  = self.get_configfile_absolutepath(section['ca_file'])
 
         config['username'] = section['username']
         #password_key = section['password_key']
@@ -225,9 +232,13 @@ class rhev:
                 description=current_vm['description'],
                 cluster=current_vm['cluster'],
                 default_gw=current_vdi['default_gateway'],
-                autounattend_templatefile=configuration_array['autounattend_templatefile'],
+                autounattend_templatefile=self.get_configfile_absolutepath(configuration_array['autounattend_templatefile']),
                 scripttime=self.scripttime_string,
-                univention_group=current_vm['group'],
+                tc_user=current_vm['tc_user'],
+		workaround_os = current_vm['workaround_os'],
+		workaround_timezone = current_vm['workaround_timezone'],
+		os = current_vm['os'],
+		timezone = current_vm['timezone'],
                 usb=dict(
                     enabled=current_vdi['usb']['enabled']
                 )
@@ -252,7 +263,8 @@ class rhev:
         vm_template = self.api.templates.get(name=vmconfig['template'])
         assert not vm_template is None, "assert not vm_template is None"
         vm_os = ovirtsdk.xml.params.OperatingSystem(
-            boot=[ovirtsdk.xml.params.Boot(dev="hd")]
+            boot=[ovirtsdk.xml.params.Boot(dev="hd")],
+	    type_=vmconfig['workaround_os']
         )
         vm_params = ovirtsdk.xml.params.VM(
             name=vm_name,
@@ -261,8 +273,9 @@ class rhev:
             template=vm_template,
             os=vm_os,
 	    #timezone="Europe/Berlin",
-        timezone="W. Europe Standard Time",
+        #timezone="W. Europe Standard Time",
 	    #timezone="Europe/London",
+	    timezone=vmconfig['workaround_timezone'],
             description=vmconfig['description'])
         vm = None
 
@@ -309,7 +322,7 @@ class rhev:
                     pending_vms.remove(vm_name)
                     if not formatstring is None:
                         self.logger.debug(formatstring.format(vm_name))
-            time.sleep(1)
+            time.sleep(5)
 
     def add_vm_nic(self, vmconfig):
         vm = vmconfig['vm']
@@ -360,63 +373,161 @@ class rhev:
                     vm.get_name(), ex
                 ))
 
-    def sysprep_vm(self, vmconfig):
+    def attach_floppy(self, vmconfig):
+	floppyname = vmconfig['floppyname']
+	ovirt_worker_floppy_prefix = self.base_configuration['general']['ovirt_worker_floppy_prefix']
+	ovirt_worker_floppy_path = "{}/{}".format(ovirt_worker_floppy_prefix,floppyname)
+	
+	vm = vmconfig['vm']
+	
+	cust_prop = ovirtsdk.xml.params.CustomProperty(name="floppy", value=ovirt_worker_floppy_path)
+
+	vm.set_custom_properties(ovirtsdk.xml.params.CustomProperties(custom_property=[cust_prop]))
+	vm.update()
+
+    def detach_and_cleanup_floppy(self, vmconfig):
+	# Detaching floppy from VM Configuration
+	vm = vmconfig['vm']
+	vm.set_custom_properties(ovirtsdk.xml.params.CustomProperties())
+
+	# Remove floppy image from SFTP server
+	sftp_floppy_cleanup_cmd = self.base_configuration['general']['sftp_floppy_cleanup_cmd']
+	sftp_cmd = sftp_floppy_cleanup_cmd.format(vmconfig['floppyname'])
+	logging.debug("executing sftp cleanup cmd: {}".format(sftp_cmd))
+	subprocess.check_output(sftp_cmd,shell=True)
+	
+
+    def sysprep_vm(self, vmconfig, temp_dir):
         self.logger.info("Running sysprep for VM '%s'" % vmconfig['rhev_vm_name'])
-        self.create_iso(vmconfig)
-        self.attach_iso(vmconfig)
+	self.create_floppy(vmconfig, temp_dir)
+	self.upload_floppy(vmconfig)
+	self.attach_floppy(vmconfig)
+	
+        #self.create_iso(vmconfig)
+        #self.attach_iso(vmconfig)
         self.start_vm(vmconfig) 
-    def attach_iso(self, vmconfig):
-        iso = self.ISO_DOMAIN.files.get(vmconfig['autounattend_filename'])
-        self.logger.info("Attaching ISO image '%s' for VM '%s'" % (
-            vmconfig['autounattend_filename'],
-            vmconfig['rhev_vm_name']
-        ))
-        vm = vmconfig['vm']
-        cdrom = ovirtsdk.xml.params.CdRom(vm=vm, file=iso)
-        vm.cdroms.add(cdrom)
-        vm.update()
+
+#     def attach_iso(self, vmconfig):
+#         iso = self.ISO_DOMAIN.files.get(vmconfig['autounattend_filename'])
+#         self.logger.info("Attaching ISO image '%s' for VM '%s'" % (
+#             vmconfig['autounattend_filename'],
+#             vmconfig['rhev_vm_name']
+#         ))
+#         vm = vmconfig['vm']
+#         cdrom = ovirtsdk.xml.params.CdRom(vm=vm, file=iso)
+#         vm.cdroms.add(cdrom)
+#         vm.update()
+# 
+
+#     def adjust_vm(self, vmconfig):
+# 	vm = vmconfig['vm']
+# 	initialization = ovirtsdk.xml.params.Initialization()
+# 	vm.set_initialization(initialization)
+# 	vm.update()
 
     def start_vm(self, vmconfig):
         vm = vmconfig['vm']
-        vm.start()
+	#initialization = ovirtsdk.xml.params.Initialization()
+
+	#vm.set_initialization(initialization)
+	# vm.update()
+
+	# action = ovirtsdk.xml.params.Action()
+	# logging.debug("Sleeping 10 seconds....")
+	# time.sleep(10)
+
+	#vm.start(action)
+
+	#vm.get_os().set_type('rhel_7x64')
+	#vm.set_next_run_configuration_exists(False)
+	#vm.set_payloads(ovirtsdk.xml.params.Payloads())
+	#vm.set_floppies(ovirtsdk.xml.params.Floppies())
+	#vm.update()
+	vm.start()
+	#sys.exit(0)
+        #vm.start(ovirtsdk.xml.params.Action(host=self.api.hosts.get("eponine")))
+ 
+    def postprocess_vm(self, vmconfig):
+	# sync state from ovirt
+	vmconfig['vm'] = self.api.vms.get(vmconfig['rhev_vm_name'])
+
+	self.adjust_os_and_timezone(vmconfig)
+	self.detach_and_cleanup_floppy(vmconfig)
+	self.set_stateless(vmconfig, False) # FIXME
+	self.vm_adduser(vmconfig)
+	
+	# sync changes back to ovirt
+	vmconfig['vm'].update()
+	
+    def adjust_os_and_timezone(self, vmconfig):
+	vmconfig['vm'].set_timezone(vmconfig['timezone'])
+	vmconfig['vm'].get_os().set_type(vmconfig['os'])	
+    
 
     def set_stateless(self, vmconfig, stateless=True):
         vm = vmconfig['vm']
         vm.set_stateless(stateless)
         vm.update()
 
-    def create_iso(self, vmconfig):
-        unattendxml = self.apply_unattend_xml_template(vmconfig)
-        isofilename = "autounattend-vm-%s.iso" % vmconfig['rhev_vm_name']
-        isopath = self.connect_configuration['isofolder'] + isofilename
+    def upload_floppy(self, vmconfig):
+	sftp_floppy_upload_cmd = self.base_configuration['general']['sftp_floppy_upload_cmd']
+	sftp_cmd = sftp_floppy_upload_cmd.format(vmconfig['floppypath'], vmconfig['floppyname'])
+	logging.debug("executing cmd: {}".format(sftp_cmd))
+	subprocess.check_output(sftp_cmd,shell=True)
+	os.remove(vmconfig['floppypath'])
 
-        script = '''DIR=`mktemp -d /tmp/ADSY-VDI-POOL-MANAGE.XXXXXXXXXXXXXXXXXX`
-        #echo $DIR;
-        mkdir $DIR/cdrom
-        cat > $DIR/cdrom/Autounattend.xml << "EOFEOFEOF"
-        %s
 
-EOFEOFEOF
-        #echo ==== Start autounattend.xml ====
-        #cat $DIR/cdrom/Autounattend.xml
-        #echo ==== end autounattend.xml ====
-        genisoimage -quiet -J -input-charset iso8859-1 -o %s $DIR/cdrom/
+    def create_floppy(self,vmconfig,temp_dir):
+	    content = self.apply_unattend_xml_template(vmconfig) 
+	    floppyname = "floppy-{}-{}.img".format(self.scripttime_string, vmconfig['rhev_vm_name'])
+            floppypath = "{}/{}".format(temp_dir, floppyname)
+            logging.debug("Zeroing floppy image file {}".format(floppypath))
+            subprocess.check_call("dd if=/dev/zero of={} bs=1440K count=1".format(floppypath), shell=True)
+            logging.debug("Creating msdos filesystem on floppy image {}".format(floppypath))
+            subprocess.check_call("mkfs.msdos {}".format(floppypath), shell=True)
+            with open("{}/sysprep.inf".format(temp_dir), "w") as text_file:
+                    text_file.write(content)
+            logging.debug("Copy file into floppy image {} using mtools".format(floppypath))
+            subprocess.check_call("mcopy -i {} sysprep.inf ::/".format(floppypath), shell=True)
+            logging.debug("Listing floppy image content of {}".format(floppypath))
+            subprocess.check_call("mdir -i {} ::/".format(floppypath), shell=True)
+   	    vmconfig['floppyname'] = floppyname
+	    vmconfig['floppypath'] = floppypath
 
-        ''' % (unattendxml, isopath)
-
-        call_args = self.connect_configuration['remoteshell'] + [script]
-        subprocess.check_call(call_args)
-
-        vmconfig['autounattend_filename'] = isofilename
-
+#     def create_iso(self, vmconfig):
+#         unattendxml = self.apply_unattend_xml_template(vmconfig)
+#         isofilename = "autounattend-vm-%s.iso" % vmconfig['rhev_vm_name']
+#         isopath = self.connect_configuration['isofolder'] + isofilename
+# 
+#         script = '''DIR=`mktemp -d /tmp/ADSY-VDI-POOL-MANAGE.XXXXXXXXXXXXXXXXXX`
+#         #echo $DIR;
+#         mkdir $DIR/cdrom
+#         cat > $DIR/cdrom/Autounattend.xml << "EOFEOFEOF"
+#         %s
+# 
+# EOFEOFEOF
+#         #echo ==== Start autounattend.xml ====
+#         #cat $DIR/cdrom/Autounattend.xml
+#         #echo ==== end autounattend.xml ====
+#         genisoimage -quiet -J -input-charset iso8859-1 -o %s $DIR/cdrom/
+# 
+#         ''' % (unattendxml, isopath)
+# 
+#         call_args = self.connect_configuration['remoteshell'] + [script]
+#         subprocess.check_call(call_args)
+# 
+#         vmconfig['autounattend_filename'] = isofilename
+# 
     def apply_unattend_xml_template(self, vmconfig):
         try:
             t = mako.template.Template(
                 filename=vmconfig['autounattend_templatefile']
             )
             result = t.render(**vmconfig)
-            with open("Autounattend.xml", "w") as text_file:
-                text_file.write(result)
+
+            # with open("Autounattend.xml", "w") as text_file:
+            #    text_file.write(result)
+
             return result
 
         except:
@@ -621,29 +732,27 @@ EOFEOFEOF
             )
         )
 
-    def vm_addgroup(self, vmconfig):
-        vm = vmconfig['vm']
-        group_name = vmconfig['univention_group']
-
-        if group_name == 'None':
-            return
-        role = self.api.roles.get("UserRole")
-        group = self.api.groups.get(group_name)
-        vm.permissions.add(
-            ovirtsdk.xml.params.Permission(
-                group=group, role=role
-            )
-        )
-
+#     def vm_addgroup(self, vmconfig):
+#         vm = vmconfig['vm']
+#         group_name = vmconfig['univention_group']
+# 
+#         if group_name == 'None':
+#             return
+#         role = self.api.roles.get("UserRole")
+#         group = self.api.groups.get(group_name)
+#         vm.permissions.add(
+#             ovirtsdk.xml.params.Permission(
+#                 group=group, role=role
+#             )
+#         )
+# 
     def vm_adduser(self, vmconfig):
         # Gives the Role <role> to the User <user> on <vm>.
         # FIXME: user/role should be configurable.
 
 
         vm = vmconfig['vm']
-        #user_name = vmconfig['univention_user']
-	# FIXME: 
-        user_name = 'rhev.thinclient@ovirt-domain'
+        user_name = vmconfig['tc_user']
 
         if user_name == 'None':
             return
