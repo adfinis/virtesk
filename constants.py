@@ -53,35 +53,35 @@ WAIT_FOR_SNAPSHOTS_READY_SLEEP_TIME = 4
 
 
 # Possible paths for configuration files
-CONFIG_FILE_SEARCH_PATH = [
-    '/etc/adsy-rhev-tools.config',
-    os.path.expanduser('~/.config/adsy-rhev-tools.config'),
-    os.path.expanduser('~/.config/adsy-rhev-tools/adsy-rhev-tools.config'),
-]
+# CONFIG_FILE_SEARCH_PATH = [
+#     '/etc/adsy-rhev-tools.config',
+#     os.path.expanduser('~/.config/adsy-rhev-tools.config'),
+#     os.path.expanduser('~/.config/adsy-rhev-tools/adsy-rhev-tools.config'),
+# ]
 
-if 'ADSY_RHEV_CONFIG' in os.environ:
-    CONFIG_FILE_SEARCH_PATH.append(os.environ['ADSY_RHEV_CONFIG'])
-
-# Possible commands for RhevManager
-COMMANDS = {
-    'cleanup': {
-        'command':      'cleanup',
-        'helptext':     'Clean up a class room (remove all VMs)',
-        'arguments':    {
-            'classroom':    {
-                'argument':    'classroom',
-                'helptext':    'Classroom to clean up'
-            }
-        }
-    },
-    'rollout': {
-        'command':    'rollout',
-        'helptext':   'Roll out a class room (populate all VMs for a certain class room)',
-        'arguments':  {
-            'classroom':    {
-                'argument': 'classroom',
-                'helptext': 'Classroom to roll out'
-            }
-        }
-    }
-}
+#if 'ADSY_RHEV_CONFIG' in os.environ:
+#    CONFIG_FILE_SEARCH_PATH.append(os.environ['ADSY_RHEV_CONFIG'])
+# 
+# # Possible commands for RhevManager
+# COMMANDS = {
+#     'cleanup': {
+#         'command':      'cleanup',
+#         'helptext':     'Clean up a class room (remove all VMs)',
+#         'arguments':    {
+#             'classroom':    {
+#                 'argument':    'classroom',
+#                 'helptext':    'Classroom to clean up'
+#             }
+#         }
+#     },
+#     'rollout': {
+#         'command':    'rollout',
+#         'helptext':   'Roll out a class',
+#         'arguments':  {
+#             'classroom':    {
+#                 'argument': 'classroom',
+#                 'helptext': 'Classroom to roll out'
+#             }
+#         }
+#     }
+# }

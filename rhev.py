@@ -31,8 +31,6 @@
 
 
 # System Imports
-import argparse
-import sys
 import os
 import pprint
 import time
@@ -40,7 +38,6 @@ import copy
 import subprocess
 import re
 import string
-import configobj
 import logging
 import logging.config
 
@@ -215,8 +212,10 @@ class rhev:
             computerName = rhev_vm_name
 
             if len(rhev_vm_name) > 15:
-                msg = ("Name of VM %s greater than 15 characters long. " +
-                       "This isn't supported by RHEV and Windows.") % rhev_vm_name
+                msg = "Name of VM {} greater than 15 characters long. "
+                "This isn't supported by RHEV and Windows.".format(
+                    rhev_vm_name
+                )
                 raise Exception(msg)
 
             vm_config = dict(
@@ -315,7 +314,12 @@ class rhev:
         vm.set_usb(vm_usb)
         vm.update()
 
-    def wait_for_vms_down(self, vmconfigs=None, vm_names=None, formatstring=None):
+    def wait_for_vms_down(
+            self,
+            vmconfigs=None,
+            vm_names=None,
+            formatstring=None
+    ):
         if vm_names is None:
             pending_vms = [vmconfig['rhev_vm_name'] for vmconfig in vmconfigs]
         else:
@@ -439,25 +443,7 @@ class rhev:
 
     def start_vm(self, vmconfig):
         vm = vmconfig['vm']
-        # initialization = ovirtsdk.xml.params.Initialization()
-
-        # vm.set_initialization(initialization)
-        # vm.update()
-
-        # action = ovirtsdk.xml.params.Action()
-        # logging.debug("Sleeping 10 seconds....")
-        # time.sleep(10)
-
-        # vm.start(action)
-
-        # vm.get_os().set_type('rhel_7x64')
-        # vm.set_next_run_configuration_exists(False)
-        # vm.set_payloads(ovirtsdk.xml.params.Payloads())
-        # vm.set_floppies(ovirtsdk.xml.params.Floppies())
-        # vm.update()
         vm.start()
-        # sys.exit(0)
-        # vm.start(ovirtsdk.xml.params.Action(host=self.api.hosts.get("eponine")))
 
     def postprocess_vm(self, vmconfig):
         # sync state from ovirt
@@ -495,8 +481,9 @@ class rhev:
             self.scripttime_string, vmconfig['rhev_vm_name'])
         floppypath = "{}/{}".format(temp_dir, floppyname)
         logging.debug("Zeroing floppy image file {}".format(floppypath))
-        subprocess.check_call(
-            "dd if=/dev/zero of={} bs=1440K count=1".format(floppypath), shell=True)
+
+        dd_cmd = "dd if=/dev/zero of={} bs=1440K count=1".format(floppypath)
+        subprocess.check_call(dd_cmd, shell=True)
         logging.debug(
             "Creating msdos filesystem on floppy image {}".format(floppypath))
         subprocess.check_call("mkfs.msdos {}".format(floppypath), shell=True)
@@ -512,30 +499,6 @@ class rhev:
         vmconfig['floppyname'] = floppyname
         vmconfig['floppypath'] = floppypath
 
-#     def create_iso(self, vmconfig):
-#         unattendxml = self.apply_unattend_xml_template(vmconfig)
-#         isofilename = "autounattend-vm-%s.iso" % vmconfig['rhev_vm_name']
-#         isopath = self.connect_configuration['isofolder'] + isofilename
-#
-#         script = '''DIR=`mktemp -d /tmp/ADSY-VDI-POOL-MANAGE.XXXXXXXXXXXXXXXXXX`
-# echo $DIR;
-#         mkdir $DIR/cdrom
-#         cat > $DIR/cdrom/Autounattend.xml << "EOFEOFEOF"
-#         %s
-#
-# EOFEOFEOF
-# echo ==== Start autounattend.xml ====
-# cat $DIR/cdrom/Autounattend.xml
-# echo ==== end autounattend.xml ====
-#         genisoimage -quiet -J -input-charset iso8859-1 -o %s $DIR/cdrom/
-#
-#         ''' % (unattendxml, isopath)
-#
-#         call_args = self.connect_configuration['remoteshell'] + [script]
-#         subprocess.check_call(call_args)
-#
-#         vmconfig['autounattend_filename'] = isofilename
-#
     def apply_unattend_xml_template(self, vmconfig):
         try:
             t = mako.template.Template(
@@ -568,15 +531,14 @@ class rhev:
             while not self.api.vms.get(vm_name) is None:
                 time.sleep(1)
         else:
-            self.logger.warn("Tried to delete VM '%s' but it seems not to be on RHEV server" %
-                             vmconfig['rhev_vm_name'])
+            msg = "Tried to delete VM '{}' but it seems not to be on "
+            "RHEV server".format(vmconfig['rhev_vm_name'])
+            self.logger.warn(msg)
 
     def force_stop_vm(self, vm_name):
         vm = self.api.vms.get(vm_name)
-        try:
-            vm.stop()
-        except Exception as ex:
-            pass
+        vm.stop()
+
         self.wait_for_vms_down(vm_names=[vm_name])
 
     def create_rhev_pool(self, poolconfig):
@@ -626,57 +588,6 @@ class rhev:
 
         vm_list.reverse()
         return vm_list
-
-    def get_rhev_pool_vms(self, poolconfig):
-        # FIXME: dies ist ineffizient, denn hier
-        # werden von allen VMs im RHEV alle Infos geholt,
-        # aber eigentlich werden nur die Infos von ca. 22 VMs gebraucht.
-        result = []
-        pool = poolconfig['pool']
-        vm_list = self.get_all_rhev_vms()
-        for vm in vm_list:
-            vm_name = vm.get_name()
-            vm_pool = vm.get_vmpool()
-            if vm_pool is None:
-                continue
-            if vm_pool.get_id() == pool.get_id():
-                result.append(vm)
-        poolconfig['list_of_precreated_pool_vms'] = result
-        return result
-
-    def create_rhev_pool_vm(self, vmconfig):
-        vm_name = vmconfig['rhev_vm_name']
-        poolconfig = vmconfig['poolconfig']
-        precreated_pool_vms = poolconfig['list_of_precreated_pool_vms']
-        self.logger.info("Creating pool VM '%s'" % vm_name)
-
-        try:
-            pool_name = poolconfig['name']
-            pool = poolconfig['pool']
-            assert len(
-                precreated_pool_vms) > 0, "precreated_pool_vms(list) > 0"
-            vm = precreated_pool_vms.pop()
-
-            assert not (vm is None), "assert not (vm is None)"
-
-            vm_pool = vm.get_vmpool()
-            assert not (vm_pool is None), "assert not (vm_pool is None)"
-            assert vm_pool.get_id() == pool.get_id(
-            ), "assert vm_pool.get_id() == pool.get_id()"
-            self.logger.info(
-                "Renaming VM '{0}' to '{1}'".format(
-                    vm.get_name(), vm_name
-                )
-            )
-            vm.set_name(vm_name)
-            vm.update()
-            vmconfig['vm'] = vm
-            self.logger.info("Finished creation of pool VM '%s'" % vm_name)
-        except Exception as ex:
-            raise Exception(
-                "Creating pool VM '{0}' FAILED: {1}".format(
-                    vm_name, ex
-                ))
 
     def eject(self, vmconfig):
         try:
@@ -829,9 +740,10 @@ class rhev:
         while len(snapshots) > 0:
             for snapshot in snapshots:
                 # REST-API call to get an updated snapshot object.
-                # "snapshot.vm.snapshots" is an attribute from the parentclass (
-                # the VM itself). The id of a VM snapshot is only valid within
-                # the context of a VM (snapshot ids are not global).
+                # "snapshot.vm.snapshots" is an attribute from the
+                # parentclass ( the VM itself). The id of a VM snapshot
+                # is only valid within the context of
+                # a VM (snapshot ids are not global).
                 vm = self.api.vms.get(id=snapshot.vm.id)
                 snapshot_updated = vm.snapshots.get(id=snapshot.id)
                 status = snapshot_updated.get_snapshot_status()

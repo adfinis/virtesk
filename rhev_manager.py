@@ -32,7 +32,6 @@
 
 # System Imports
 import os
-import sys
 import time
 import logging
 import logging.config
@@ -179,34 +178,36 @@ class RhevManager():
                     time.sleep(constants.VM_SLEEP_TIME)
 
                 # Wait for VMs to shut down
+                msg_formatstring = \
+                    "VM {0} has been stopped after running Autounattend.xml."
+
                 self.rhev_lib.wait_for_vms_down(
                     vmconfigs=vms_for_classroom,
-                    formatstring='VM {0} has been stopped ' +
-                        'after running Autounattend.xml.'
+                    formatstring=msg_formatstring
                 )
 
                 # Eject ISOs, set statless and add (user-) group.
                 # Create a snapshot of every VM.
-                vm_snapshots = []
+                #vm_snapshots = []
                 for vm in vms_for_classroom:
                     self.rhev_lib.postprocess_vm(vm)
                     # self.rhev_lib.adjust_os_and_timezone(vm)
                     # self.rhev_lib.detach_and_cleanup_floppy(vm)
                     # self.rhev_lib.eject(vm)
-                    # FIXME: instead of just commenting this out, it should be made
-                    # configurable.
+                    # FIXME: instead of just commenting this out,
+                    # it should be made configurable.
                     # self.rhev_lib.set_stateless(vm)
                     # self.rhev_lib.vm_addgroup(vm)
                     # self.rhev_lib.vm_adduser(vm)
 
                     # creating the snapshot must be the final task in this
                     # loop.
-                    description = ("ADSY_RHEV_TOOLS, STOPPED, FIXIP={0}/{1}, " +
-                                   "initial snapshot after vm creation using " +
-                                   "adsy_rhev_tools succeded.").format(
-                        vm['ip'], vm['netmask_as_suffix'])
+                    # description = ("ADSY_RHEV_TOOLS, STOPPED, FIXIP={0}/{1}, " +
+                    #               "initial snapshot after vm creation using " +
+                    #               "adsy_rhev_tools succeded.").format(
+                    # vm['ip'], vm['netmask_as_suffix'])
                     # vm_snapshots += [self.rhev_lib.create_vm_snapshot(vm,
-                    #                                                 description)]
+                    #                                              description)]
 
                 # Wait for all VM snapshots to become ready.
                 # self.rhev_lib.wait_for_vm_snapshots_ready(vm_snapshots)

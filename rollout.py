@@ -30,19 +30,12 @@
 
 
 # System Imports
-import sys
-import time
 import traceback
-import configobj
-import string
 import argparse
 import logging
-import os
-import pprint
 
 # Project imports
 import rhev_manager as adsy_rhev_manager
-import constants as constants
 import utils as rhev_utils
 
 try:
@@ -67,7 +60,6 @@ try:
     )
     classroom = args.classroom
 
-
     # Initialize RHEV manager
     rhev_manager = adsy_rhev_manager.RhevManager(
         config_file
@@ -81,4 +73,3 @@ try:
 except Exception as ex:
     logging.exception("Unexpected error: {0}".format(ex))
     logging.exception(traceback.format_exc())
-

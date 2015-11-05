@@ -30,7 +30,6 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # System imports
-import sys
 import copy
 import os
 

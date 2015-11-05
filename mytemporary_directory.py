@@ -1,10 +1,13 @@
 import shutil
 import tempfile
+import errno
 
 
 class TemporaryDirectory(object):
-
-    """Context manager for tempfile.mkdtemp() so it's usable with "with" statement."""
+    """
+    Context manager for tempfile.mkdtemp() so it's usable
+    with "with" statement.
+    """
 
     def __init__(self, prefix):
         #	super(object, self).__init__()
