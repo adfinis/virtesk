@@ -39,13 +39,14 @@ import logging.config
 import configobj
 
 # Project imports
-#import singletonmixin
+# import singletonmixin
 import rhev
 import constants
 import mytemporary_directory as tmpdir
 
 
 class RhevManager():
+
     def __init__(self, configuration_file):
         assert(configuration_file)
 
@@ -56,9 +57,8 @@ class RhevManager():
 
         self.read_base_configuration()
         self.initialize_logging()
-	
-	self.rhev_lib = rhev.rhev(self.base_configuration)
 
+        self.rhev_lib = rhev.rhev(self.base_configuration)
 
     def cleanup(self):
         self.rhev_lib.cleanup()
@@ -147,7 +147,7 @@ class RhevManager():
             raise Exception('No classroom given')
 
         try:
-	    with tmpdir.TemporaryDirectory("vdi_vm_rollout-") as temp_dir:
+            with tmpdir.TemporaryDirectory("vdi_vm_rollout-") as temp_dir:
                 self.logger.info(
                     "Starting to roll out classroom '{0}'".format(classroom)
                 )
@@ -155,13 +155,14 @@ class RhevManager():
                 # Make sure classroom is clean before rolling out
 
                 # Get VMs for given classroom
-                vms_for_classroom = self.rhev_lib.get_vms_for_classroom(classroom)
+                vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+                    classroom)
 
                 # Create (template) VMs
                 for vm in vms_for_classroom:
                     self.rhev_lib.create_standalone_vm(vm)
-		    #sys.exit(0)
-	            time.sleep(constants.VM_CREATION_SLEEP_TIME)
+                    # sys.exit(0)
+                    time.sleep(constants.VM_CREATION_SLEEP_TIME)
 
                 # Wait for VMs to shut donw
                 self.rhev_lib.wait_for_vms_down(
@@ -172,8 +173,8 @@ class RhevManager():
                 # Add NIC and initiate sysprep
                 for vm in vms_for_classroom:
                     self.rhev_lib.add_vm_nic(vm)
-                    #self.rhev_lib.enable_usb(vm)
-                    self.rhev_lib.sysprep_vm(vm,temp_dir)
+                    # self.rhev_lib.enable_usb(vm)
+                    self.rhev_lib.sysprep_vm(vm, temp_dir)
                     self.logger.info('Waiting for sysprep to finish')
                     time.sleep(constants.VM_SLEEP_TIME)
 
@@ -188,30 +189,30 @@ class RhevManager():
                 # Create a snapshot of every VM.
                 vm_snapshots = []
                 for vm in vms_for_classroom:
-		    self.rhev_lib.postprocess_vm(vm)
-		    #self.rhev_lib.adjust_os_and_timezone(vm)
-		    #self.rhev_lib.detach_and_cleanup_floppy(vm)
-                    #self.rhev_lib.eject(vm)
+                    self.rhev_lib.postprocess_vm(vm)
+                    # self.rhev_lib.adjust_os_and_timezone(vm)
+                    # self.rhev_lib.detach_and_cleanup_floppy(vm)
+                    # self.rhev_lib.eject(vm)
                     # FIXME: instead of just commenting this out, it should be made
                     # configurable.
-                    #self.rhev_lib.set_stateless(vm)
-                    #self.rhev_lib.vm_addgroup(vm)
-                    #self.rhev_lib.vm_adduser(vm)
+                    # self.rhev_lib.set_stateless(vm)
+                    # self.rhev_lib.vm_addgroup(vm)
+                    # self.rhev_lib.vm_adduser(vm)
 
-
-                    # creating the snapshot must be the final task in this loop.
+                    # creating the snapshot must be the final task in this
+                    # loop.
                     description = ("ADSY_RHEV_TOOLS, STOPPED, FIXIP={0}/{1}, " +
-                        "initial snapshot after vm creation using " +
-                        "adsy_rhev_tools succeded.").format(
-                                                vm['ip'],vm['netmask_as_suffix'])
-                    #vm_snapshots += [self.rhev_lib.create_vm_snapshot(vm,
+                                   "initial snapshot after vm creation using " +
+                                   "adsy_rhev_tools succeded.").format(
+                        vm['ip'], vm['netmask_as_suffix'])
+                    # vm_snapshots += [self.rhev_lib.create_vm_snapshot(vm,
                     #                                                 description)]
 
                 # Wait for all VM snapshots to become ready.
-                #self.rhev_lib.wait_for_vm_snapshots_ready(vm_snapshots)
+                # self.rhev_lib.wait_for_vm_snapshots_ready(vm_snapshots)
 
-                ## Start VMs
-                #for vm in vms_for_classroom:
+                # Start VMs
+                # for vm in vms_for_classroom:
                 #    logging.debug("Starting VM %s...", vm['vm'].name)
                 #    self.rhev_lib.start_vm(vm)
                 #    time.sleep(constants.VM_SLEEP_TIME)

@@ -32,28 +32,28 @@
 
 import os
 
-MODULE_NAME                     = 'adsy_rhev_tools'
-LIBRARY_DIRECTORY               = 'lib'
+MODULE_NAME = 'adsy_rhev_tools'
+LIBRARY_DIRECTORY = 'lib'
 
 DEFAULT_CONFIGURATION_FILE_NAME = 'adsy-rhev-tools.config'
 
 
 # Wait time in seconds after creating a new VM.
-VM_CREATION_SLEEP_TIME		= 15
+VM_CREATION_SLEEP_TIME = 15
 
 # Wait time in seconds after various tasks concerning VMs
-VM_SLEEP_TIME                   = 10
+VM_SLEEP_TIME = 10
 
 # Wait time in seconds after creating a new VM snapshot
-CREATE_VM_SNAPSHOT_SLEEP_TIME   = 8
+CREATE_VM_SNAPSHOT_SLEEP_TIME = 8
 
 # Wait time in seconds between attempts to check the state of freshly
 # created VM snapshots
-WAIT_FOR_SNAPSHOTS_READY_SLEEP_TIME   = 4
+WAIT_FOR_SNAPSHOTS_READY_SLEEP_TIME = 4
 
 
 # Possible paths for configuration files
-CONFIG_FILE_SEARCH_PATH         = [
+CONFIG_FILE_SEARCH_PATH = [
     '/etc/adsy-rhev-tools.config',
     os.path.expanduser('~/.config/adsy-rhev-tools.config'),
     os.path.expanduser('~/.config/adsy-rhev-tools/adsy-rhev-tools.config'),
