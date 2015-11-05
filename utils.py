@@ -35,20 +35,19 @@ import copy
 import os
 
 # Project imports
-#import constants
-
+# import constants
 
 
 # def commonstringprefix(first, second):
 #     """
 #     Berechnet das gemeinsame Prefix von zwei Strings.
-# 
+#
 #     type first: str
 #     type second: str
 #     rtype: str
-# 
+#
 #     """
-# 
+#
 #     l = min(len(first), len(second))
 #     i = 0
 #     while i < l:
@@ -57,16 +56,16 @@ import os
 #         i = i + 1
 #     result = first[0:i]
 #     return result
-# 
-# 
+#
+#
 # def commonstringsuffix(first, second):
 #     """
 #     Berechnet das gemeinsame Suffix von zwei Strings.
-# 
+#
 #     type first: str
 #     type second: str
 #     rtype: str
-# 
+#
 #     """
 #     flen = len(first)
 #     slen = len(second)
@@ -77,36 +76,36 @@ import os
 #             break
 #         i = i + 1
 #     return first[flen - i + 1:]
-# 
-# 
+#
+#
 # def findmiddle(first, second, count=None):
 #     """
 #     Macht aus zwei Strings, die einen Range der Grösse count
 #     repräsentieren, eine Liste, die diesen Range explizit ausdrückt.
 #     """
-# 
+#
 #     if len(first) != len(second):
 #         raise Exception(
 #             "strings passed to findmiddle() have to be of equal length."
 #         )
-# 
+#
 #     length = len(first)
 #     prefix = commonstringprefix(first, second)
 #     suffix = commonstringsuffix(first, second)
-# 
+#
 #     plen = len(prefix)
 #     slen = len(suffix)
-# 
+#
 #     firstmiddle = first[plen: length - slen]
 #     secondmiddle = second[plen:length - slen]
-# 
+#
 #     print firstmiddle + "|" + secondmiddle
-# 
+#
 #     firstint = int(firstmiddle)
 #     secondint = int(secondmiddle)
-# 
+#
 #     assert firstint <= secondint
-# 
+#
 #     if not count is None:
 #         if secondint - firstint != count:
 #             raise Exception(
@@ -114,21 +113,21 @@ import os
 #                     firstint, count, secondint
 #                 )
 #             )
-# 
+#
 #     digits = len(str(secondint))
 #     formatstring = "%s%0" + str(digits) + "i%s"
-# 
+#
 #     values = range(firstint, secondint + 1)
 #     result = [formatstring % (prefix, val, suffix) for val in values]
 #     return result
-# 
-# 
+#
+#
 # def processrangestring(arg, count=None):
 #     strings = arg.split("...")
 #     assert len(strings) == 2
-# 
+#
 #     return findmiddle(strings[0], strings[1], count)
-# 
+#
 
 def applyconfigdefaults(config, defaults):
     """
@@ -151,6 +150,3 @@ def applyconfigdefaults(config, defaults):
 
 def escape_for_ovirt_query(query):
     return query.replace('_', '*')
-
-
-
