@@ -173,8 +173,8 @@ subnet 10.0.0.0 netmask 255.255.255.0 {
 Pleasee make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
 
 #### Setting up boot files
-We do want our network bootloader to be accessible by TFTP (for PXE) 
-and by HTTP (for advanced network boatloaders like iPXE). 
+We do want our network bootloader to be accessible by both TFTP (for PXE) 
+and HTTP (for advanced network boatloaders like iPXE). 
 
 However, existing SELinux rules makes it difficult for httpd to access the
 files in the standard location /var/lib/tftpboot/ .
