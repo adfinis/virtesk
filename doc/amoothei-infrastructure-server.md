@@ -96,6 +96,50 @@ Apply with:
 ```
 
 ### Network boot
+#### legacy bios versus UEFI
+This guide has only been tested with legacy bios. UEFI Thinclients should work fine
+as long as the compatibility mode / legacy mode of UEFI is used.
+
+EFI installation of TCs has not been implemented and is not supported. This feature could be engineered, but so far there hasn't been any need for it.
+
+#### Setting up dhcp service
+We assume that there is already an existing dhcp service, so there is no
+need to install a new one.
+
+Configure your existing dhcp server to allow PXE boot from our infrastructure
+server. Instructions for that can be found in the [RHEL7 Installation Guide, Chapter 21, Preparing for a Network Installation][1]
+
+[1]: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Installation_Guide/chap-installation-server-setup.html
+
+Example configuration of isc-dhcp-server:
+
+```
+option space pxelinux;
+option pxelinux.magic code 208 = string;
+option pxelinux.configfile code 209 = text;
+option pxelinux.pathprefix code 210 = text;
+option pxelinux.reboottime code 211 = unsigned integer 32;
+option architecture-type code 93 = unsigned integer 16;
+
+subnet 10.0.0.0 netmask 255.255.255.0 {
+  option routers 10.0.0.254;
+  range 10.0.0.2 10.0.0.253;
+
+  class "pxeclients" {
+      match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+      next-server 10.0.0.1;
+
+      if option architecture-type = 00:07 {
+        filename "uefi/shim.efi";
+      } else {
+        filename "pxelinux/pxelinux.0";
+      }
+  }
+}
+```
+
+Pleasee make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
+
 #### Setting up boot files
 We do want our network bootloader to be accessible by TFTP (for PXE) 
 and by HTTP (for advanced network boatloaders like iPXE). 
@@ -232,11 +276,62 @@ cd /var/www/mirror/public/fedora/fedora22-updates
 createrepo --workers=10 -g comps.xml .
 ``` 
 
+### Setting up a remote syslog server
+The thinclients use our infrastructure server for remote logging,
+both during kickstart installation and normal operation.
+
+Please note: remote logging is insecure (no authentication, no verification,
+no encryption, could be flooded with messages, ...). Make sure your syslog server is accessible only by trusted clients.
+
+It is recommended to put /var/log/remote/ on a seperate file system, so that no other services are harmed if /var/log/remote/ runs out of diskspace. Setting it up on a LVM logical volume is recommended so you can enlarge it on demand.
+
+/etc/rsyslog.d/tcp-listening.conf:
+``` 
+# Define templates before the rules that use them
+
+### Per-Host Templates for Remote Systems ###
+
+$template LoggingFormat,"%timereported:::date-rfc3339% %timegenerated:::date-rfc3339% %HOSTNAME% %syslogpriority%,%syslogfacility% %syslogtag%%msg:::drop-last-lf%\n"
+$template TmplMsg, "/var/log/remote/%fromhost-ip%.log"
 
 
+# Provides TCP syslog reception
+$ModLoad imtcp
+$ModLoad imrelp # more reliable remote logging
 
+# Adding this ruleset to process remote messages
+$RuleSet remote1
 
+kern.*,authpriv.*,*.info;mail.none;authpriv.none;cron.none;user.*   ?TmplMsg;LoggingFormat
 
+$RuleSet RSYSLOG_DefaultRuleset   #End the rule set by switching back to the default rule set
+
+$InputTCPServerBindRuleset remote1  #Define a new input and bind it to the "remote1" rule set
+$InputTCPServerRun 514
+# $InputRELPServerBindRuleSet remote1
+# $InputRELPServerRun 20514
+``` 
+
+If you use ports other than 514/tcp, you might need to adjust your SELinux settings.
+
+Apply changes:
+
+``` 
+service rsyslog restart
+``` 
+
+#### Setting up syslog clients
+Your syslog clients need to be configured to forward messages to infrasturcture-server:514.
+
+/etc/rsyslog.d/remote-logging.conf:
+
+``` 
+*.* @@infrastructure-server:514
+``` 
+
+On thinclients, this configuration will be automatically done in the kickstart post section.
+
+Known limitation: The syslog client will only forward messages that are logged *after* rsyslog is started. Boot messages (including kernel boot messages) are logged before rsyslog starts, so those messages are not forwarded to our infrastructure server.
 
 
 
