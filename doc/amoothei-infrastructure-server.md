@@ -36,11 +36,14 @@ Requirements:
 * 1-2GB Ram
 * 100GB Diskspace (only one mirror: fedora 22 x86_64)
 * 150-200GB (and more) Diskspace (for mirroring multiple distributions / multiple versions)
+* Static IP address. Can be a private rfc1918 address. Must be accessible direcly by all thinclients in your LAN. It can be in a different Layer 2 network than you TCs, but must be accessible by layer 3 routing. Technologies that tamper with layer 4 and above (NAT, transparent proxies, ...) will cause problems with TFTP, NFS, kickstart and so on. Those problems can be resolved, but this requires expert knowledge.
+
+    To support TC management features like ssh remote access to thinclients, screenshots of thinclients, pinging thinclients, ..., it is recommended that the infrastructure server is allowed to connect to thinclients using ssh (port 22/tcp) and icmp.
 
 LVM is recommended for disk space management, with the following 
 file systems on seperate logical volumes:
 
-| fs                     | size       | comment                                       |
+| filesystem             | size       | comment                                       |
 | ---------------------- | ---------- | --------------------------------------------- |
 | /boot (not on LVM)     | 200-500 MB |                                               |
 | /                      | 10 GB      |                                               |
@@ -68,7 +71,36 @@ yum install atd openssh-clients openssh-server bzip2 mc tcpdump iptraf vim \
 
 ```
 
+### Firewall
+Firewalling is explained in [RHEL7 security guide, chapter 4.5: Using Firewalls][0].
 
+[0]: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html
+
+Services are described in XML Files residing in ```/usr/lib/firewalld/services/```.
+
+```
+# syslogd
+firewall-cmd --permanent --add-port=514/tcp
+
+# NFS
+firewall-cmd --permanent --add-service=nfs
+firewall-cmd --permanent --add-service=rpc-bind
+firewall-cmd --permanent --add-service=mountd
+
+# Other services
+firewall-cmd --permanent --add-service=ssh
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+firewall-cmd --permanent --add-service=tftp
+firewall-cmd --permanent --add-service=postgresql
+
+# apply changes
+firewall-cmd --reload
+```
+
+For NFS, additional changes might be necessary.
+
+ 
 ### NFS Server
 Installing and starting nfs server:
 
@@ -332,6 +364,120 @@ Your syslog clients need to be configured to forward messages to infrasturcture-
 On thinclients, this configuration will be automatically done in the kickstart post section.
 
 Known limitation: The syslog client will only forward messages that are logged *after* rsyslog is started. Boot messages (including kernel boot messages) are logged before rsyslog starts, so those messages are not forwarded to our infrastructure server.
+
+### Setting up postgres database
+#### Installation
+Postgres: installation, initalization, enable service, starting service:
+
+``` 
+yum install postgresql-server
+postgresql-setup initdb
+systemctl enable postgresql
+systemctl start postgresql
+``` 
+
+#### Creating database user
+We create two users, vdi-dbadmin and vdi-readonly:
+
+``` 
+# su - postgres         ## change to user postgres
+-bash-4.2$ createuser --connection-limit=10 --no-createdb --login --pwprompt --no-createrole --no-superuser vdi-dbadmin
+Enter password for new role: 
+Enter it again: 
+-bash-4.2$ createuser --connection-limit=10 --no-createdb --login --pwprompt --no-createrole --no-superuser vdi-readonly
+Enter password for new role: 
+Enter it again: 
+-bash-4.2$ exit
+``` 
+
+The user vdi-dbadmin will be used by the system administrator (you!) to administer the database and to change the VM-to-TC-mapping.
+The password for the user vdi-readonly needs to be configured in amoothei-tc-connectspice. It is used to determine the VM that should be displayed on a TC.
+
+#### Creating database, grant permissions.
+
+``` 
+# su - postgres
+Last login: Thu Oct 15 17:42:31 CEST 2015 on pts/3
+-bash-4.2$ psql
+psql (9.2.13)
+Type "help" for help.
+
+postgres=# create database vdi;
+CREATE DATABASE
+postgres=# grant all on database vdi to "vdi-dbadmin";
+GRANT
+postgres=# \quit
+-bash-4.2$ exit
+``` 
+
+#### Setting up SSL
+For our purposes, a self-signed certificate is sufficent. Put it on the server and then tell postgres where to find it:
+
+
+/var/lib/pgsql/data/postgresql.conf:
+
+``` 
+ssl = on
+ssl_cert_file = '/etc/pki/postgres/postgres_ssl.crt'
+ssl_key_file = '/etc/pki/postgres/postgres_ssl.key'
+``` 
+
+Permissions: The key shall only be accessible by postgres:
+
+``` 
+chown postges:root /etc/pki/postgres/postgres_ssl.key
+chown 600 /etc/pki/postgres/postgres_ssl.key
+``` 
+
+Restart your database to let the changes take effect.
+
+The certificate, /etc/pki/postgres/postgres_ssl.crt , should also be installed
+on all thinclients for secure database access. This is done in the kickstart post-section.
+
+#### Allow network access
+/var/lib/pgsql/data/pg_hba.conf:
+
+``` 
+hostssl    all             all          0.0.0.0/0               md5
+``` 
+
+This line allows password-based authentication, protected with TLS/SSL, from everywhere.
+
+Restart your database to let the changes take effect.
+
+#### Create database layout for amoothei-vdi:
+FIXME
+
+
+#### Accessing database
+There are alot of postgres shells, both console shells and graphical tools.
+
+For console access, we do recommend ```psql```, for GUI access we do recommend ```pgadmin3```.
+
+A list of postgres shells / tools can be found here:
+https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
+
+Troubleshooting
+===============
+
+### TFTP
+Logfiles:
+
+``` 
+journalctl _COMM=in.tftpd 
+# or
+journalctl -u xinetd.service
+``` 
+
+Testing:
+
+``` 
+# tftp 127.0.0.1
+tftp> get pxelinux/pxelinux.cfg/default
+tftp> quit
+# cat default 
+``` 
+
 
 
 
