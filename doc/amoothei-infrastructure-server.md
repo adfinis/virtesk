@@ -40,19 +40,6 @@ Requirements:
 LVM is recommended for disk space management, with the following 
 file systems on seperate logical volumes:
 
-
-+------------------------+------------+----------------------------------------------+
-| fs:                    | size:      | comment:                                     |
-+========================+============+==============================================+
-| /boot (not on LVM)     | 200-500 MB |                                              |
-| /                      | 10 GB      |                                              |
-| /tmp			 | 1 GB       |                                              |
-| /var                   | 4 GB       |                                              |
-| /var/log		 | 4 GB       |                                              |
-| /var/log/remote        | 2 GB       | more for large installations                 |
-| /var/www/mirror        | 68 GB      | more for mirroring more than one distributio |
-+------------------------+------------+----------------------------------------------+
-
 | fs                     | size       | comment                                       |
 | ---------------------- | ---------- | --------------------------------------------- |
 | /boot (not on LVM)     | 200-500 MB |                                               |
