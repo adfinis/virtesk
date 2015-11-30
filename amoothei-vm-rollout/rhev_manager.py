@@ -142,12 +142,12 @@ class RhevManager():
             )
 
     # reset vms to snapshot
-    def reset_classroom(classroom):
+    def reset_classroom(self,classroom):
         if not classroom:
             raise Exception('No classroom given')
 
         self.logger.info(
-            "Starting to roll out classroom '{0}'".format(classroom)
+            "Starting to reset classroom '{0}'".format(classroom)
         )
 
         # Get VMs for given classroom

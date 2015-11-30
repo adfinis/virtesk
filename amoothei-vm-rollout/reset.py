@@ -68,7 +68,7 @@ try:
     rhev_manager.reset_classroom(classroom)
 
     # Cleanup
-    # rhev_manager.cleanup()
+    rhev_manager.cleanup()
 
 except Exception as ex:
     logging.exception("Unexpected error: {0}".format(ex))
