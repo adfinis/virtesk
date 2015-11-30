@@ -773,8 +773,8 @@ class rhev:
     def reset_vm_to_snapshot(self, vmconfig):
 	try:
 		# FIXME: make this configurable
-		autoreset_snapshot_regex="test"		
-		autostart_vm_after_reset=True		
+		autoreset_snapshot_regex = "test"
+		autostart_vm_after_reset = True
 
 		vm_name = vmconfig[rhev_vm_name]
 
@@ -782,32 +782,34 @@ class rhev:
 		if vm is None:
 			logging.error("could not reset VM {}, VM does not exist".format(vm_name))
 			return
-		snapshots = vm.snapshots.list()	
-		candidate_snapshots = [s for s in snapshots if re.search(autoreset_snapshot_regex ,s.description)]
+		snapshots = vm.snapshots.list()
+		candidate_snapshots = [
+		    s for s in snapshots if re.search(autoreset_snapshot_regex, s.description)]
 		if len(candidate_snapshots) > 1:
 			logging.error("could not reset VM {}, to many snaphosts are matching the regex `{}'.".format(vm_name, autoreset_snapshot_regex)
 			return
-		
+
 		if len(candidate_snapshots) == 0:
 			logging.error("could not reset VM {}, no snaphosts are matching the regex `{}'.".format(vm_name, autoreset_snapshot_regex)
 			return
-		snapshot = candidate_snapshots[0]
-	
+		snapshot=candidate_snapshots[0]
+
 		if vm.status.state != 'down':
 			if vm.status.state == 'up':
 				logging.info("VM {} is running, forcefully stop VM...".format(vm_name))
 				vm.stop()
-				logging.info("VM {} is running, forcefully stop VM... done".format(vm_name))
+				logging.info(
+				    "VM {} is running, forcefully stop VM... done".format(vm_name))
 				self.wait_for_vms_down([vmconfig])
 			else:
 				logging.error("VM {} in unknown state, skipping...".format(vm_name))
 				return
-			
-		logging.info("Trying to reset VM {} to snapshot {} ...".format(vm_name, snapshot.description))
+
+		logging.info(
+		    "Trying to reset VM {} to snapshot {} ...".format(vm_name, snapshot.description))
 		snapshot.reset()
 
-		
+
 		if autostart_vm_after_reset:
 			self.wait_for_vms_down([vmconfig])
 			vm.start()
-

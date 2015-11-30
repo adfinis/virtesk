@@ -146,17 +146,16 @@ class RhevManager():
         if not classroom:
             raise Exception('No classroom given')
 
-	self.logger.info(
-	    "Starting to roll out classroom '{0}'".format(classroom)
-	)
+        self.logger.info(
+            "Starting to roll out classroom '{0}'".format(classroom)
+        )
 
-	# Get VMs for given classroom
-	vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
-	    classroom)
+        # Get VMs for given classroom
+        vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+            classroom)
 
-	for vm in vms_for_classroom:
-		self.rhev_lib.reset_vm_to_snapshot(vm)
-
+        for vm in vms_for_classroom:
+            self.rhev_lib.reset_vm_to_snapshot(vm)
 
     def rollout_classroom(self, classroom):
         if not classroom:
@@ -205,7 +204,7 @@ class RhevManager():
 
                 # Eject ISOs, set statless and add (user-) group.
                 # Create a snapshot of every VM.
-                #vm_snapshots = []
+                # vm_snapshots = []
                 for vm in vms_for_classroom:
                     self.rhev_lib.postprocess_vm(vm)
                     # self.rhev_lib.adjust_os_and_timezone(vm)
