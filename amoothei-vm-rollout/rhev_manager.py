@@ -141,6 +141,23 @@ class RhevManager():
                 "Cleaning up classroom '{0}' failed: {1}".format(classroom, e)
             )
 
+    # reset vms to snapshot
+    def reset_classroom(classroom):
+        if not classroom:
+            raise Exception('No classroom given')
+
+	self.logger.info(
+	    "Starting to roll out classroom '{0}'".format(classroom)
+	)
+
+	# Get VMs for given classroom
+	vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+	    classroom)
+
+	for vm in vms_for_classroom:
+		self.rhev_lib.reset_vm_to_snapshot(vm)
+
+
     def rollout_classroom(self, classroom):
         if not classroom:
             raise Exception('No classroom given')
