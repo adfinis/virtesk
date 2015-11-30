@@ -120,6 +120,8 @@ class RhevManager():
         if not classroom:
             raise Exception('No classrom given')
 
+        self.logger.info("cleaning up classroom '{0}'".format(classroom))
+
         try:
             # Get VMs for given classroom
             self.logger.debug(
