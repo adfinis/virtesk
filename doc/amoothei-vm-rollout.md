@@ -7,14 +7,14 @@ The script creates new VMs based on an existing Ovirt VM Template, and assings h
 
 The process is based on Windows Sysprep / Unattended.xml technologies.
 
-See also: [Compatibility](Compatibility.html)
+See also: [Compatibility](Compatibility.md)
 
 
 System preparation
 ==================
 To run amoothei-vm-rollout, the system must be prepared first:
 
-1. Setting up [floppy payload mechanism](sftp-floppy-upload.html)
+1. Setting up [floppy payload mechanism](sftp-floppy-upload.md)
 
 
 Goldimage preparation
