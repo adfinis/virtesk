@@ -51,6 +51,7 @@ $ rpm -i usbredir-0.7-3.fc22.src.rpm
 ```
 
 The rpm command above will unpack the following files into your rpm build environment:
+
 * ~/rpmbuild/SOURCES/usbredir-0.7.tar.bz2
 * ~/rpmbuild/SPECS/usbredir.spec
 
