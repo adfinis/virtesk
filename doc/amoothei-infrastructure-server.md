@@ -170,7 +170,7 @@ subnet 10.0.0.0 netmask 255.255.255.0 {
 }
 ```
 
-Pleasee make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
+Please make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
 
 #### Setting up boot files
 We do want our network bootloader to be accessible by both TFTP (for PXE) 
