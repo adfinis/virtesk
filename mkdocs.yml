@@ -1,3 +1,20 @@
 site_name: Amoothei-VDI
 docs_dir: doc
-theme: readthedocs
+pages:
+- Overview: 'index.md'
+- Expert Topics:
+        - 'Rollout Payload': 'sftp-floppy-upload.md'
+        - 'amoothei-infrastructure-server.md'
+        - 'amoothei-tc-connectspice.md'
+        - 'amoothei-tc-kickstart.md'
+- Misc Topics:
+        - 'amoothei-tc-tools.md'
+        - 'amoothei-vm-rollout.md'
+        - 'Compatibility.md' 
+        - 'DEPENDENCIES.md'
+        - 'libusbredir-patching.md'
+
+markdown_extensions:
+    - toc:
+        permalink: 
+    - admonition:

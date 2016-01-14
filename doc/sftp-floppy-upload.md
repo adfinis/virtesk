@@ -1,5 +1,11 @@
-Introduction
-================
+# Payload mechanism
+
+Floppy payloads for VM rollout
+
+---
+
+## Introduction
+
 The windows sysprep/unattened.xml process requires passing an individual configuration file (sysprep.inf)  to the VM.
 
 This file is passed to the VM inside a floppy image. For passing floppy images, a few preparations need to be made:
@@ -85,7 +91,7 @@ If you really do want to test that floppies do work, a few more steps are necess
 4. Now the image should be accessible as a floppy drive inside the VM.
 
 Configuring an sftp server for hosting floppy images
-====================================================
+------------------------------------------------------
 The [VM rollout script](amoothei-vm-rollout.md) needs a way to upload floppy images,
 so that the images are accessible by the ovirt hosts afterwards. The [VM rollout script](amoothei-vm-rollout.md) uses sftp to upload floppy images, and the ovirt hosts use NFS to access the floppy images.
 
@@ -196,7 +202,7 @@ Now, you should be able to list/put/remove files using the following command:
 ```
 
 Troubleshooting
-==================
+-----------------
 ### Duplicate floppy drive
 Ovirt error message:
 ```
@@ -216,7 +222,7 @@ If a VM with a floppy configured using the custom property fails to run, careful
 
 
 Alternative payload mechanisms
-===============================
+-------------------------------
 A lot of mechanisms for injecting a payload into an ovirt VM were evaluated, but all have their problems:
 
 * Passing Unattended.xml content through API:
