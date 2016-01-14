@@ -152,20 +152,20 @@ class rhev:
 
         section_name = 'room ' + classroom
         if section_name in self.base_configuration.keys():
-                # Get current class room
-                section = self.base_configuration[section_name]
+            # Get current class room
+            section = self.base_configuration[section_name]
 
-                subsections = section.keys()
+            subsections = section.keys()
 
-                # Build list with VMs
-                for subsection in subsections:
-                    #if type(section[subsection]) is types.DictType:
-                    if isinstance(section[subsection], dict):
-                        result += self.build_vm_list_for_key(classroom, subsection, section)
-                    else:
-                        self.logger.warn("Config section `{0}': skipping "
-                        "unparseable config item: '{1}={2}'.".format(
-                        section_name,subsection,section[subsection]))
+            # Build list with VMs
+            for subsection in subsections:
+                #if type(section[subsection]) is types.DictType:
+                if isinstance(section[subsection], dict):
+                    result += self.build_vm_list_for_key(classroom, subsection, section)
+                else:
+                    self.logger.warn("Config section `{0}': skipping "
+                    "unparseable config item: '{1}={2}'.".format(
+                    section_name,subsection,section[subsection]))
 
         else:
             raise Exception("Classroom '%s' was not found" % classroom)
@@ -222,7 +222,7 @@ class rhev:
                     )
                     raise Exception(msg)
 
-                
+
                 # validate and compile regex
                 reset_to_snapshot_regex_string = current_vm['reset_to_snapshot_regex']
                 try:
@@ -230,8 +230,8 @@ class rhev:
                 except re.error:
                     logging.error("Invalid regex `{0}={1}' configured in section `{2}'. Exiting...".format('reset_to_snapshot_regex', reset_to_snapshot_regex_string, key) )
                     sys.exit(-1)
-                    
-                    
+
+
                 vm_config = dict(
                     rhev_vm_name=rhev_vm_name,
                     memory=eval(current_vm['memory']),
@@ -264,10 +264,9 @@ class rhev:
                 )
 
                 vm_list.append(vm_config)
-            except KeyError as ex:
-                logging.error("Configuration error, room `{0}', subsection `{1}': Key `{2}' is mandatory.".format(roomname, key, str(ex)))
-                sys.exit(-1)
-
+        except KeyError as ex:
+            logging.error("Configuration error, room `{0}', subsection `{1}': Key `{2}' is mandatory.".format(roomname, key, str(ex)))
+            sys.exit(-1)
         return vm_list
 
     def connect(self, config):
@@ -562,7 +561,7 @@ class rhev:
                     break
                 except:
                     self.logger.warn("Deleting VM {0} failed in iteration {1}... trying again...".format(vm_name, iteration))
-                    sleep(2)
+                    time.sleep(2)
 
             if not deletion_successfull:
                 self.logger.warn("Deleting VM {0}: *last try*".format(vm_name))
@@ -760,7 +759,7 @@ class rhev:
         # The VM should not be used until the snapshot is ready.
         # Please use wait_for_vm_snapshots_ready(...) after calling this
         # function.
- 
+
         vmconfig['snapshot_description'] = string.Template(vmconfig['snapshot_description']).safe_substitute(vmconfig)
         description = vmconfig['snapshot_description']
 
@@ -862,7 +861,7 @@ class rhev:
             else:
                 logging.error("VM {} in unknown state, skipping...".format(vm_name))
                 return None
- 
+
         logging.info("Trying to reset VM {} to snapshot {} ...".format(vm_name, snapshot.description))
 
         snapshot.restore()
@@ -893,7 +892,7 @@ class rhev:
 
         return some_vm_exist
 
-                
+
 
 
 
