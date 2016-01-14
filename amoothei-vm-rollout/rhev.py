@@ -40,6 +40,7 @@ import re
 import string
 import logging
 import logging.config
+import types
 
 # Project imports
 import constants
@@ -148,22 +149,24 @@ class rhev:
         if not classroom:
             raise Exception('No classroom given')
 
-        for class_room in self.base_configuration.keys():
-            if 'classroom' in class_room and classroom in class_room:
-                classroom_was_found = True
-
+        section_name = 'room ' + classroom
+        if section_name in self.base_configuration.keys():
                 # Get current class room
-                class_room = self.base_configuration[class_room]
+                section = self.base_configuration[section_name]
+
+                subsections = section.keys()
 
                 # Build list with VMs
+                for subsection in subsections:
+                    #if type(section[subsection]) is types.DictType:
+                    if isinstance(section[subsection], dict):
+                        result += self.build_vm_list_for_key(classroom, subsection, section)
+                    else:
+                        self.logger.warn("Config section `{0}': skipping "
+                        "unparseable config item: '{1}={2}'.".format(
+                        section_name,subsection,section[subsection]))
 
-                # Teacher VMs
-                result += self.build_vm_list_for_key('teacher_vms', class_room)
-
-                # Student VMs
-                result += self.build_vm_list_for_key('student_vms', class_room)
-
-        if not classroom_was_found:
+        else:
             raise Exception("Classroom '%s' was not found" % classroom)
 
         if len(result) <= 0:
@@ -175,7 +178,7 @@ class rhev:
 
         return result
 
-    def build_vm_list_for_key(self, key, configuration_array):
+    def build_vm_list_for_key(self, roomname, key, configuration_array):
         vm_list = []
 
         vm_ids = eval(configuration_array[key]['ids'])
@@ -194,7 +197,6 @@ class rhev:
             current_id = int(vm_id)
             current_id_padded = ("%0" + str(vm_id_digits) + "i") % current_id
             current_vm = configuration_array[key]
-            current_vdi = configuration_array['vdi']
 
             ip_address_suffix = int(
                 current_vm['ip_addresses_suffix']
@@ -205,7 +207,7 @@ class rhev:
             )
 
             rhev_vm_name = rhev_vm_name.safe_substitute(
-                roomname=configuration_array['name'],
+                roomname=roomname,
                 id=current_id_padded
             )
 
@@ -226,25 +228,26 @@ class rhev:
                 ).safe_substitute(
                     suffix=ip_address_suffix
                 ),
-                netmask_as_suffix=current_vdi['netmask_suffix'],
+                netmask_as_suffix=current_vm['netmask_suffix'],
                 ComputerName=computerName,
-                # vlan=current_vdi['vlan'],
-                network_name=current_vdi['network_name'],
+                network_name=current_vm['network_name'],
                 template=current_vm['template_name'],
                 description=current_vm['description'],
                 cluster=current_vm['cluster'],
-                default_gw=current_vdi['default_gateway'],
+                default_gw=current_vm['default_gateway'],
                 autounattend_templatefile=self.get_configfile_absolutepath(
-                    configuration_array['autounattend_templatefile']),
+                    current_vm['autounattend_templatefile']),
                 scripttime=self.scripttime_string,
                 tc_user=current_vm['tc_user'],
                 workaround_os=current_vm['workaround_os'],
                 workaround_timezone=current_vm['workaround_timezone'],
                 os=current_vm['os'],
                 timezone=current_vm['timezone'],
-                usb=dict(
-                    enabled=current_vdi['usb']['enabled']
-                )
+                usb_enabled=current_vm['usb'].strip() == 'enabled',
+                snapshot_description = current_vm['snapshot_description'],
+                rollout_startvm = current_vm['rollout_startvm'].strip() == 'True',
+                reset_startvm = current_vm['reset_startvm'].strip(),
+                stateless = current_vm['stateless'].strip() == 'True'
             )
 
             vm_list.append(vm_config)
@@ -309,10 +312,9 @@ class rhev:
         # enabling usb cannot be done while creating the VM, because that
         # might trigger a RHEV-bug [0].
         # [0] https://project.adfinis-sygroup.ch/issues/6764
-        vm = vmconfig['vm']
-        vm_usb = ovirtsdk.xml.params.Usb(enabled=True, type_='native')
-        vm.set_usb(vm_usb)
-        vm.update()
+        if vmconfig['usb_enabled']:
+            vm_usb = ovirtsdk.xml.params.Usb(enabled=True, type_='native')
+            vmconfig['vm'].set_usb(vm_usb)
 
     def wait_for_vms_down(
             self,
@@ -449,22 +451,30 @@ class rhev:
         # sync state from ovirt
         vmconfig['vm'] = self.api.vms.get(vmconfig['rhev_vm_name'])
 
+        self.enable_usb(vmconfig)
         self.adjust_os_and_timezone(vmconfig)
         self.detach_and_cleanup_floppy(vmconfig)
-        self.set_stateless(vmconfig, False)  # FIXME
+        self.set_stateless(vmconfig)
         self.vm_adduser(vmconfig)
 
         # sync changes back to ovirt
         vmconfig['vm'].update()
 
+        self.create_vm_snapshot(vmconfig)
+
+    def start_vm_after_rollout(self, vmconfig):
+        if vmconfig['rollout_startvm']:
+            self.logger.debug("starting VM {0} ...".format(vmconfig['rhev_vm_name']))
+            vmconfig['vm'].start()
+            time.sleep(1)
+
     def adjust_os_and_timezone(self, vmconfig):
         vmconfig['vm'].set_timezone(vmconfig['timezone'])
         vmconfig['vm'].get_os().set_type(vmconfig['os'])
 
-    def set_stateless(self, vmconfig, stateless=True):
-        vm = vmconfig['vm']
-        vm.set_stateless(stateless)
-        vm.update()
+    def set_stateless(self, vmconfig):
+        stateless = vmconfig['stateless']
+        vm = vmconfig['vm'].set_stateless(stateless)
 
     def upload_floppy(self, vmconfig):
         sftp_floppy_upload_cmd = self.base_configuration[
@@ -531,8 +541,8 @@ class rhev:
             while not self.api.vms.get(vm_name) is None:
                 time.sleep(1)
         else:
-            msg = "Tried to delete VM '{}' but it seems not to be on "
-            "RHEV server".format(vmconfig['rhev_vm_name'])
+            msg = ("Tried to delete VM '{}' but it seems not to be on "
+            "RHEV server".format(vmconfig['rhev_vm_name']))
             self.logger.warn(msg)
 
     def force_stop_vm(self, vm_name):
@@ -709,7 +719,7 @@ class rhev:
             )
         )
 
-    def create_vm_snapshot(self, vmconfig, description):
+    def create_vm_snapshot(self, vmconfig):
         # creates a snapshot of a VM with a given description.
         # returns a ovirtsdk.infrastructure.brokers.VMSnapshot object.
         #
@@ -717,19 +727,32 @@ class rhev:
         # The VM should not be used until the snapshot is ready.
         # Please use wait_for_vm_snapshots_ready(...) after calling this
         # function.
+        description = vmconfig['snapshot_description'].strip()
+        if description == "":
+            logging.info("Not creating a snaphost for vm {0}.".format(vmconfig['rhev_vm_name']))
+            return
+
         try:
             vm = vmconfig['vm']
             logging.debug("Creating a snapshot(description: %s) of vm %s... ",
                           description, vm.name)
             snapshot = vm.snapshots.add(ovirtsdk.xml.params.Snapshot(
                 description=description))
-            return snapshot
+
+            # save this object, so we can ask for status later.
+            vmconfig['pending_snapshot'] = snapshot
+
         except Exception as ex:
             logging.error("Creating a snapshot(description: %s) " +
                           "of vm %s... FAILED", description, vm.name)
             raise(ex)
 
-    def wait_for_vm_snapshots_ready(self, snapshots):
+    def wait_for_vm_snapshots_ready(self, vmconfigs):
+        snapshots = []
+        for vmconfig in vmconfigs:
+            if 'pending_snapshot' in vmconfig:
+                snapshots.append(vmconfig['pending_snapshot'])
+
         # Given a list of snapshots, this function waits until all of them
         # are in state 'ok'.
         # Please use this function together with create_vm_snapshot(...).

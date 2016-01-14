@@ -190,7 +190,6 @@ class RhevManager():
                 # Add NIC and initiate sysprep
                 for vm in vms_for_classroom:
                     self.rhev_lib.add_vm_nic(vm)
-                    # self.rhev_lib.enable_usb(vm)
                     self.rhev_lib.sysprep_vm(vm, temp_dir)
                     self.logger.info('Waiting for sysprep to finish')
                     time.sleep(constants.VM_SLEEP_TIME)
@@ -209,14 +208,6 @@ class RhevManager():
                 # vm_snapshots = []
                 for vm in vms_for_classroom:
                     self.rhev_lib.postprocess_vm(vm)
-                    # self.rhev_lib.adjust_os_and_timezone(vm)
-                    # self.rhev_lib.detach_and_cleanup_floppy(vm)
-                    # self.rhev_lib.eject(vm)
-                    # FIXME: instead of just commenting this out,
-                    # it should be made configurable.
-                    # self.rhev_lib.set_stateless(vm)
-                    # self.rhev_lib.vm_addgroup(vm)
-                    # self.rhev_lib.vm_adduser(vm)
 
                     # creating the snapshot must be the final task in this
                     # loop.
@@ -224,17 +215,13 @@ class RhevManager():
                     #               "initial snapshot after vm creation using " +
                     #               "adsy_rhev_tools succeded.").format(
                     # vm['ip'], vm['netmask_as_suffix'])
-                    # vm_snapshots += [self.rhev_lib.create_vm_snapshot(vm,
-                    #                                              description)]
 
                 # Wait for all VM snapshots to become ready.
-                # self.rhev_lib.wait_for_vm_snapshots_ready(vm_snapshots)
+                self.rhev_lib.wait_for_vm_snapshots_ready(vms_for_classroom)
 
                 # Start VMs
-                # for vm in vms_for_classroom:
-                #    logging.debug("Starting VM %s...", vm['vm'].name)
-                #    self.rhev_lib.start_vm(vm)
-                #    time.sleep(constants.VM_SLEEP_TIME)
+                for vm in vms_for_classroom:
+                    self.rhev_lib.start_vm_after_rollout(vm)
 
                 self.logger.info(
                     "Finished rolling out classroom '{0}' successfully".format(
