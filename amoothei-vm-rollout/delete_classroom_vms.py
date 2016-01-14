@@ -33,6 +33,7 @@
 import traceback
 import argparse
 import logging
+import sys
 
 # Project imports
 import rhev_manager as adsy_rhev_manager
@@ -73,3 +74,5 @@ try:
 except Exception as ex:
     logging.exception("Unexpected error: {0}".format(ex))
     logging.exception(traceback.format_exc())
+    sys.exit(-1) 
+    

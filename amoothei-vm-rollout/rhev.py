@@ -47,7 +47,7 @@ import sys
 import constants
 import ovirtsdk.api
 import ovirtsdk.xml
-import mako				# http://www.makotemplates.org/
+import mako             # http://www.makotemplates.org/
 import mako.exceptions
 import mako.template
 
@@ -180,89 +180,93 @@ class rhev:
         return result
 
     def build_vm_list_for_key(self, roomname, key, configuration_array):
-        vm_list = []
+        try:
+            vm_list = []
 
-        vm_ids = eval(configuration_array[key]['ids'])
+            vm_ids = eval(configuration_array[key]['ids'])
 
-        # To how many digits shall we pad the vm_id?
-        # answer: vm_id_digits.
-        if len(vm_ids) > 0:
-            max_vm_id = max([int(x) for x in vm_ids])
-            vm_id_digits = len("%i" % max_vm_id)
+            # To how many digits shall we pad the vm_id?
+            # answer: vm_id_digits.
+            if len(vm_ids) > 0:
+                max_vm_id = max([int(x) for x in vm_ids])
+                vm_id_digits = len("%i" % max_vm_id)
 
-            # we pad always to at least 2 digits.
-            if vm_id_digits < 2:
-                vm_id_digits = 2
+                # we pad always to at least 2 digits.
+                if vm_id_digits < 2:
+                    vm_id_digits = 2
 
-        for vm_id in vm_ids:
-            current_id = int(vm_id)
-            current_id_padded = ("%0" + str(vm_id_digits) + "i") % current_id
-            current_vm = configuration_array[key]
+            for vm_id in vm_ids:
+                current_id = int(vm_id)
+                current_id_padded = ("%0" + str(vm_id_digits) + "i") % current_id
+                current_vm = configuration_array[key]
 
-            ip_address_suffix = int(
-                current_vm['ip_addresses_suffix']
-            ) + current_id - 1
+                ip_address_suffix = int(
+                    current_vm['ip_addresses_suffix']
+                ) + current_id - 1
 
-            rhev_vm_name = string.Template(
-                current_vm['names']
-            )
-
-            rhev_vm_name = rhev_vm_name.safe_substitute(
-                roomname=roomname,
-                id=current_id_padded
-            )
-
-            computerName = rhev_vm_name
-
-            if len(rhev_vm_name) > 15:
-                msg = "Name of VM {} greater than 15 characters long. "
-                "This isn't supported by RHEV and Windows.".format(
-                    rhev_vm_name
+                rhev_vm_name = string.Template(
+                    current_vm['names']
                 )
-                raise Exception(msg)
 
-            
-            # validate and compile regex
-            reset_to_snapshot_regex_string = current_vm['reset_to_snapshot_regex']
-            try:
-                reset_to_snapshot_regex = re.compile(reset_to_snapshot_regex_string)
-            except re.error:
-                logging.error("Invalid regex `{0}={1}' configured in section `{2}'. Exiting...".format('reset_to_snapshot_regex', reset_to_snapshot_regex_string, key) )
+                rhev_vm_name = rhev_vm_name.safe_substitute(
+                    roomname=roomname,
+                    id=current_id_padded
+                )
+
+                computerName = rhev_vm_name
+
+                if len(rhev_vm_name) > 15:
+                    msg = "Name of VM {} greater than 15 characters long. "
+                    "This isn't supported by RHEV and Windows.".format(
+                        rhev_vm_name
+                    )
+                    raise Exception(msg)
+
+                
+                # validate and compile regex
+                reset_to_snapshot_regex_string = current_vm['reset_to_snapshot_regex']
+                try:
+                    reset_to_snapshot_regex = re.compile(reset_to_snapshot_regex_string)
+                except re.error:
+                    logging.error("Invalid regex `{0}={1}' configured in section `{2}'. Exiting...".format('reset_to_snapshot_regex', reset_to_snapshot_regex_string, key) )
+                    sys.exit(-1)
+                    
+                    
+                vm_config = dict(
+                    rhev_vm_name=rhev_vm_name,
+                    memory=eval(current_vm['memory']),
+                    ip=string.Template(
+                        current_vm['ip_addresses']
+                    ).safe_substitute(
+                        suffix=ip_address_suffix
+                    ),
+                    netmask_as_suffix=current_vm['netmask_suffix'],
+                    ComputerName=computerName,
+                    network_name=current_vm['network_name'],
+                    template=current_vm['template_name'],
+                    description=current_vm['description'],
+                    cluster=current_vm['cluster'],
+                    default_gw=current_vm['default_gateway'],
+                    autounattend_templatefile=self.get_configfile_absolutepath(
+                        current_vm['autounattend_templatefile']),
+                    scripttime=self.scripttime_string,
+                    tc_user=current_vm['tc_user'],
+                    workaround_os=current_vm['workaround_os'],
+                    workaround_timezone=current_vm['workaround_timezone'],
+                    os=current_vm['os'],
+                    timezone=current_vm['timezone'],
+                    usb_enabled=current_vm['usb'].strip() == 'enabled',
+                    snapshot_description = current_vm['snapshot_description'],
+                    reset_to_snapshot_regex = reset_to_snapshot_regex,
+                    rollout_startvm = current_vm['rollout_startvm'].strip() == 'True',
+                    reset_startvm = current_vm['reset_startvm'].strip(),
+                    stateless = current_vm['stateless'].strip() == 'True'
+                )
+
+                vm_list.append(vm_config)
+            except KeyError as ex:
+                logging.error("Configuration error, room `{0}', subsection `{1}': Key `{2}' is mandatory.".format(roomname, key, str(ex)))
                 sys.exit(-1)
-                
-                
-            vm_config = dict(
-                rhev_vm_name=rhev_vm_name,
-                memory=eval(current_vm['memory']),
-                ip=string.Template(
-                    current_vm['ip_addresses']
-                ).safe_substitute(
-                    suffix=ip_address_suffix
-                ),
-                netmask_as_suffix=current_vm['netmask_suffix'],
-                ComputerName=computerName,
-                network_name=current_vm['network_name'],
-                template=current_vm['template_name'],
-                description=current_vm['description'],
-                cluster=current_vm['cluster'],
-                default_gw=current_vm['default_gateway'],
-                autounattend_templatefile=self.get_configfile_absolutepath(
-                    current_vm['autounattend_templatefile']),
-                scripttime=self.scripttime_string,
-                tc_user=current_vm['tc_user'],
-                workaround_os=current_vm['workaround_os'],
-                workaround_timezone=current_vm['workaround_timezone'],
-                os=current_vm['os'],
-                timezone=current_vm['timezone'],
-                usb_enabled=current_vm['usb'].strip() == 'enabled',
-                snapshot_description = current_vm['snapshot_description'],
-                reset_to_snapshot_regex = reset_to_snapshot_regex,
-                rollout_startvm = current_vm['rollout_startvm'].strip() == 'True',
-                reset_startvm = current_vm['reset_startvm'].strip(),
-                stateless = current_vm['stateless'].strip() == 'True'
-            )
-
-            vm_list.append(vm_config)
 
         return vm_list
 
@@ -450,10 +454,10 @@ class rhev:
 #
 
 #     def adjust_vm(self, vmconfig):
-# 	vm = vmconfig['vm']
-# 	initialization = ovirtsdk.xml.params.Initialization()
-# 	vm.set_initialization(initialization)
-# 	vm.update()
+#   vm = vmconfig['vm']
+#   initialization = ovirtsdk.xml.params.Initialization()
+#   vm.set_initialization(initialization)
+#   vm.update()
 
     def start_vm(self, vmconfig):
         vm = vmconfig['vm']
@@ -549,9 +553,26 @@ class rhev:
                 self.logger.info("Detaching VM '%s'" % vm_name)
                 vm.detach()
             self.logger.info("Deleting VM '%s'" % vm_name)
-            vm.delete()
+
+            deletion_successfull = False
+            for iteration in range(1,5+1):
+                try:
+                    vm.delete()
+                    deletion_successfull = True
+                    break
+                except:
+                    self.logger.warn("Deleting VM {0} failed in iteration {1}... trying again...".format(vm_name, iteration))
+                    sleep(2)
+
+            if not deletion_successfull:
+                self.logger.warn("Deleting VM {0}: *last try*".format(vm_name))
+                vm.delete()
+
             while not self.api.vms.get(vm_name) is None:
                 time.sleep(1)
+
+            self.logger.info("Successfully deleted VM {0}.".format(vm_name))
+
         else:
             msg = ("Tried to delete VM '{}' but it seems not to be on "
             "RHEV server".format(vmconfig['rhev_vm_name']))
@@ -739,7 +760,10 @@ class rhev:
         # The VM should not be used until the snapshot is ready.
         # Please use wait_for_vm_snapshots_ready(...) after calling this
         # function.
-        description = vmconfig['snapshot_description'].strip()
+ 
+        vmconfig['snapshot_description'] = string.Template(vmconfig['snapshot_description']).safe_substitute(vmconfig)
+        description = vmconfig['snapshot_description']
+
         if description == "":
             logging.info("Not creating a snaphost for vm {0}.".format(vmconfig['rhev_vm_name']))
             return
@@ -806,9 +830,8 @@ class rhev:
         self.logger.info("Disconnected from '%s' successfully!" % product_name)
 
     def reset_vm_to_snapshot(self, vmconfig):
-        # FIXME: make this configurable
-        autoreset_snapshot_regex = "test"
-        autostart_vm_after_reset = True
+        autoreset_snapshot_regex = vmconfig['reset_to_snapshot_regex']
+        vm_was_running_before_reset = False
 
         vm_name = vmconfig["rhev_vm_name"]
 
@@ -829,15 +852,16 @@ class rhev:
         snapshot=candidate_snapshots[0]
 
         if vm.status.state != 'down':
- 			if vm.status.state == 'up':
- 				logging.info("VM {} is running, forcefully stop VM...".format(vm_name))
- 				vm.stop()
- 				logging.info(
- 				    "VM {} is running, forcefully stop VM... done".format(vm_name))
- 				self.wait_for_vms_down([vmconfig])
- 			else:
- 				logging.error("VM {} in unknown state, skipping...".format(vm_name))
- 				return None
+            if vm.status.state == 'up':
+                vm_was_running_before_reset = True
+                logging.info("VM {} is running, forcefully stop VM...".format(vm_name))
+                vm.stop()
+                logging.info(
+                    "VM {} is running, forcefully stop VM... done".format(vm_name))
+                self.wait_for_vms_down([vmconfig])
+            else:
+                logging.error("VM {} in unknown state, skipping...".format(vm_name))
+                return None
  
         logging.info("Trying to reset VM {} to snapshot {} ...".format(vm_name, snapshot.description))
 
@@ -845,7 +869,31 @@ class rhev:
         self.wait_for_vms_down([vmconfig])
         logging.info("Trying to reset VM {} to snapshot {} ... done".format(vm_name, snapshot.description))
 
-        if autostart_vm_after_reset:
-            logging.info("Starting VM {}.".format(vm_name))
+        if vmconfig['reset_startvm'].lower() == 'always':
+            logging.info("Starting VM {0}.".format(vm_name))
             vm.start()
+        elif vmconfig['reset_startvm'].lower() == 'auto' and vm_was_running_before_reset:
+            logging.info("VM {0} was running before reset, lets start it again...".format(vm_name))
+            vm.start()
+        else:
+            logging.info("Not starting VM {0} after reset (disabled by configuration).".format(vm_name))
+
+    def check_if_vms_exist(self, vms):
+        some_vm_exist = False
+
+        for vmconfig in vms:
+            vm_name = vmconfig['rhev_vm_name']
+            exists = self.api.vms.get(vm_name) != None
+
+            if exists:
+                self.logger.info("VM {0} exists.".format(vm_name))
+                some_vm_exist = True
+            else:
+                self.logger.info("VM {0} doesnt exist.".format(vm_name))
+
+        return some_vm_exist
+
+                
+
+
 

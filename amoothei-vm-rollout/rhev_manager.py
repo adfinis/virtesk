@@ -159,6 +159,22 @@ class RhevManager():
         for vm in vms_for_classroom:
             self.rhev_lib.reset_vm_to_snapshot(vm)
 
+    def analyze_config_of_classroom(self,classroom):
+        self.logger.info("Analyzing configuration of classroom {0}".format(classroom))
+
+        # Get VMs for given classroom
+        vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+                    classroom)
+
+        for vmconfig in vms_for_classroom:
+            self.logger.debug(str(vmconfig))
+
+        if self.rhev_lib.check_if_vms_exist(vms_for_classroom):
+            self.logger.info("Some VMs already exist. Please delete them before rollout")
+            self.analyze_snapshots(vms_for_classroom)
+
+
+
     def rollout_classroom(self, classroom):
         if not classroom:
             raise Exception('No classroom given')
@@ -169,11 +185,17 @@ class RhevManager():
                     "Starting to roll out classroom '{0}'".format(classroom)
                 )
 
-                # Make sure classroom is clean before rolling out
-
                 # Get VMs for given classroom
                 vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
                     classroom)
+
+                for vmconfig in vms_for_classroom:
+                    self.logger.debug(str(vmconfig))
+
+                # Make sure the VMs don't exist (avoiding conflicts)
+                if self.rhev_lib.check_if_vms_exist(vms_for_classroom):
+                    self.logger.error("Some VMs already exist. Please delete them first")
+                    sys.exit(-1)
 
                 # Create (template) VMs
                 for vm in vms_for_classroom:
