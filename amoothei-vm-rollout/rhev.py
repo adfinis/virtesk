@@ -41,6 +41,7 @@ import string
 import logging
 import logging.config
 import types
+import sys
 
 # Project imports
 import constants
@@ -220,6 +221,16 @@ class rhev:
                 )
                 raise Exception(msg)
 
+            
+            # validate and compile regex
+            reset_to_snapshot_regex_string = current_vm['reset_to_snapshot_regex']
+            try:
+                reset_to_snapshot_regex = re.compile(reset_to_snapshot_regex_string)
+            except re.error:
+                logging.error("Invalid regex `{0}={1}' configured in section `{2}'. Exiting...".format('reset_to_snapshot_regex', reset_to_snapshot_regex_string, key) )
+                sys.exit(-1)
+                
+                
             vm_config = dict(
                 rhev_vm_name=rhev_vm_name,
                 memory=eval(current_vm['memory']),
@@ -245,6 +256,7 @@ class rhev:
                 timezone=current_vm['timezone'],
                 usb_enabled=current_vm['usb'].strip() == 'enabled',
                 snapshot_description = current_vm['snapshot_description'],
+                reset_to_snapshot_regex = reset_to_snapshot_regex,
                 rollout_startvm = current_vm['rollout_startvm'].strip() == 'True',
                 reset_startvm = current_vm['reset_startvm'].strip(),
                 stateless = current_vm['stateless'].strip() == 'True'
