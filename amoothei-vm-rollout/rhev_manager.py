@@ -36,6 +36,7 @@ import time
 import logging
 import logging.config
 import configobj
+import sys
 
 # Project imports
 # import singletonmixin
@@ -171,7 +172,7 @@ class RhevManager():
 
         if self.rhev_lib.check_if_vms_exist(vms_for_classroom):
             self.logger.info("Some VMs already exist. Please delete them before rollout")
-            self.analyze_snapshots(vms_for_classroom)
+            self.rhev_lib.analyze_snapshots(vms_for_classroom)
 
 
 

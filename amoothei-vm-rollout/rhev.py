@@ -769,6 +769,9 @@ class rhev:
 
         try:
             vm = vmconfig['vm']
+            if vm.get_stateless():
+                logging.info("Not creating a snaphost for VM {0}. Reason: VM is stateless.".format(vmconfig['rhev_vm_name']))
+                return
             logging.debug("Creating a snapshot(description: %s) of vm %s... ",
                           description, vm.name)
             snapshot = vm.snapshots.add(ovirtsdk.xml.params.Snapshot(
@@ -838,6 +841,10 @@ class rhev:
         if vm is None:
             logging.error("could not reset VM {}, VM does not exist".format(vm_name))
             return
+
+        if vm.get_stateless():
+            logging.info("VM {0} is stateless, reset is not supported. Skipping.".format(vm_name))
+            return
         snapshots = vm.snapshots.list()
         candidate_snapshots = [
             s for s in snapshots if re.search(autoreset_snapshot_regex, s.description)]
@@ -850,16 +857,26 @@ class rhev:
             return
         snapshot=candidate_snapshots[0]
 
-        if vm.status.state != 'down':
+        vm_ready = False
+        for iteration in range(1,5+1):
+            vm = self.api.vms.get(vm.name)
+            if vm.status.state == 'down':
+                vm_ready = True
+                break
             if vm.status.state == 'up':
                 vm_was_running_before_reset = True
                 logging.info("VM {} is running, forcefully stop VM...".format(vm_name))
                 vm.stop()
-                logging.info(
-                    "VM {} is running, forcefully stop VM... done".format(vm_name))
-                self.wait_for_vms_down([vmconfig])
+                time.sleep(4)
+                continue
             else:
-                logging.error("VM {} in unknown state, skipping...".format(vm_name))
+                logging.error("VM {0} in unknown state '{1}', trying to stop it...".format(vm_name, vm.status.state))
+                vm.stop()
+                time.sleep(4)
+                continue
+        
+        if not vm_ready:
+                logging.error("VM {0} in unknown state '{1}', reset for this vm will be skipped...".format(vm_name, vm.status.state))
                 return None
 
         logging.info("Trying to reset VM {} to snapshot {} ...".format(vm_name, snapshot.description))
@@ -891,6 +908,36 @@ class rhev:
                 self.logger.info("VM {0} doesnt exist.".format(vm_name))
 
         return some_vm_exist
+
+
+    def analyze_snapshots(self,vms_for_classroom):
+        for vmconfig in vms_for_classroom:
+            autoreset_snapshot_regex = vmconfig['reset_to_snapshot_regex']
+            vm_name = vmconfig["rhev_vm_name"]
+
+            vm = self.api.vms.get(vm_name)
+            if vm is None:
+                logging.info("VM {0} does not exist".format(vm_name))
+                continue
+
+            if vm.get_stateless():
+                logging.info("VM {0} is stateless.".format(vm_name))
+            else:
+                logging.info("VM {0} is not stateless.".format(vm_name))
+
+            snapshots = vm.snapshots.list()
+            logging.info("Snapshots of VM {0}: {1}.".format(
+                vm_name,
+                [s.description for s in snapshots]
+            ))
+            snapshots_matching_pattern = [
+                s.description for s in snapshots if re.search(autoreset_snapshot_regex, s.description)]
+            
+            logging.info("Snapshots of VM `{0}' that match pattern `{1}': `{2}'.".format(
+                vm_name,
+                autoreset_snapshot_regex.pattern,
+                snapshots_matching_pattern
+            ))
 
 
 
