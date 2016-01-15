@@ -173,6 +173,9 @@ def applyconfigdefaults(config, defaults):
 def escape_for_ovirt_query(query):
     return query.replace('_', '*')
 
+class Failure:
+    def __init__(self, msg):
+        self.msg = msg
 
 def get_valid_config_file(config_file):
     """
@@ -182,29 +185,20 @@ def get_valid_config_file(config_file):
     the path under CONFIG_FILE_SEARCH_PATH.
     """
 
-    if config_file is None or not os.path.exists(config_file):
-        config_file = os.path.expanduser(
-            constants.DEFAULT_CONFIGURATION_FILE_NAME
-        )
-        config_file_exists = False
-
-        for config_file in constants.CONFIG_FILE_SEARCH_PATH:
-
+    if config_file is not None:
+        if os.path.exists(config_file):
+            return config_file
+        else:
             config_file = os.path.expanduser(config_file)
-            config_file = os.path.abspath(config_file)
-
             if os.path.exists(config_file):
-                config_file_exists = True
-                break
+                return config_file
+            else:
+                raise Failure("Config file `{0}' does not exist.".format(config_file))
 
-        if not config_file_exists:
-            raise Exception(
-                "None of the given configuration files seem to exist"
-            )
+    for config_file in constants.CONFIG_FILE_SEARCH_PATH:
+            if os.path.exists(config_file):
+                os.stat(config_file)
+                return config_file
 
-        os.stat(config_file)
+    raise Failure("No config file specified on command line and no config file available at default locations.")
 
-        return config_file
-
-    else:
-        return config_file

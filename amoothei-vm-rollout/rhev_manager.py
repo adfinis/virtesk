@@ -37,10 +37,13 @@ import logging
 import logging.config
 import configobj
 import sys
+import argparse
+import textwrap
 
 # Project imports
 # import singletonmixin
 import rhev
+import utils
 import constants
 import mytemporary_directory as tmpdir
 
@@ -59,6 +62,40 @@ class RhevManager():
         self.initialize_logging()
 
         self.rhev_lib = rhev.rhev(self.base_configuration)
+
+    @staticmethod
+    def construct_from_cmdargs(description):
+        epilog = textwrap.dedent('''
+        The following config file locations are used, first match wins:
+            * Command line argument
+            * ~/.config/amoothei-vdi/amoothei-vm-rollout.conf
+            * /etc/amoothei-vdi/amoothei-vm-rollout.conf
+        ''')
+ 
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog=epilog, description=description)
+
+        parser.add_argument('--config', help="Absolute or relative path to configuration file.")
+
+        parser.add_argument(
+            'virtroom', help="virtual room to act on"
+        )
+
+        args = parser.parse_args()
+
+        config_file = utils.get_valid_config_file(
+            args.config
+        )
+
+        room = args.virtroom
+
+        # Initialize RHEV manager
+        rhev_manager = RhevManager(
+            config_file
+        )
+
+        return rhev_manager, room
 
     def cleanup(self):
         self.rhev_lib.cleanup()
