@@ -34,43 +34,24 @@ import traceback
 import argparse
 import logging
 import sys
+import textwrap
 
 # Project imports
-import rhev_manager as adsy_rhev_manager
-import utils as rhev_utils
+import rhev_manager
+import utils
 
 try:
-    # Commandline argument parsing
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--configfile',
-        help="Absolute or relative path to configuration file,\
-                e.g. '~/.config/adsy-rhev-tools.conf'.\
-                If not given the application tries to determine the path\
-                automatically."
-    )
+    description = """Reset a virtual room to snapshosts"""
 
-    parser.add_argument(
-        'classroom', help="classroom to roll out"
-    )
+    manager, room = rhev_manager.RhevManager.construct_from_cmdargs(description)
 
-    args = parser.parse_args()
+    manager.reset_classroom(room)
 
-    config_file = rhev_utils.get_valid_config_file(
-        args.configfile
-    )
-    classroom = args.classroom
+    manager.cleanup()
 
-    # Initialize RHEV manager
-    rhev_manager = adsy_rhev_manager.RhevManager(
-        config_file
-    )
-
-    rhev_manager.reset_classroom(classroom)
-
-    # Cleanup
-    rhev_manager.cleanup()
-
+except utils.Failure as f:
+    logging.error(f.msg)
+    sys.exit(-1)
 except Exception as ex:
     logging.exception("Unexpected error: {0}".format(ex))
     logging.exception(traceback.format_exc())
