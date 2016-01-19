@@ -1,7 +1,22 @@
+# amoothei-infrastructure-server.md
+# amoothei-tc-connectspice.md
+# amoothei-tc-kickstart.md
+# amoothei-tc-tools.md
+# amoothei-vm-rollout.md
+# Compatibility.md
+# DEPENDENCIES.md
+# index.md
+# libusbredir-patching.md
+# Makefile
+# sftp-floppy-upload.md
+# 
+
 site_name: Amoothei-VDI
 docs_dir: doc
 pages:
 - Overview: 'index.md'
+- 'VM rollout':
+        - 'VM rollout tools': amoothei-vm-rollout.md
 - Expert Topics:
         - 'Rollout Payload': 'sftp-floppy-upload.md'
         - 'amoothei-infrastructure-server.md'
