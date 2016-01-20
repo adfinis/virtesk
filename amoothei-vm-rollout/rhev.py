@@ -89,12 +89,9 @@ class rhev:
         try:
             self.logger = logging.getLogger(__name__)
 
-        except Exception, ex:
-            raise Exception(
-                'Unexpected error while initialize logging: {0}'.format(
-                    ex
-                )
-            )
+        except Exception as ex:
+            logging.error("Failed to initialize logging. Error details: `{}'".format(str(ex)))
+            sys.exit(-1)
 
     def get_configfile_absolutepath(self, filename):
         path = os.path.expanduser(filename)

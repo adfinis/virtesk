@@ -131,10 +131,7 @@ class RhevManager():
                 self.base_configuration['logging']['config_file']
             )
 
-            log_file = os.path.join(
-                os.getcwd(),
-                self.base_configuration['logging']['log_file']
-            )
+            log_file = self.base_configuration['logging']['log_file']
 
             logging.config.fileConfig(log_config_file, defaults={
                 'log_file':     log_file,
@@ -150,9 +147,8 @@ class RhevManager():
             )
 
         except Exception as ex:
-            raise Exception(
-                'Unexpected error while initialize logging: {0}'.format(ex)
-            )
+            logging.error("Failed to initialize logging. Logfile: `{0}'. Error details: `{1}'".format(log_file,ex))
+            sys.exit(-1)
 
     def cleanup_classroom(self, classroom):
         if not classroom:
