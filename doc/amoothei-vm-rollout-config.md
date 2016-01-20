@@ -187,14 +187,26 @@ Room definition:
 
 Numbering and naming:
 
-* **ids:** FIXME
-* **names:** FIXME
+* **ids:** List of IDs. Will be passed to `eval()`, e.g. this can be any valid python code.
+    + Every VM has an ID. This is required for computing VM names, IP Addresses, ...
+    + Example: `ids = "[1,2,3,4,5]"` - 5 VMs.
+    + Example: `ids = "range(1,5+1)" - same as `"[1,2,3,4,5]"`. Please dont forget the `+1`, because the python range()-function does not include the end itself in the list.
+    + Number of VM: `len(ids)`
+    + Requirement: IDs must be unique with the IDs-List itself. However, they don't need to be unique inside the room (different subsections can have the same IDs). Also, it is quite common to have the same set of IDs for different rooms.
+* **names:** Specifies the Ovirt names of the VMs, and also the Windows ComputerName that will be configured during the Autounattend phase.
+    + Examle: `names = "${roomname}-vd${id}"`
+    + Variable substitution: implemented using [Python template strings](https://docs.python.org/2/library/string.html#template-strings)
+    + Variable **roomname**: name of the virtual room
+    + Variable **id**: id of the VM. Padded to two digits.
 
 Network:
 
 * **network_name:** Name of Ovirt network to attach to VM.
-* **ip_adresses:** IP address to configure. This parameter is computed, but not used, by amoothei-vm-rollout. It can be used inside Autounattend.xml to configure a static IP adress. FIXME
-* **ip_adresses_suffix:** Suffix of the first VM. FIXME
+* **ip_adresses** and **ip_adresses_suffix:** Used to define IP addresses for the VMs. IPs are computed, but not used, by amoothei-vm-rollout. IPs can be used inside Autounattend.xml to configure static IP adresses for VMs.
+    + last IP octet = ip_adresses_suffix + id - 1
+    + IP = ip_adresses, with `$suffix` replaced by the last IP octet computed above.
+    + Example: `ids=[1,2,3,4]`, `ip_adresses=192.0.2.$suffix`, `ip_adresses_suffix=11` ===> VMs will get the IPs 192.0.2.11, 192.0.2.12, 192.0.2.13, 192.0.2.14.
+    + Example: `ids=[1,2,3,4]`, `ip_adresses=192.0.2.$suffix`, `ip_adresses_suffix=100` ===> VMs will get the IPs 192.0.2.100, 192.0.2.101, 192.0.2.102, 192.0.2.103.
 * **netmask_suffix:** Prefix length of network mask. Passed directly to Autounattend.xml.
     + `netmask_suffix=24` ===> same as netmask 255.255.255.0
     + `netmask_suffix=21` ===> same as netmask 255.255.248.0
