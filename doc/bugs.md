@@ -32,6 +32,6 @@ VMSnapshotCdroms object comparison caused infinite loop.
 2016-01-20 19:27:22,519 - root - DEBUG - Creating a snapshot(description: Automatic snapshot after amoothei-vmrollout, IP=XXXXXXXXXXXX, scripttime=2016-01-20-1853)  of vm test03-vd15... done
 ```
 
-Cause: unknown. Maybe a python problem with recursive object structures, like describe in (https://mail.python.org/pipermail/python-dev/2003-October/039445.html) ?
+Cause: unknown. Maybe a python phaenomen related to recursive object structures, like described in [https://mail.python.org/pipermail/python-dev/2003-October/039445.html](https://mail.python.org/pipermail/python-dev/2003-October/039445.html)?
 
 Impact: none, the VMs and the snapshots are created successfully.
