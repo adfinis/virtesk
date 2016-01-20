@@ -13,7 +13,7 @@ The script creates new VMs based on an existing Ovirt VM Template, and assings h
 
 The process is based on Windows Sysprep / Unattended.xml technologies.
 
-See also: [Compatibility](Compatibility.md)
+See also: [Compatibility](compatibility.md)
 
 ------------------
 

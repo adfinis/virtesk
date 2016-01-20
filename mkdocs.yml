@@ -8,8 +8,8 @@ pages:
         - 'Configuring virtual rooms': amoothei-vm-rollout-config.md
         - stateless_and_snapshot_features.md
         - 'Quality control after rollout': quality_control.md
-        - 'Windows Unattended Setup': Autounattend.md
-        - 'Windows Goldimage': Goldimage.md
+        - 'Windows Unattended Setup': autounattend.md
+        - 'Windows Goldimage': goldimage.md
 - 'Thinclients':
         - 'Setting up an infrastructure server for thinclients': amoothei-infrastructure-server.md
         - 'Rolling out Thinclients using Kickstart': amoothei-tc-kickstart.md
@@ -17,7 +17,7 @@ pages:
         - 'VDI software running on Thinclients': amoothei-tc-connectspice.md
         - 'USB Redirect: avoiding USB Reset': libusbredir-patching.md
 - 'Misc':
-        - Compatibility.md
+        - compatibility.md
         - 'Payload injection': sftp-floppy-upload.md
         - 'Workarounds': workaround_os.md
 
