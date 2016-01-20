@@ -1,5 +1,11 @@
-Introduction
-===============
+# USB Redirect: avoiding USB reset
+
+Solution to avoid problems that might occour when redirecting usb devices over spice.
+Only few devices are affected, most devices work without the patches below.
+
+---------------
+
+## Introduction
 Spice used libusbredir to redirect usb devices.
 
 Normally, a reset command is issued to the device before it is redirected.
@@ -14,14 +20,10 @@ Device: error resetting device: LIBUSB_ERROR_NOT_FOUND.
 
 By adding those devices to an internal blacklist of libusbredir, we can prevent usb reset
 for them. This way, amoothei-vdi can successfully redirect those devices. However, libusbredir
-must be patched on all thinclients.
+must be patched on all thinclients. The following steps explain how the patching is done.
 
-
-Patching libusbredir
-======================
-
-Setting up an rpm build environment
--------------------------------------
+----------------
+## Setting up an rpm build environment
 Build Machine: A test machine running the same fedora version as your thinclients.
 
 Installing build-tools:
@@ -55,8 +57,9 @@ The rpm command above will unpack the following files into your rpm build enviro
 * ~/rpmbuild/SOURCES/usbredir-0.7.tar.bz2
 * ~/rpmbuild/SPECS/usbredir.spec
 
-Patching usbredir
----------------------
+---------------
+
+## Patching libusbredir
 First, we add a patch file, then we tell rpmbuild to apply our patch before building the package.
 
 ~/rpmbuild/SOURCES/usbredir-blacklist.patch
@@ -120,8 +123,8 @@ Release:        99mypackage3%{?dist}
 ```
 
 
-Building the RPM:
-------------------
+--------------
+## Building the RPM package:
 ```
 rpmbuild -ba ~/rpmbuild/SPECS/usbredir.spec
 ```
@@ -132,8 +135,7 @@ Afterwards, the RPMs will be available at:
 ```
 
 
-Testing: Installing RPM manually:
-------------------------------------
+## Testing: Installing RPM manually:
 On a thinclient, run the following command:
 ```
 # dnf install usbredir-0.7-99mypackage3.fc22.x86_64.rpm
