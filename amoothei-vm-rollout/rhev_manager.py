@@ -207,6 +207,27 @@ class RhevManager():
             self.logger.info("Some VMs already exist. Please delete them before rollout")
             self.rhev_lib.analyze_snapshots(vms_for_classroom)
 
+    def start_all_vms_in_room(self,classroom):
+        self.logger.info("Starting VMs in Room... {0}".format(classroom))
+
+        # Get VMs for given classroom
+        vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+                    classroom)
+
+        for vmconfig in vms_for_classroom:
+            self.logger.debug(str(vmconfig))
+            self.rhev_lib.start_vm_if_possible(vmconfig)
+
+    def shutdown_all_vms_in_room(self,classroom):
+        self.logger.info("Shutting down VMs in Room... {0}".format(classroom))
+
+        # Get VMs for given classroom
+        vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
+                    classroom)
+
+        for vmconfig in vms_for_classroom:
+            self.logger.debug(str(vmconfig))
+            self.rhev_lib.shutdown_vm_if_possible(vmconfig)
 
 
     def rollout_classroom(self, classroom):

@@ -459,6 +459,30 @@ class rhev:
         vm = vmconfig['vm']
         vm.start()
 
+    def start_vm_if_possible(vmconfig):
+        vmname = vmconfig['rhev_vm_name']
+
+        vm = self.api.vms.get(vmname)
+        if vm is None:
+            logging.info("Not starting VM {0}. Reason: VM not found.".format(vmname))
+        elif vm.state.lower() == 'up':
+            logging.info("Not starting VM {0}. Reason: VM is already running".format(vmname))
+        else
+            logging.info("Starting VM {0}. Current VM state: `{1}'".format(vmname, vm.state))
+            vm.start()
+
+    def shutdown_vm_if_possible(vmconfig):
+        vmname = vmconfig['rhev_vm_name']
+
+        vm = self.api.vms.get(vmname)
+        if vm is None:
+            logging.info("Not shutting down VM {0}. Reason: VM not found.".format(vmname))
+        elif vm.state.lower() == 'down':
+            logging.info("Not shutting down VM {0}. Reason: VM isn't running.".format(vmname))
+        else
+            logging.info("Shutting down VM {0}. Current VM state: `{1}'".format(vmname, vm.state))
+            vm.shutdown()
+
     def postprocess_vm(self, vmconfig):
         # sync state from ovirt
         vmconfig['vm'] = self.api.vms.get(vmconfig['rhev_vm_name'])
