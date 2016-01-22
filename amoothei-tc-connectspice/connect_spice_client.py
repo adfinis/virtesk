@@ -455,20 +455,22 @@ class connect_spice_client:
     def collect_debug_information(self):
         # collects debug information to be shown in the support window.
 
-        result = "===========================================================\n"
-        result += "    Version\n"
-        result += "===========================================================\n"
         # FIXME: Needs a generic name
         envvariables = filter(
             lambda x: re.match('^CONNECT_SPICE_CLIENT_.*', x), os.environ.keys())
-        for envvariable in envvariables:
-            if envvariable in os.environ:
-                value = os.environ[envvariable]
-            else:
-                value = "(undef)"
-            result += "%s=%s\n" % (envvariable, value)
 
-        result += "\n\n"
+        if len(envvariables) > 0:
+            result = "===========================================================\n"
+            result += "    Version\n"
+            result += "===========================================================\n"
+            for envvariable in envvariables:
+                if envvariable in os.environ:
+                    value = os.environ[envvariable]
+                else:
+                    value = "(undef)"
+                result += "%s=%s\n" % (envvariable, value)
+
+            result += "\n\n"
 
         with open("/proc/self/cmdline", 'r') as f:
             self_process_cmdline = f.read()
