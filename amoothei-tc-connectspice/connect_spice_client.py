@@ -454,13 +454,14 @@ class connect_spice_client:
 
     def collect_debug_information(self):
         # collects debug information to be shown in the support window.
+        result=""
 
         # FIXME: Needs a generic name
         envvariables = filter(
             lambda x: re.match('^CONNECT_SPICE_CLIENT_.*', x), os.environ.keys())
 
         if len(envvariables) > 0:
-            result = "===========================================================\n"
+            result += "===========================================================\n"
             result += "    Version\n"
             result += "===========================================================\n"
             for envvariable in envvariables:
