@@ -98,8 +98,7 @@ class connect_spice_client:
                 cur = conn.cursor()
 
                 # Query the database and obtain data as Python objects
-                cur.execute(
-                    "SELECT vm, thinclient, prio, id FROM thinclient_everything_view WHERE dhcp_hostname = ANY (%s) OR systemuuid = ANY (%s);", (dhcp_hostnames, sys_uuids))
+                cur.execute("SELECT vm, thinclient, prio, id, shutdown_vm FROM thinclient_everything_view WHERE dhcp_hostname = ANY (%s) OR systemuuid = ANY (%s);", (dhcp_hostnames, sys_uuids))
 
                 results = cur.fetchall()
 
@@ -110,13 +109,15 @@ class connect_spice_client:
                     raise AssertionFailedException(
                         "Es konnte keine passende VM für diesen Thinclient gefunden werden.")
 
-                vm_name = results[0][0]
-                vm = self.api.vms.get(vm_name)
-                self.vm = vm
+                self.vm_name = results[0][0]
+                self.shutdown_vm = results[0][4]
+
+                self.vm = self.api.vms.get(self.vm_name)
+
                 if self.vm is None:
                     raise AssertionFailedException(
                         "Es konnte keine passende VM für diesen Thinclient gefunden werden.")
-                return vm
+                return self.vm
 
             except Exception as ex:
                 if ex.message is not None and ex.message.startswith("timeout expired"):
@@ -124,6 +125,7 @@ class connect_spice_client:
                     continue
                 else:
                     raise ex
+
 
     def prepare_vm(self):
         # A spice-connection can only be established when the VM is running
@@ -585,6 +587,31 @@ class connect_spice_client:
 
         self.execute_spice_client_program()
 
+    def shutdown_vm_action_sequence(self):
+        try:
+                self.parse_arguments()
+
+                self.read_config_file()
+
+                self.adjust_logging()
+
+                logging.info("Auto-Shutdown program started...")
+
+                self.wait_for_dhcp_lease()
+
+                self.connect_to_rest_api()
+
+                self.get_vm_from_db()
+
+                if self.vm is not None and self.shutdown_vm:
+                        logging.info("Auto-Shutdown VM `{0}'".format(self.vm_name))
+                        self.vm.shutdown()
+                else:
+                        logging.info("No Auto-Shutdown.")
+        except Exception as ex:
+                logging.info("Auto-Shutdown failed: `{0}'".format(ex))
+
+
     def __init__(self):
         self.api = None
         self.vm = None
@@ -754,6 +781,3 @@ class NetworkError(RetryException):
     pass
 
 
-if __name__ == "__main__":
-    # logging.basicConfig(level=logging.DEBUG)
-    connect_spice_client().main()
