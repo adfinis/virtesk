@@ -216,6 +216,8 @@ class RhevManager():
 
         for vmconfig in vms_for_classroom:
             self.logger.debug(str(vmconfig))
+
+        for vmconfig in vms_for_classroom:
             self.rhev_lib.start_vm_if_possible(vmconfig)
 
     def shutdown_all_vms_in_room(self,classroom):
@@ -227,6 +229,8 @@ class RhevManager():
 
         for vmconfig in vms_for_classroom:
             self.logger.debug(str(vmconfig))
+
+        for vmconfig in vms_for_classroom:
             self.rhev_lib.shutdown_vm_if_possible(vmconfig)
 
 
