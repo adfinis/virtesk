@@ -95,7 +95,7 @@ When manageing alot of virtual rooms, bash features can be handy:
 ```
 for room in room{01..10}; do amoothei-virtroom-show $room; done
 for room in room01 room02 room03; do amoothei-virtroom-show $room; done
-for room in $(cat room-list.txt) do amoothei-virtroom-show $room; done
+for room in $(cat room-list.txt); do amoothei-virtroom-show $room; done
 ```
 
 ## See also
