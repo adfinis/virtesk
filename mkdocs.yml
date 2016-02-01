@@ -2,7 +2,7 @@ site_name: Amoothei-VDI
 docs_dir: doc
 pages:
 - Overview: 'index.md'
-- 'VM rollout':
+- 'Virtual Rooms':
         - 'VM rollout tools': amoothei-vm-rollout.md
         - 'Installing amoothei-vm-rollout': amoothei-vm-rollout-install.md
         - 'Configuring virtual rooms': amoothei-vm-rollout-config.md
@@ -10,6 +10,7 @@ pages:
         - 'Quality control after rollout': quality_control.md
         - 'Windows Unattended Setup': autounattend.md
         - 'Windows Goldimage': goldimage.md
+        - 'Start and Stop Management': start-and-stop-management.md
 - 'Thinclients':
         - 'Setting up an infrastructure server for thinclients': amoothei-infrastructure-server.md
         - 'Rolling out Thinclients using Kickstart': amoothei-tc-kickstart.md

@@ -56,6 +56,24 @@ How it works:
 
 Reset to snapshot state is not supported for stateless VMs.
 
+### amoothei-virtroom-start
+Starts all VMs in a virtual room.
+
+Details:
+
+* Ignores already running VMs
+* No validation is done - returns as soon as the start signal has been sent to all VMs. Does not wait for the VMs to launch.
+
+### amoothei-virtroom-shutdown
+Shut down all VMs in a virtual room.
+
+Details:
+
+* Clean shutdown: A signal (ACPI shutdown or guest agent shutdown) is sent to the operating system of the VM. 
+Assumes that ACPI daemon and/or guest agent is properly configured inside the VM and that the VM does a clean shutdown when told to do so.
+* Ignores already stopped VMs
+* No validation is done - returns as soon as the shutdown signal has been sent to all VMs. Does not wait for the VMs to shut down.
+
 ## Usage
 ```bash
 amoothei-virtroom-show [--config CONFIG] myroom
