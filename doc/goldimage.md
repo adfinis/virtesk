@@ -1,6 +1,6 @@
 # Windows Goldimage
 
-How to create and seal a windows goldimage and use it as a RHEV/Ovirt VmTemplate
+How to create and seal a windows goldimage and use it as a RHEV/Ovirt VmTemplate.
 
 -------------------------------------------------
 
