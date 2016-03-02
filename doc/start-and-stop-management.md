@@ -7,6 +7,8 @@
 
 Running VMs do consume ressources, in particular memory. This article describes start/stop behavior and ways to save ressources by shutting down unused VMs.
 
+This article was written with Ovirt 3.4/3.5 in mind. Ovirt 3.6 introduces new features for shutting down VMs upon spice disconnect. Those features can be used as an alternative to the approach described here.
+
 ## Start/Stop behaviour
 ### Thinclients startup: VM auto-launch
 Whenever a TC is started, it checks if the assigned VM is already running. If not, it is started automatically.
