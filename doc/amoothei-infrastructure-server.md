@@ -467,8 +467,30 @@ systemctl start xinetd.service
 ``` 
 
 
-### Make amoothei thinclient software available
-FIXME
+### Making the kickstart file and the amoothei thinclient software available
+```
+mkdir -p /var/www/mirror/private/thinclients/kickstart/
+cp sample_config/tc_rollout.ks /var/www/mirror/private/thinclients/kickstart/
+```
+
+Then adapt the kickstart file to your environment as described [here](amoothei-tc-kickstart.md)
+
+```
+git checkout url-of-amoothei-vdi.src
+cd amoothei-vdi.src/amoothei-tc-connectspice
+make release
+```
+
+This will put the software into a tarball located at: `/var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz`
+
+Afterwards, copy it to the location used by wget in the kickstart-post-section:
+
+```
+cp -f /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz \
+   /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client.tar.gz
+```
+
+
 
 
 ### Setting up a remote syslog server
