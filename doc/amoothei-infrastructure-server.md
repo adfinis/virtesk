@@ -467,6 +467,10 @@ systemctl start xinetd.service
 ``` 
 
 
+### Make amoothei thinclient software available
+FIXME
+
+
 ### Setting up a remote syslog server
 The thinclients use our infrastructure server for remote logging,
 both during kickstart installation and normal operation.
