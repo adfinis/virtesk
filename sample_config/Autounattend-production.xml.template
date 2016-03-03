@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <UserData>
+                <ProductKey>
+                    <Key></Key>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <!--<FullName></FullName> -->
+                <Organization>MyOrganization</Organization>
+            </UserData>
+            <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
+            <!--
+            <ImageInstall>
+                <OSImage>
+                    <InstallToAvailablePartition>true</InstallToAvailablePartition>
+                </OSImage>
+            </ImageInstall>
+            -->
+        </component>
+        <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <DomainProfile_EnableFirewall>false</DomainProfile_EnableFirewall>
+                <PrivateProfile_EnableFirewall>false</PrivateProfile_EnableFirewall>
+                <PublicProfile_EnableFirewall>false</PublicProfile_EnableFirewall>
+        </component>
+        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SetupUILanguage>
+                <UILanguage>807:00000807</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>807:00000807</InputLocale>
+            <SystemLocale>807:00000807</SystemLocale>
+            <UILanguage>de-DE</UILanguage>
+            <UILanguageFallback>de-CH</UILanguageFallback>
+            <UserLocale>de-CH</UserLocale>
+        </component>
+       </settings>
+    <settings pass="specialize">
+       <component name="Microsoft-Windows-TCPIP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Interfaces>
+                <Interface wcm:action="add">
+                    <Identifier>LAN-Verbindung</Identifier>
+                    <Ipv4Settings>
+                        <DhcpEnabled>false</DhcpEnabled>
+                        <Metric>10</Metric>
+                        <RouterDiscoveryEnabled>false</RouterDiscoveryEnabled>
+                    </Ipv4Settings>
+                    <UnicastIpAddresses>
+                        <IpAddress wcm:action="add" wcm:keyValue="1">${ip}/${netmask_as_suffix}</IpAddress>
+                    </UnicastIpAddresses>
+                    <Routes>
+                        <Route wcm:action="add">
+                            <Identifier>0</Identifier>
+                            <NextHopAddress>${default_gw}</NextHopAddress>
+                            <Prefix>0.0.0.0/0</Prefix>
+                        </Route>
+                    </Routes>
+                </Interface>
+            </Interfaces>
+        </component>
+      <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS">
+              <Interfaces>
+                    <Interface wcm:action="add">
+                            <Identifier>LAN-Verbindung</Identifier>
+                                <DNSServerSearchOrder>
+                                      <IpAddress wcm:action="add" wcm:keyValue="1">192.0.2.220</IpAddress>
+                                </DNSServerSearchOrder>
+                                <DisableDynamicUpdate>false</DisableDynamicUpdate>
+                                <EnableAdapterDomainNameRegistration>true</EnableAdapterDomainNameRegistration>
+                                <DNSDomain>your-dns-domain.tld</DNSDomain>
+                    </Interface>
+                </Interfaces>
+       </component>
+       <component name="Microsoft-Windows-NetBT" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral"
+                        versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <Interfaces>
+                                <Interface wcm:action="add">
+                                <NameServerList>
+                                        <IpAddress wcm:action="add" wcm:keyValue="1">192.0.2.220</IpAddress>
+                                </NameServerList>
+                                <Identifier>LAN-Verbindung</Identifier>
+                                <NetbiosOptions>1</NetbiosOptions>
+                                </Interface>
+                        </Interfaces>
+        </component>
+	<component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+           <EnableLUA>false</EnableLUA>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Display>
+                <ColorDepth>32</ColorDepth>
+                <DPI>96</DPI>
+                <HorizontalResolution>1920</HorizontalResolution>
+                <RefreshRate>75</RefreshRate>
+                <VerticalResolution>1080</VerticalResolution>
+            </Display>
+            <ComputerName>${ComputerName}</ComputerName>
+            <TimeZone>W. Europe Standard Time</TimeZone>
+        </component>
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>de-CH</InputLocale>
+            <UserLocale>de-CH</UserLocale>
+            <SystemLocale>de-CH</SystemLocale>
+            <UILanguage>de-CH</UILanguage>
+        </component>
+
+	<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>w32tm /config  /manualpeerlist:192.0.2.221 /syncfromflags:MANUAL</Path>
+                    <Order>1</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>w32tm /resync</Path>
+                    <Order>2</Order>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Path>w32tm /query /peers</Path>
+                    <Order>3</Order>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+
+
+
+        <component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Identification>
+                <Credentials>
+                    <Domain>YOUR-ACTIVEDIRECTORY-DOMAIN</Domain>
+		    <Username>Administrator4Domainjoins</Username>
+                    <Password>PASSWORD</Password>
+                </Credentials>
+                <JoinDomain>YOUR-ACTIVEDIRECTORY-DOMAIN</JoinDomain>
+            </Identification>
+        </component>
+    </settings>
+
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>807:00000807</InputLocale>
+            <SystemLocale>de-CH</SystemLocale>
+            <UILanguage>de-DE</UILanguage>
+            <UILanguageFallback>de-CH</UILanguageFallback>
+            <UserLocale>de-CH</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Sidebar" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                  <SidebarOnByDefault>false</SidebarOnByDefault>
+                  <SidebarVisible>false</SidebarVisible>
+        </component>
+        <component name="Security-Malware-Windows-Defender" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <DisableAntiSpyware>true</DisableAntiSpyware>
+        </component>
+
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OOBE>
+                <ProtectYourPC>3</ProtectYourPC>
+                <NetworkLocation>Work</NetworkLocation>
+                <HideEULAPage>true</HideEULAPage>
+                <SkipMachineOOBE>true</SkipMachineOOBE>
+                <SkipUserOOBE>true</SkipUserOOBE>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+            </OOBE>
+             <OEMInformation>
+                <HelpCustomized>true</HelpCustomized>
+                <Manufacturer>MyManufacturer</Manufacturer>
+                <Model>MyModel</Model>
+                <SupportHours>5x8</SupportHours>
+                <SupportPhone></SupportPhone>
+                <SupportURL>http://mysupportURL/</SupportURL>
+            </OEMInformation>
+            <RegisteredOwner>MyOwner</RegisteredOwner>
+            <RegisteredOrganization>MyOrganization</RegisteredOrganization>
+            <AutoLogon>
+                    <Password>
+                            <Value>PASSWORD</Value>
+                    </Password>
+                <Username>Administrator</Username>
+                <Enabled>true</Enabled>
+                <LogonCount>1</LogonCount>
+            </AutoLogon>
+            <UserAccounts>
+                <AdministratorPassword>
+                    <Value>PASSWORD</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" /v "DisablePasswordChange" /t REG_DWORD /d 1 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>1</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" /v "MaximumPasswordAge" /t REG_DWORD /d 1000000 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>2</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" /v "update" /t REG_SZ /d "no" /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>3</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>4</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations" /v LowRiskFileTypes /t REG_EXPAND_SZ /d ".exe;.bat;.cmd;.reg;.vbs" /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>5</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKU\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations" /v LowRiskFileTypes /t REG_EXPAND_SZ /d ".exe;.bat;.cmd;.reg;.vbs" /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>6</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\FirstNetwork" /v Category /t REG_DWORD /d 00000001 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>7</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>8</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /v AutoReboot /t REG_DWORD /d 0 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>9</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\TCPIP\Parameters" /v DisableTaskOffload /t REG_DWORD /d 1 /f</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>10</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>net use Y: \\someserver\scriptshare /persistent:no /user:username@windowsdomain password</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>20</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>cmd /c Y:\autounattend-firstlogon.cmd ${scripttime} ${ComputerName} 1> C:\autounattend-firstlogon.log 2>&1 </CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>21</Order>
+                </SynchronousCommand>
+
+                <!-- Do not delete next item -->
+                <SynchronousCommand wcm:action="add">
+                     <CommandLine>shutdown /p</CommandLine>
+                     <RequiresUserInput>false</RequiresUserInput>
+                     <Order>50</Order>
+                </SynchronousCommand>
+
+
+            </FirstLogonCommands>
+       </component>
+    </settings>
+</unattend>
+
