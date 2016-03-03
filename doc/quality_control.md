@@ -3,7 +3,7 @@
 ---------------------------------------
 
 ## Introduction
-Alot of problems can occour during Windows Unattended Setup:
+A lot of problems can occour during Windows Unattended Setup:
 
 * Network, DNS, DHCP, Firewall-Problems
 * Network adapter: wrong name, wrong Windows-Firewall-Zone, ...

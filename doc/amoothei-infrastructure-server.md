@@ -1,5 +1,9 @@
-Introduction
-==============
+# Amoothei-VDI: infrastructure server
+
+
+---------------------------------------------
+
+## Introduction
 A lot of infrastructure services are needed for VDI:
 
 * TFTP / HTTP / NFS4 for thinclients:
@@ -23,8 +27,7 @@ This article explains how to set up an infrastructure server based on EL 7
 hosting all those services.
 
 
-Enterprise Linux 7 installation
-===============================
+## Enterprise Linux 7 installation
 Normal RHEL 7 / CentOS 7 / Scientific Linux 7 installation, as documented here: 
 https://access.redhat.com/documentation/en/red-hat-enterprise-linux/
     
@@ -54,8 +57,7 @@ file systems on seperate logical volumes:
 | /var/www/mirror        | 68 GB      | more for mirroring more than one distribution |
 
 
-Installing and configuring services
-===================================
+## Installing and configuring services
 
 Additional repositories and standard packets:
  
@@ -160,74 +162,19 @@ subnet 10.0.0.0 netmask 255.255.255.0 {
   class "pxeclients" {
       match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
       next-server 10.0.0.1;
+      filename "pxelinux/pxelinux.0";
 
-      if option architecture-type = 00:07 {
-        filename "uefi/shim.efi";
-      } else {
-        filename "pxelinux/pxelinux.0";
-      }
-  }
+##	if you really wanna do EFI, try something like this:
+#       if option architecture-type = 00:07 {
+#         filename "uefi/shim.efi";
+#       } else {
+#         filename "pxelinux/pxelinux.0";
+#       }
+   }
 }
 ```
 
 Please make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
-
-#### Setting up boot files
-We do want our network bootloader to be accessible by both TFTP (for PXE) 
-and HTTP (for advanced network boatloaders like iPXE). 
-
-However, existing SELinux rules makes it difficult for httpd to access the
-files in the standard location /var/lib/tftpboot/ .
-
-So we create a new directory, /srv/tftpboot/ , and we adjust SELinux rules to
-make sure that both in.tftpd and httpd are able to access it:
-
-```
-yum install syslinux-tftpboot policycoreutils-python-2.2.5-15
-
-mkdir -p /srv/tftpboot/pxelinux
-cp -r /var/lib/tftpboot/* /srv/tftpboot/pxelinux/
-
-semanage fcontext -a -t public_content_t '/srv/tftpboot(/.*)?'
-restorecon -r /srv/tftpboot/
-```
-
-FIXME: setting up Fedora kernel/initrd, pxelinux config, ..
-
-#### Setting up in.tftpd
-```
-yum install tftp-server
-``` 
-
-/etc/xinetd.d/tftp:
-
-``` 
-# default: off
-# description: The tftp server serves files using the trivial file transfer \
-#	protocol.  The tftp protocol is often used to boot diskless \
-#	workstations, download configuration files to network-aware printers, \
-#	and to start the installation process for some operating systems.
-service tftp
-{
-	socket_type		= dgram
-	protocol		= udp
-	wait			= yes
-	user			= root
-	server			= /usr/sbin/in.tftpd
-	server_args		= -v -s /srv/tftpboot/
-	disable			= no
-	per_source		= 11
-	cps			= 100 2
-	flags			= IPv4
-}
-``` 
-
-Enabling and starting xinetd service:
-
-``` 
-systemctl enable xinetd.service
-systemctl start xinetd.service
-``` 
 
 #### Setting up httpd
 FIXME
@@ -307,6 +254,218 @@ createrepo --workers=10 -g comps.xml .
 cd /var/www/mirror/public/fedora/fedora22-updates
 createrepo --workers=10 -g comps.xml .
 ``` 
+
+#### Fedora 22 installation tree
+We need to setup a bootable fedora installation tree. We are gonna use an official
+Fedora DVD image to archive this.
+
+We recommend to use the "Fedora Server"-Spin.
+
+Download a Fedora Installation ISO, mount it loopback, and copy all files:
+``` 
+mount Fedora-Server-DVD-x86_64-22.iso /mnt -o loop
+mkdir -p /var/www/mirror/public/fedora/Fedora-Server-DVD-x86_64-22_ISO/
+rsync -avAHSr /mnt/ /var/www/mirror/public/fedora/Fedora-Server-DVD-x86_64-22_ISO/
+umount /mnt
+``` 
+
+Remark: Please make sure that hidden files (starting with a dot) are copied as well.
+
+
+#### Setting up boot files
+We do want our network bootloader to be accessible by both TFTP (for PXE) 
+and HTTP (for advanced network boatloaders like iPXE). 
+
+However, existing SELinux rules makes it difficult for httpd to access the
+files in the standard location /var/lib/tftpboot/ .
+
+So we create a new directory, /srv/tftpboot/ , and we adjust SELinux rules to
+make sure that both in.tftpd and httpd are able to access it:
+
+```
+yum install syslinux-tftpboot policycoreutils-python-2.2.5-15
+
+mkdir -p /srv/tftpboot/pxelinux
+cp -r /var/lib/tftpboot/* /srv/tftpboot/pxelinux/
+
+semanage fcontext -a -t public_content_t '/srv/tftpboot(/.*)?'
+restorecon -r /srv/tftpboot/
+```
+
+Example: PXE File layout:
+```
+ls -lR /srv/tftpboot/
+/srv/tftpboot/:
+total 4
+lrwxrwxrwx. 1 root root   47 Sep 22 18:18 fedora22-x86_64-pxeboot -> /srv/tftpboot/pxelinux/fedora22-x86_64-pxeboot/
+lrwxrwxrwx. 1 root root   27 Sep 22 17:55 img -> /srv/tftpboot/pxelinux/img/
+drwxr-xr-x. 5 root root 4096 Sep 22 18:16 pxelinux
+lrwxrwxrwx. 1 root root   35 Sep 22 17:55 pxelinux.cfg -> /srv/tftpboot/pxelinux/pxelinux.cfg
+
+/srv/tftpboot/pxelinux:
+total 1464
+-rw-r--r--. 1 root root   5696 Sep 22 17:14 cat.c32
+-rw-r--r--. 1 root root  20832 Sep 22 17:14 chain.c32
+-rw-r--r--. 1 root root    800 Sep 22 17:14 cmd.c32
+-rw-r--r--. 1 root root   4620 Sep 22 17:14 config.c32
+-rw-r--r--. 1 root root   5388 Sep 22 17:14 cpuid.c32
+-rw-r--r--. 1 root root  15064 Sep 22 17:14 cpuidtest.c32
+-rw-r--r--. 1 root root   5132 Sep 22 17:14 disk.c32
+-rw-r--r--. 1 root root  35736 Sep 22 17:14 dmitest.c32
+-rw-r--r--. 1 root root  27984 Sep 22 17:14 elf.c32
+-rw-r--r--. 1 root root  28368 Sep 22 17:14 ethersel.c32
+drwxr-xr-x. 2 root root   4096 Sep 22 18:17 fedora22-x86_64-pxeboot
+-rw-r--r--. 1 root root  21436 Sep 22 17:14 gfxboot.c32
+-rw-r--r--. 1 root root   2320 Sep 22 17:14 gpxecmd.c32
+-rw-r--r--. 1 root root  89476 Sep 22 17:14 gpxelinux.0
+-rw-r--r--. 1 root root 341172 Sep 22 17:14 hdt.c32
+-rw-r--r--. 1 root root   4236 Sep 22 17:14 host.c32
+-rw-r--r--. 1 root root   1312 Sep 22 17:14 ifcpu64.c32
+-rw-r--r--. 1 root root  19680 Sep 22 17:14 ifcpu.c32
+-rw-r--r--. 1 root root   2444 Sep 22 17:14 ifplop.c32
+drwxr-xr-x. 2 root root   4096 Sep 22 17:54 img
+-rw-r--r--. 1 root root     55 Sep 22 17:14 int18.com
+-rw-r--r--. 1 root root   5084 Sep 22 17:14 kbdmap.c32
+-rw-r--r--. 1 root root  16232 Sep 22 17:14 linux.c32
+-rw-r--r--. 1 root root   9132 Sep 22 17:14 ls.c32
+-rw-r--r--. 1 root root 246988 Sep 22 17:14 lua.c32
+-rw-r--r--. 1 root root  33756 Sep 22 17:14 mboot.c32
+-rw-r--r--. 1 root root  26268 Sep 22 17:14 memdisk
+-rw-r--r--. 1 root root   6168 Sep 22 17:14 memdump.com
+-rw-r--r--. 1 root root   4916 Sep 22 17:14 meminfo.c32
+-rw-r--r--. 1 root root  55140 Sep 22 17:14 menu.c32
+-rw-r--r--. 1 root root  32100 Sep 22 17:14 pcitest.c32
+-rw-r--r--. 1 root root  12764 Sep 22 17:14 pmload.c32
+-rw-r--r--. 1 root root    239 Sep 22 17:14 poweroff.com
+-rw-r--r--. 1 root root   1932 Sep 22 17:14 pwd.c32
+-rw-r--r--. 1 root root    998 Sep 22 17:14 pxechain.com
+-rw-r--r--. 1 root root  26771 Sep 22 17:14 pxelinux.0
+drwxr-xr-x. 2 root root   4096 Feb 29 18:46 pxelinux.cfg
+-rw-r--r--. 1 root root    800 Sep 22 17:14 reboot.c32
+-rw-r--r--. 1 root root  21000 Sep 22 17:14 rosh.c32
+-rw-r--r--. 1 root root   2448 Sep 22 17:14 sanboot.c32
+-rw-r--r--. 1 root root  25808 Sep 22 17:14 sdi.c32
+-rw-r--r--. 1 root root  40688 Sep 22 17:14 sysdump.c32
+-rw-r--r--. 1 root root   1300 Sep 22 17:14 ver.com
+-rw-r--r--. 1 root root   5004 Sep 22 17:14 vesainfo.c32
+-rw-r--r--. 1 root root 153104 Sep 22 17:14 vesamenu.c32
+-rw-r--r--. 1 root root   5924 Sep 22 17:14 vpdtest.c32
+-rw-r--r--. 1 root root   2832 Sep 22 17:14 whichsys.c32
+-rw-r--r--. 1 root root   9360 Sep 22 17:14 zzjson.c32
+
+/srv/tftpboot/pxelinux/fedora22-x86_64-pxeboot:
+total 49344
+-rw-r--r--. 1 root root 44628936 Sep 22 18:17 initrd.img
+-rwxr-xr-x. 1 root root  5897400 Sep 22 18:16 vmlinuz
+
+/srv/tftpboot/pxelinux/img:
+total 8
+-rw-r--r--. 1 root root 4705 Sep 22 17:52 splash_amoothei_vdi.png
+
+/srv/tftpboot/pxelinux/pxelinux.cfg:
+total 4
+-rw-r--r--. 1 root root 2824 Feb 29 18:46 default
+```
+
+Fedora installer: kernel + initramfs:
+```
+mkdir -p /srv/tftpboot/pxelinux/fedora22-x86_64-pxeboot
+
+cp /var/www/mirror/public/fedora/Fedora-Server-DVD-x86_64-22_ISO/isolinux/{vmlinuz,initrd.img} \
+	/srv/tftpboot/pxelinux/fedora22-x86_64-pxeboot/
+
+ln -s /srv/tftpboot/pxelinux/fedora22-x86_64-pxeboot/ /srv/tftpboot/
+```
+
+PXE Linux Config file, boot menu:
+```
+mkdir -p /srv/tftpboot/pxelinux/pxelinux.cfg
+ln -s /srv/tftpboot/pxelinux/pxelinux.cfg /srv/tftpboot/
+vim /srv/tftpboot/pxelinux/pxelinux.cfg/default
+```
+
+/srv/tftpboot/pxelinux/pxelinux.cfg/default
+```
+default vesamenu.c32
+PROMPT 0
+TIMEOUT 800
+
+MENU BACKGROUND img/splash_amoothei_vdi.png
+MENU TITLE Amoothei-VDI Thinclient Rollout
+MENU VSHIFT 5
+MENU ROWS 10
+MENU TABMSGROW 15
+MENU TABMSG Please choose
+MENU HELPMSGROW 17
+MENU HELPMSGENDROW -3
+MENU MARGIN 8
+
+MENU COLOR title        * #FF5255FF *
+MENU COLOR border       * #00000000 #00000000 none
+MENU COLOR sel          * #ffffffff #FF5255FF *
+
+
+label bootlocal
+ menu label Boot from local hard drive
+ menu default
+ localboot 0
+ timeout 6000
+ text help
+ Boot from local hard drive
+ endtext
+ 
+label fedora22-x86_64-ks
+ menu label Amoothei-VDI Thinclient Rollout - DELETES EVERYTHING
+ text help
+ Kickstart Fedora22-x86_64
+ * Will ERASE all data on local hard drives and on USB flash drives
+ * Fully automated Fedora 22 installation
+ * Post-Install: Setting up Amoothei-VDI Thinclient Software
+ * Post-Install: Desktop-Lockdown
+ endtext
+  kernel fedora22-x86_64-pxeboot/vmlinuz
+  append initrd=fedora22-x86_64-pxeboot/initrd.img enforcing=0 net.ifnames=0 inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_rollout.ks
+```
+
+Please adjust the kernel parameter `inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_rollout.ks` to make sure it points to the correct loation.
+
+See also: [Kickstart](amoothei-tc-kickstart.md)
+
+#### Setting up in.tftpd
+```
+yum install tftp-server
+``` 
+
+/etc/xinetd.d/tftp:
+
+``` 
+# default: off
+# description: The tftp server serves files using the trivial file transfer \
+#	protocol.  The tftp protocol is often used to boot diskless \
+#	workstations, download configuration files to network-aware printers, \
+#	and to start the installation process for some operating systems.
+service tftp
+{
+	socket_type             = dgram
+	protocol                = udp
+	wait                    = yes
+	user                    = root
+	server                  = /usr/sbin/in.tftpd
+	server_args             = -v -s /srv/tftpboot/
+	disable                 = no
+	per_source              = 11
+	cps                     = 100 2
+	flags                   = IPv4
+}
+``` 
+
+Enabling and starting xinetd service:
+
+``` 
+systemctl enable xinetd.service
+systemctl start xinetd.service
+``` 
+
 
 ### Setting up a remote syslog server
 The thinclients use our infrastructure server for remote logging,
@@ -446,8 +605,10 @@ This line allows password-based authentication, protected with TLS/SSL, from eve
 Restart your database to let the changes take effect.
 
 #### Create database layout for amoothei-vdi:
-FIXME
+Proceed here:
 
+* [Database layout](dblayout.md)
+* [Thinclient - VM mapping](tc-vm-mapping.md)
 
 #### Accessing database
 There are alot of postgres shells, both console shells and graphical tools.
@@ -457,8 +618,7 @@ For console access, we do recommend ```psql```, for GUI access we do recommend `
 A list of postgres shells / tools can be found here:
 https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
 
-Troubleshooting
-===============
+## Troubleshooting
 
 ### TFTP
 Logfiles:
