@@ -17,7 +17,6 @@ pages:
         - 'Managing Thinclients': amoothei-tc-tools.md
         - 'VDI software running on Thinclients': amoothei-tc-connectspice.md
         - 'USB Redirect: avoiding USB Reset': libusbredir-patching.md
-        - 'Database layout': dblayout.md
         - 'Thinclient to VM mapping': tc-vm-mapping.md
 - 'Misc':
         - compatibility.md
