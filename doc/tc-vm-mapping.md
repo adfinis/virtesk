@@ -111,5 +111,5 @@ one view to connect them all and using Spice to bind them."_
 
 All information in the other tables and views is condensed in this one big view, ready for use by amoothei-tc-connectspice.
 
-See also: [Thinclient perspective: SQL Query](dblayout.md#thinclient-perspective-sql-query)
+See also: [Thinclient perspective: SQL Query](#thinclient-perspective-sql-query)
 
