@@ -676,8 +676,16 @@ This line allows password-based authentication, protected with TLS/SSL, from eve
 
 Restart your database to let the changes take effect.
 
-### Create database layout for amoothei-vdi:
-Proceed here:
+### Import sample database layout
+A sample database layout is provided in `sample_config/database-layout.sql`. Please edit the [thinclient dns domain](dblayout.md#thinclient-dns-domain) before importing the database layout.
+
+```
+su - postgres
+psql --single-transaction vdi < sample_config/database-layout.sql 
+exit
+```
+
+See also:
 
 * [Database layout](dblayout.md)
 * [Thinclient - VM mapping](tc-vm-mapping.md)
