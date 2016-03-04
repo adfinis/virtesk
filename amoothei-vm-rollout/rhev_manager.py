@@ -135,7 +135,7 @@ class RhevManager():
 
             logging.config.fileConfig(log_config_file, defaults={
                 'log_file':     log_file,
-                'file_mode':    'w'
+                'file_mode':    'a'
             })
 
             self.logger = logging.getLogger(__name__)
