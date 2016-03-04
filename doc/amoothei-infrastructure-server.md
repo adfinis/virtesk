@@ -57,7 +57,7 @@ file systems on seperate logical volumes:
 | /var/www/mirror        | 68 GB      | more for mirroring more than one distribution |
 
 
-## Installing and configuring services
+## Repositories and packages
 
 Additional repositories and standard packets:
  
@@ -73,7 +73,7 @@ yum install atd openssh-clients openssh-server bzip2 mc tcpdump iptraf vim \
 
 ```
 
-### Firewall
+## Firewall
 Firewalling is explained in [RHEL7 security guide, chapter 4.5: Using Firewalls][0].
 
 [0]: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html
@@ -103,7 +103,7 @@ firewall-cmd --reload
 For NFS, additional changes might be necessary.
 
  
-### NFS Server
+## NFS Server
 Installing and starting nfs server:
 
 ```
@@ -129,57 +129,56 @@ Apply with:
     exportfs -a
 ```
 
-### Network boot
-#### legacy bios versus UEFI
-This guide has only been tested with legacy bios. UEFI Thinclients should work fine
-as long as the compatibility mode / legacy mode of UEFI is used.
-
-EFI installation of TCs has not been implemented and is not supported. This feature could be engineered, but so far there hasn't been any need for it.
-
-#### Setting up dhcp service
-We assume that there is already an existing dhcp service, so there is no
-need to install a new one.
-
-Configure your existing dhcp server to allow PXE boot from our infrastructure
-server. Instructions for that can be found in the [RHEL7 Installation Guide, Chapter 21, Preparing for a Network Installation][1]
-
-[1]: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Installation_Guide/chap-installation-server-setup.html
-
-Example configuration of isc-dhcp-server:
-
+## Apache Webserver
+Installing Apache:
 ```
-option space pxelinux;
-option pxelinux.magic code 208 = string;
-option pxelinux.configfile code 209 = text;
-option pxelinux.pathprefix code 210 = text;
-option pxelinux.reboottime code 211 = unsigned integer 32;
-option architecture-type code 93 = unsigned integer 16;
-
-subnet 10.0.0.0 netmask 255.255.255.0 {
-  option routers 10.0.0.254;
-  range 10.0.0.2 10.0.0.253;
-
-  class "pxeclients" {
-      match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
-      next-server 10.0.0.1;
-      filename "pxelinux/pxelinux.0";
-
-##	if you really wanna do EFI, try something like this:
-#       if option architecture-type = 00:07 {
-#         filename "uefi/shim.efi";
-#       } else {
-#         filename "pxelinux/pxelinux.0";
-#       }
-   }
-}
+yum install httpd
+mkdir -p /var/www/mirror/private/thinclients/ /var/www/mirror/public
 ```
 
-Please make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
+/etc/httpd/conf.d/mirror.conf
+```
+Alias /mirror/private   /var/www/mirror/private
+Alias /mirror/public    /var/www/mirror/public
 
-#### Setting up httpd
-FIXME
 
-#### Setting up a fedora 22 mirror
+<Location /mirror/private>
+        Options -Indexes
+        Require all granted
+</Location>
+
+
+<Location /mirror/public>
+        Options +Indexes
+        Require all granted
+</Location>
+
+<Location /mirror/private/thinclients/>
+        Options -Indexes
+        Require all granted
+</Location>
+```
+
+Optional: Enabling PXE-Boot using HTTP. Enables faster network boots when using compatible boot loaders, for example ipxe or a http-enabled version of pxelinux.
+
+/etc/httpd/conf.d/tftp.conf
+```
+Alias /tftpboot /srv/tftpboot
+
+<Location /tftpboot/>
+        Options -Indexes +FollowSymLinks
+        Require all granted
+</Location>
+```
+
+Enabling and starting httpd:
+```
+systemctl enable httpd
+systemctl start httpd
+```
+
+
+## Fedora 22 mirror
 First add repository definitions for fedora 22 to our infrastructure server.
 By setting ```enabled=0``` we can access those repositories, but they don't
 interfere with package installation/update on our infrastructure server.
@@ -271,8 +270,55 @@ umount /mnt
 
 Remark: Please make sure that hidden files (starting with a dot) are copied as well.
 
+## Network boot
+### legacy bios versus UEFI
+This guide has only been tested with legacy bios. UEFI Thinclients should work fine
+as long as the compatibility mode / legacy mode of UEFI is used.
 
-#### Setting up boot files
+EFI installation of TCs has not been implemented and is not supported. This feature could be engineered, but so far there hasn't been any need for it.
+
+### Setting up dhcp service
+We assume that there is already an existing dhcp service, so there is no
+need to install a new one.
+
+Configure your existing dhcp server to allow PXE boot from our infrastructure
+server. Instructions for that can be found in the [RHEL7 Installation Guide, Chapter 21, Preparing for a Network Installation][1]
+
+[1]: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Installation_Guide/chap-installation-server-setup.html
+
+Example configuration of isc-dhcp-server:
+
+```
+option space pxelinux;
+option pxelinux.magic code 208 = string;
+option pxelinux.configfile code 209 = text;
+option pxelinux.pathprefix code 210 = text;
+option pxelinux.reboottime code 211 = unsigned integer 32;
+option architecture-type code 93 = unsigned integer 16;
+
+subnet 10.0.0.0 netmask 255.255.255.0 {
+  option routers 10.0.0.254;
+  range 10.0.0.2 10.0.0.253;
+
+  class "pxeclients" {
+      match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";
+      next-server 10.0.0.1;
+      filename "pxelinux/pxelinux.0";
+
+##	if you really wanna do EFI, try something like this:
+#       if option architecture-type = 00:07 {
+#         filename "uefi/shim.efi";
+#       } else {
+#         filename "pxelinux/pxelinux.0";
+#       }
+   }
+}
+```
+
+Please make sure that ```next-server 10.0.0.1;``` points to the IP address of your infrastructure server.
+
+
+### Setting up boot files
 We do want our network bootloader to be accessible by both TFTP (for PXE) 
 and HTTP (for advanced network boatloaders like iPXE). 
 
@@ -431,7 +477,7 @@ Please adjust the kernel parameter `inst.ks=http://infrastructure-server/mirror/
 
 See also: [Kickstart](amoothei-tc-kickstart.md)
 
-#### Setting up in.tftpd
+### TFTP-Server: in.tftpd
 ```
 yum install tftp-server
 ``` 
@@ -493,7 +539,7 @@ cp -f /var/www/mirror/private/thinclients/thinclient-software/connect_spice_clie
 
 
 
-### Setting up a remote syslog server
+## Setting up a remote syslog server
 The thinclients use our infrastructure server for remote logging,
 both during kickstart installation and normal operation.
 
@@ -537,7 +583,7 @@ Apply changes:
 service rsyslog restart
 ``` 
 
-#### Setting up syslog clients
+### Setting up syslog clients
 Your syslog clients need to be configured to forward messages to infrasturcture-server:514.
 
 /etc/rsyslog.d/remote-logging.conf:
@@ -550,8 +596,8 @@ On thinclients, this configuration will be automatically done in the kickstart p
 
 Known limitation: The syslog client will only forward messages that are logged *after* rsyslog is started. Boot messages (including kernel boot messages) are logged before rsyslog starts, so those messages are not forwarded to our infrastructure server.
 
-### Setting up postgres database
-#### Installation
+## Setting up postgres database
+### Installation
 Postgres: installation, initalization, enable service, starting service:
 
 ``` 
@@ -561,7 +607,7 @@ systemctl enable postgresql
 systemctl start postgresql
 ``` 
 
-#### Creating database user
+### Creating database user
 We create two users, vdi-dbadmin and vdi-readonly:
 
 ``` 
@@ -578,7 +624,7 @@ Enter it again:
 The user vdi-dbadmin will be used by the system administrator (you!) to administer the database and to change the VM-to-TC-mapping.
 The password for the user vdi-readonly needs to be configured in amoothei-tc-connectspice. It is used to determine the VM that should be displayed on a TC.
 
-#### Creating database, grant permissions.
+### Creating database, grant permissions.
 
 ``` 
 # su - postgres
@@ -595,7 +641,7 @@ postgres=# \quit
 -bash-4.2$ exit
 ``` 
 
-#### Setting up SSL
+### Setting up SSL
 For our purposes, a self-signed certificate is sufficent. Put it on the server and then tell postgres where to find it:
 
 
@@ -619,7 +665,7 @@ Restart your database to let the changes take effect.
 The certificate, /etc/pki/postgres/postgres_ssl.crt , should also be installed
 on all thinclients for secure database access. This is done in the kickstart post-section.
 
-#### Allow network access
+### Allow network access
 /var/lib/pgsql/data/pg_hba.conf:
 
 ``` 
@@ -630,13 +676,13 @@ This line allows password-based authentication, protected with TLS/SSL, from eve
 
 Restart your database to let the changes take effect.
 
-#### Create database layout for amoothei-vdi:
+### Create database layout for amoothei-vdi:
 Proceed here:
 
 * [Database layout](dblayout.md)
 * [Thinclient - VM mapping](tc-vm-mapping.md)
 
-#### Accessing database
+### Accessing database
 There are alot of postgres shells, both console shells and graphical tools.
 
 For console access, we do recommend ```psql```, for GUI access we do recommend ```pgadmin3```.
