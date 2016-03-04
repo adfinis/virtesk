@@ -17,6 +17,7 @@ Any any given point in time, there shall be a 1:1-mapping between TCs and VMs: A
 
 However, it makes also sense to talk about a **1:2-mapping** (or 1:3-mapping, ...). One VM is mapped to the thinclient. The other VMs can be maintained (fresh rollout of virtual rooms, ...) without impacting users. This is also interesting for having dedicated VMs for special courses (exam VMs, VMs with special software, VMs with different operating systems, ...).
 
+This mapping is mandatory. Other VDI concepts, like pools of VMs, on-the-fly creation of VMs, per-User-VMs, or user-choosen VMs are not supported.
 
 ## Thinclient perspective: SQL Query
 
