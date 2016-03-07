@@ -142,27 +142,27 @@ class rhev:
 
         for key in optional_string_params:
             if key in section:
-                config['key'] = section['key']
+                config[key] = section[key]
 
         for key in optional_int_params:
             if key in section:
                 try:
-                    config['key'] = section['key'].as_int()
-                except ValueError:
+                    config[key] = section.as_int(key)
+                except Exception:
                     logging.error(
                         "Config error: {0}={1}: cannot convert {1} to int!"
-                        .format(key, section['key'])
+                        .format(key, section[key])
                     )
                     sys.exit(-1)
 
         for key in optional_boolean_params:
             if key in section:
                 try:
-                    config['key'] = section['key'].as_bool()
-                except ValueError:
+                    config[key] = section.as_bool(key)
+                except Exception:
                     logging.error(
                         "Config error: {0}={1}: cannot convert {1} to boolean!"
-                        .format(key, section['key'])
+                        .format(key, section[key])
                     )
                     sys.exit(-1)
 
@@ -328,8 +328,21 @@ class rhev:
         return vm_list
 
     def connect(self, config):
+        config_copy = copy.copy(config)
+        config_copy['password'] = "XXXXXXXXXXXXXXX"
+
+        logging.debug(
+            "Trying to connect to REST API using the "
+            "following configuration: {0}..."
+            .format(str(config_copy))
+        )
+
         try:
             self.api = ovirtsdk.api.API(**config)
+
+            logging.info(
+                "Connected to REST-API successfully."
+            )
         except Exception as ex:
             logging.error(
                 "Failed to connect to REST-API. "
