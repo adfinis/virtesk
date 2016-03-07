@@ -36,7 +36,10 @@ LIBRARY_DIRECTORY = 'lib'
 
 DEFAULT_CONFIGURATION_FILE_NAME = 'adsy-rhev-tools.config'
 
-CONFIG_FILE_SEARCH_PATH = [os.path.expanduser('~/.config/amoothei-vdi/amoothei-vm-rollout.conf'), '/etc/amoothei-vdi/amoothei-vm-rollout.conf']
+CONFIG_FILE_SEARCH_PATH = [
+    os.path.expanduser('~/.config/amoothei-vdi/amoothei-vm-rollout.conf'),
+    '/etc/amoothei-vdi/amoothei-vm-rollout.conf'
+]
 
 # Wait time in seconds after creating a new VM.
 VM_CREATION_SLEEP_TIME = 15
@@ -50,5 +53,3 @@ CREATE_VM_SNAPSHOT_SLEEP_TIME = 8
 # Wait time in seconds between attempts to check the state of freshly
 # created VM snapshots
 WAIT_FOR_SNAPSHOTS_READY_SLEEP_TIME = 4
-
-

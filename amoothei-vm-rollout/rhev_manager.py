@@ -71,12 +71,15 @@ class RhevManager():
             * ~/.config/amoothei-vdi/amoothei-vm-rollout.conf
             * /etc/amoothei-vdi/amoothei-vm-rollout.conf
         ''')
- 
+
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=epilog, description=description)
 
-        parser.add_argument('--config', help="Absolute or relative path to configuration file.")
+        parser.add_argument(
+            '--config',
+            help="Absolute or relative path to configuration file."
+        )
 
         parser.add_argument(
             'virtroom', help="virtual room to act on"
@@ -147,7 +150,10 @@ class RhevManager():
             )
 
         except Exception as ex:
-            logging.error("Failed to initialize logging. Logfile: `{0}'. Error details: `{1}'".format(log_file,ex))
+            logging.error(
+                "Failed to initialize logging. "
+                "Logfile: `{0}'. Error details: `{1}'".format(log_file, ex)
+            )
             sys.exit(-1)
 
     def cleanup_classroom(self, classroom):
@@ -178,7 +184,7 @@ class RhevManager():
             )
 
     # reset vms to snapshot
-    def reset_classroom(self,classroom):
+    def reset_classroom(self, classroom):
         if not classroom:
             raise Exception('No classroom given')
 
@@ -193,26 +199,31 @@ class RhevManager():
         for vm in vms_for_classroom:
             self.rhev_lib.reset_vm_to_snapshot(vm)
 
-    def analyze_config_of_classroom(self,classroom):
-        self.logger.info("Analyzing configuration of classroom {0}".format(classroom))
+    def analyze_config_of_classroom(self, classroom):
+        self.logger.info(
+            "Analyzing configuration of classroom {0}".format(classroom)
+        )
 
         # Get VMs for given classroom
         vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
-                    classroom)
+            classroom)
 
         for vmconfig in vms_for_classroom:
             self.logger.debug(str(vmconfig))
 
         if self.rhev_lib.check_if_vms_exist(vms_for_classroom):
-            self.logger.info("Some VMs already exist. Please delete them before rollout")
+            self.logger.info(
+                "Some VMs already exist. Please delete them before rollout"
+            )
             self.rhev_lib.analyze_snapshots(vms_for_classroom)
 
-    def start_all_vms_in_room(self,classroom):
+    def start_all_vms_in_room(self, classroom):
         self.logger.info("Starting VMs in Room... {0}".format(classroom))
 
         # Get VMs for given classroom
         vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
-                    classroom)
+            classroom
+        )
 
         for vmconfig in vms_for_classroom:
             self.logger.debug(str(vmconfig))
@@ -220,19 +231,18 @@ class RhevManager():
         for vmconfig in vms_for_classroom:
             self.rhev_lib.start_vm_if_possible(vmconfig)
 
-    def shutdown_all_vms_in_room(self,classroom):
+    def shutdown_all_vms_in_room(self, classroom):
         self.logger.info("Shutting down VMs in Room... {0}".format(classroom))
 
         # Get VMs for given classroom
         vms_for_classroom = self.rhev_lib.get_vms_for_classroom(
-                    classroom)
+            classroom)
 
         for vmconfig in vms_for_classroom:
             self.logger.debug(str(vmconfig))
 
         for vmconfig in vms_for_classroom:
             self.rhev_lib.shutdown_vm_if_possible(vmconfig)
-
 
     def rollout_classroom(self, classroom):
         if not classroom:
@@ -253,7 +263,9 @@ class RhevManager():
 
                 # Make sure the VMs don't exist (avoiding conflicts)
                 if self.rhev_lib.check_if_vms_exist(vms_for_classroom):
-                    self.logger.error("Some VMs already exist. Please delete them first")
+                    self.logger.error(
+                        "Some VMs already exist. Please delete them first"
+                    )
                     sys.exit(-1)
 
                 # Create (template) VMs
@@ -284,18 +296,11 @@ class RhevManager():
                     formatstring=msg_formatstring
                 )
 
+                # Postprocess VMs:
                 # Eject ISOs, set statless and add (user-) group.
                 # Create a snapshot of every VM.
-                # vm_snapshots = []
                 for vm in vms_for_classroom:
                     self.rhev_lib.postprocess_vm(vm)
-
-                    # creating the snapshot must be the final task in this
-                    # loop.
-                    # description = ("ADSY_RHEV_TOOLS, STOPPED, FIXIP={0}/{1}, " +
-                    #               "initial snapshot after vm creation using " +
-                    #               "adsy_rhev_tools succeded.").format(
-                    # vm['ip'], vm['netmask_as_suffix'])
 
                 # Wait for all VM snapshots to become ready.
                 self.rhev_lib.wait_for_vm_snapshots_ready(vms_for_classroom)

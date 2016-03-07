@@ -128,7 +128,7 @@ def findmiddle(first, second, count=None):
 
     assert firstint <= secondint
 
-    if not count is None:
+    if count is not None:
         if secondint - firstint != count:
             raise Exception(
                 "findmiddle: {0} + {1} == %i violated".format(
@@ -173,9 +173,12 @@ def applyconfigdefaults(config, defaults):
 def escape_for_ovirt_query(query):
     return query.replace('_', '*')
 
+
 class Failure:
+
     def __init__(self, msg):
         self.msg = msg
+
 
 def get_valid_config_file(config_file):
     """
@@ -193,12 +196,16 @@ def get_valid_config_file(config_file):
             if os.path.exists(config_file):
                 return config_file
             else:
-                raise Failure("Config file `{0}' does not exist.".format(config_file))
+                raise Failure(
+                    "Config file `{0}' does not exist.".format(config_file)
+                )
 
     for config_file in constants.CONFIG_FILE_SEARCH_PATH:
-            if os.path.exists(config_file):
-                os.stat(config_file)
-                return config_file
+        if os.path.exists(config_file):
+            os.stat(config_file)
+            return config_file
 
-    raise Failure("No config file specified on command line and no config file available at default locations.")
-
+    raise Failure(
+        "No config file specified on command line and no "
+        "config file available at default locations."
+    )

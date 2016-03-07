@@ -4,14 +4,10 @@ import errno
 
 
 class TemporaryDirectory(object):
-    """
-    Context manager for tempfile.mkdtemp() so it's usable
-    with "with" statement.
-    """
+    # Context manager for tempfile.mkdtemp() so it's usable
+    # with "with" statement.
 
     def __init__(self, prefix):
-        #	super(object, self).__init__()
-        # super().__init__()
         self.prefix = prefix
 
     def __enter__(self):

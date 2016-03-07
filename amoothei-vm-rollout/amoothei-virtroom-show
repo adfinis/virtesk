@@ -31,10 +31,8 @@
 
 # System Imports
 import traceback
-import argparse
 import logging
 import sys
-import textwrap
 
 # Project imports
 import rhev_manager
@@ -47,7 +45,9 @@ try:
     * show snapshots
     """
 
-    manager, room = rhev_manager.RhevManager.construct_from_cmdargs(description)
+    manager, room = rhev_manager.RhevManager.construct_from_cmdargs(
+        description
+    )
 
     manager.analyze_config_of_classroom(room)
 
