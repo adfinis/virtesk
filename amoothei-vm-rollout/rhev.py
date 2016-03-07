@@ -127,6 +127,39 @@ class rhev:
         config['username'] = section['username']
         config['password'] = section['password']
 
+        optional_string_params = ['key_file', 'cert_file']
+        optional_int_params = ['timeout', 'session_timeout']
+        optional_boolean_params = [
+            'persistent_auth', 'renew_session', 'insecure',
+            'validate_cert_chain', 'filter', 'debug'
+        ]
+
+        for key in optional_string_params:
+            if key in section:
+                config['key'] = section['key']
+
+        for key in optional_int_params:
+            if key in section:
+                try:
+                    config['key'] = section['key'].as_int()
+                except ValueError:
+                    logging.error(
+                        "Config error: {0}={1}: cannot convert {1} to int!"
+                        .format(key, section['key'])
+                    )
+                    sys.exit(-1)
+
+        for key in optional_boolean_params:
+            if key in section:
+                try:
+                    config['key'] = section['key'].as_bool()
+                except ValueError:
+                    logging.error(
+                        "Config error: {0}={1}: cannot convert {1} to boolean!"
+                        .format(key, section['key'])
+                    )
+                    sys.exit(-1)
+
     def dumpconnectinfo(self, section=None):
         self.read_connect_configuration(section=section)
 
@@ -289,13 +322,7 @@ class rhev:
         return vm_list
 
     def connect(self, config):
-        self.api = ovirtsdk.api.API(
-            url=config['url'],
-            username=config['username'],
-            password=config['password'],
-            ca_file=config['ca_file'],
-            persistent_auth=False
-        )
+        self.api = ovirtsdk.api.API(**config)
 
     def create_standalone_vm(self, vmconfig):
         vm_name = vmconfig['rhev_vm_name']
