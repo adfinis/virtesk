@@ -41,7 +41,6 @@ import string
 import logging
 import logging.config
 import sys
-import traceback
 
 # Project imports
 import constants
@@ -85,10 +84,10 @@ class rhev:
         except Exception as ex:
             logging.error(
                 "An unknown error occoured while setting things up. "
-                "This shouldn't happen. Traceback: {0}"
-                .format(traceback.format_exception(ex))
+                "This shouldn't happen. Traceback will follow."
             )
-        
+            logging.exception(ex)
+
             sys.exit(-1)
 
     def initialize_logging(self):
@@ -331,14 +330,14 @@ class rhev:
     def connect(self, config):
         try:
             self.api = ovirtsdk.api.API(**config)
-        except Exeption as ex:
+        except Exception as ex:
             logging.error(
                 "Failed to connect to REST-API. "
-                "Error message: `{0}'. "
-                "Configuration: {1}. "
-                "Traceback: {2}."
-                .format(str(ex), str(config), traceback.format_exception(ex))
+                "Error message: `{0}'. Configuration: {1}. "
+                "Will print a Traceback now."
+                .format(str(ex), str(config))
             )
+            logging.exception(ex)
             sys.exit(-1)
 
     def create_standalone_vm(self, vmconfig):
