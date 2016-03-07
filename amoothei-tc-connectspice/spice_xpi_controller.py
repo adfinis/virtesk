@@ -119,9 +119,12 @@ def ControllerMsg(message_id):
 
 
 def connect(
-    socket_filename, host, port, secport, ticket, spice_ca_file, secure_channels=None, disable_channels=None,
-            tls_ciphers=None, host_subject=None, window_title=None, hotkeys=None, disable_effects=None,
-            ctrl_alt_delete=None, enable_usb=None, enable_usb_autoshare=None, usb_filter=None, **rest):
+        socket_filename, host, port, secport, ticket, spice_ca_file,
+        secure_channels=None, disable_channels=None, tls_ciphers=None,
+        host_subject=None, window_title=None, hotkeys=None,
+        disable_effects=None, ctrl_alt_delete=None, enable_usb=None,
+        enable_usb_autoshare=None, usb_filter=None, **rest
+):
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     s.connect(socket_filename)
 
@@ -140,11 +143,11 @@ def connect(
     s.send(ControllerDataString(CONTROLLER_HOST, host))
 
     # send CONTROLLER_PORT
-    if not port is None:
+    if port is not None:
         s.send(ControllerValue(CONTROLLER_PORT, port))
 
     # send CONTROLLER_SPORT
-    if not secport is None:
+    if secport is not None:
         s.send(ControllerValue(CONTROLLER_SPORT, secport))
 
     # send CONTROLLER_PASSWORD
@@ -157,44 +160,44 @@ def connect(
     s.send(ControllerDataString(CONTROLLER_CA_FILE, spice_ca_file))
 
     # CONTROLLER_HOST_SUBJECT
-    if not host_subject is None:
+    if host_subject is not None:
         s.send(ControllerDataString(CONTROLLER_HOST_SUBJECT, host_subject))
 
     # TLS_CIPHERS
-    if not tls_ciphers is None:
+    if tls_ciphers is not None:
         s.send(ControllerDataString(CONTROLLER_TLS_CIPHERS, tls_ciphers))
 
     # SECURE_CHANNELS
-    if not secure_channels is None:
+    if secure_channels is not None:
         s.send(ControllerDataString(
             CONTROLLER_SECURE_CHANNELS, secure_channels))
 
-    if not disable_channels is None:
+    if disable_channels is not None:
         s.send(ControllerDataString(
             CONTROLLER_DISABLE_CHANNELS, disable_channels))
 
     # CONTROLLER_SET_TITLE
-    if not window_title is None:
+    if window_title is not None:
         s.send(ControllerDataString(CONTROLLER_SET_TITLE, window_title))
 
-    if not hotkeys is None:
+    if hotkeys is not None:
         s.send(ControllerDataString(CONTROLLER_HOTKEYS, hotkeys))
 
-    if not ctrl_alt_delete is None:
+    if ctrl_alt_delete is not None:
         s.send(ControllerValueBoolean(CONTROLLER_SEND_CAD, ctrl_alt_delete))
 
-    if not disable_effects is None:
+    if disable_effects is not None:
         s.send(ControllerDataString(
             CONTROLLER_DISABLE_EFFECTS, disable_effects))
 
-    if not enable_usb is None:
+    if enable_usb is not None:
         s.send(ControllerValueBoolean(CONTROLLER_ENABLE_USB, enable_usb))
 
-    if not enable_usb_autoshare is None:
+    if enable_usb_autoshare is not None:
         s.send(ControllerValueBoolean(
             CONTROLLER_ENABLE_USB_AUTOSHARE, enable_usb_autoshare))
 
-    if not usb_filter is None:
+    if usb_filter is not None:
         s.send(ControllerDataString(CONTROLLER_USB_FILTER, usb_filter))
 
     # CONNECT

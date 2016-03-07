@@ -114,7 +114,7 @@ def extract_identifiers_from_leasefiles(leasefilepaths):
                 fixedip = match_fixedip.group(1)
                 logging.debug("found fixed ip address in dhclient lease " +
                               "file: %s", fixedip)
-                if not fixedip in fixedips:
+                if fixedip not in fixedips:
                     fixedips.append(fixedip)
 
             match_hostname = re.search(
@@ -133,7 +133,7 @@ def extract_identifiers_from_leasefiles(leasefilepaths):
                     logging.debug(
                         "hostname: %s fqdn: %s" % (hostname_fqdn, hostname))
 
-                if not hostname in hostnames:
+                if hostname not in hostnames:
                     hostnames.append(hostname)
 
     return (hostnames, fixedips)

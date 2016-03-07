@@ -98,7 +98,12 @@ class connect_spice_client:
                 cur = conn.cursor()
 
                 # Query the database and obtain data as Python objects
-                cur.execute("SELECT vm, thinclient, prio, id, shutdown_vm FROM thinclient_everything_view WHERE dhcp_hostname = ANY (%s) OR systemuuid = ANY (%s);", (dhcp_hostnames, sys_uuids))
+                cur.execute(
+                    "SELECT vm, thinclient, prio, id, shutdown_vm "
+                    "FROM thinclient_everything_view WHERE "
+                    "dhcp_hostname = ANY (%s) OR systemuuid = ANY (%s);",
+                    (dhcp_hostnames, sys_uuids)
+                )
 
                 results = cur.fetchall()
 
@@ -107,7 +112,9 @@ class connect_spice_client:
 
                 if results is None or len(results) == 0:
                     raise AssertionFailedException(
-                        "Es konnte keine passende VM für diesen Thinclient gefunden werden.")
+                        "Es konnte keine passende VM "
+                        "für diesen Thinclient gefunden werden."
+                    )
 
                 self.vm_name = results[0][0]
                 self.shutdown_vm = results[0][4]
@@ -116,16 +123,20 @@ class connect_spice_client:
 
                 if self.vm is None:
                     raise AssertionFailedException(
-                        "Es konnte keine passende VM für diesen Thinclient gefunden werden.")
+                        "Es konnte keine passende VM "
+                        "für diesen Thinclient gefunden werden."
+                    )
                 return self.vm
 
             except Exception as ex:
-                if ex.message is not None and ex.message.startswith("timeout expired"):
+                if (
+                    ex.message is not None
+                    and ex.message.startswith("timeout expired")
+                ):
                     print "network problem..."
                     continue
                 else:
                     raise ex
-
 
     def prepare_vm(self):
         # A spice-connection can only be established when the VM is running
@@ -142,8 +153,8 @@ class connect_spice_client:
             self.vm.start()
             time.sleep(4)
             vm_id = self.vm.id
-            while not self.vm.status.state in CONSOLE_STATES:
-        # FIXME: arguments
+            while self.vm.status.state not in CONSOLE_STATES:
+                # FIXME: arguments
                 self.notify_waiting_for_vm_launch(-1, -1)
                 time.sleep(2)
                 self.vm = self.api.vms.get(id=vm_id)
@@ -164,10 +175,12 @@ class connect_spice_client:
         proto = self.vm.display.type_
 
         if proto != 'spice':
-            raise NotSpiceConsoleException("Die diesem Thinclient " +
-                                           "zugeordnete VM benützt ein nicht unterstütztes " +
-                                           "Display-Protokoll.\n\n" +
-                                           "Bitte verständigen Sie den System Administrator.")
+            raise NotSpiceConsoleException(
+                "Die diesem Thinclient " +
+                "zugeordnete VM benützt ein nicht unterstütztes " +
+                "Display-Protokoll.\n\n" +
+                "Bitte verständigen Sie den System Administrator."
+            )
 
         self.config_spice['port'] = self.vm.display.port
         self.config_spice['secport'] = self.vm.display.secure_port
@@ -186,8 +199,14 @@ class connect_spice_client:
                       "SecPort: %s, Ticket: %s", self.config_spice['host'],
                       self.config_spice['port'], self.config_spice['secport'],
                       self.config_spice['ticket'])
-        self.last_spice_server = "%s:(%s,%s)" % (self.config_spice['host'],
-                                                 self.config_spice['port'], self.config_spice['secport'])
+
+        self.last_spice_server = (
+            "%s:(%s,%s)" % (
+                self.config_spice['host'],
+                self.config_spice['port'],
+                self.config_spice['secport']
+            )
+        )
 
         # host_subject:
         # We need to get the host_subject, a value corresponding to the
@@ -233,15 +252,17 @@ class connect_spice_client:
             logging.debug("socket not ready, trying again...")
 
     def unix_socket_is_ready(self, socket):
-        # Returns True iff a server process is bound to the unix domain socket.
+        # Returns True iff a server process is bound to the
+        # unix domain socket.
         #
-        # Unfortunately, there is no efficient way to tell if a process is bound
-        # to a socket, so we simply ask the proc filesystem for it.
+        # Unfortunately, there is no efficient way to tell
+        # if a process is bound to a socket, so we simply ask the
+        # proc filesystem for it.
         #
         # Bash example with grep:
         #
-        # [vdiclient@thinclient 7449]$ grep /tmp/adsy-rhev-tools-spice-control-socket /proc/net/unix
-        # f4f5e800: 00000002 00000000 00010000 0001 01 419619 /tmp/adsy-rhev-tools-spice-control-socket
+        # $ grep /tmp/adsy-rhev-tools-spice-control-socket /proc/net/unix
+        # f4f5e800: 00000002 [...] /tmp/adsy-rhev-tools-spice-control-socket
         #
         # Empty output        ===> remote-viewer is not ready
         # At least one line   ===> remote-viewer is ready
@@ -323,28 +344,21 @@ class connect_spice_client:
     def notify_waiting_for_dhcplease(self, iteration, time):
         logging.info("notify_waiting_for_dhcplease")
         cmd = self.config_general['notify_cmd_waiting_for_dhcplease']
-        retcode = subprocess.call(cmd, shell=True)
-        # retcode = subprocess.call('notify-send -t 3000 -i
-        # /usr/share/icons/gnome/48x48/status/network-wired-disconnected.png
-        # "Warten auf Netzwerk..."', shell=True)
+        subprocess.call(cmd, shell=True)
 
     # Called while program waits for DB connection
     # Shall display a message to user, like "connecting to database..."
     def notify_waiting_for_db_connection(self, iteration, time):
         logging.info("notify_waiting_for_db_connection")
         cmd = self.config_general['notify_cmd_waiting_for_db_connection']
-        retcode = subprocess.call(cmd, shell=True)
+        subprocess.call(cmd, shell=True)
 
     # Called while a vm is launching...
     # Shall display a message to user, like "launching vm <vm>..."
     def notify_waiting_for_vm_launch(self, iteration, time):
         logging.info("notify_waiting_for_vmlaunch")
         cmd = self.config_general['notify_cmd_waiting_for_vm_launch']
-        retcode = subprocess.call(cmd, shell=True)
-        # retcode = subprocess.call('notify-send --hint string:transient:true
-        # -t 3000 -i
-        # /usr/share/icons/gnome/48x48/apps/preferences-desktop-remote-desktop.png
-        # "   VM wird gestarted... bitte warten..."', shell=True)
+        subprocess.call(cmd, shell=True)
 
     def adjust_logging(self):
         # reads the logging configuration file and passes it
@@ -417,7 +431,7 @@ class connect_spice_client:
                 tag = self.api.tags.get(id=rest_id)
                 value = tag.description
 
-                if not value is None and not re.match("\s*\Z", value):
+                if value is not None and not re.match("\s*\Z", value):
                     logging.debug("Config via rhev-tag: %s = %s", key, value)
                     self.config_spice_tags[key] = value
 
@@ -442,7 +456,7 @@ class connect_spice_client:
         # Connection information (url, username/password, ...) is taken from
         # the section [connect] in the configuration file
 
-        if not self.api is None:
+        if self.api is not None:
             try:
                 self.api.disconnect()
             except Exception as ex:
@@ -454,16 +468,20 @@ class connect_spice_client:
 
     def collect_debug_information(self):
         # collects debug information to be shown in the support window.
-        result=""
+        result = ""
 
         # FIXME: Needs a generic name
         envvariables = filter(
-            lambda x: re.match('^CONNECT_SPICE_CLIENT_.*', x), os.environ.keys())
+            lambda x: re.match('^CONNECT_SPICE_CLIENT_.*', x),
+            os.environ.keys()
+        )
 
         if len(envvariables) > 0:
-            result += "===========================================================\n"
-            result += "    Version\n"
-            result += "===========================================================\n"
+            result += (
+                "===========================================================\n"
+                "    Version\n"
+                "===========================================================\n"
+            )
             for envvariable in envvariables:
                 if envvariable in os.environ:
                     value = os.environ[envvariable]
@@ -479,10 +497,12 @@ class connect_spice_client:
         self_process_cmdline = "\n".join(
             textwrap.wrap(self_process_cmdline.replace('\0', ' '), 60))
 
-        result += "===========================================================\n"
-        result += "    letzte Verbindung\n"
-        result += "===========================================================\n"
-        tags = find_thinclient_identifier.get_thinclient_identifiers()
+        result += (
+            "===========================================================\n"
+            "    letzte Verbindung\n"
+            "===========================================================\n"
+        )
+
         result += "Zugewiesene VM(s): " + str(self.last_vm_names) + "\n"
         result += "Spice-Server: " + self.last_spice_server + "\n"
         result += "Tags: " + str(self.last_vm_tags) + "\n"
@@ -491,9 +511,11 @@ class connect_spice_client:
         result += "\n\n"
 
         if self.last_exception_info is not None:
-            result += "===========================================================\n"
-            result += "    letzte Exception\n"
-            result += "===========================================================\n"
+            result += (
+                "===========================================================\n"
+                "    letzte Exception\n"
+                "===========================================================\n"
+            )
             result += "ERROR: " + str(self.last_exception_info[1]) + "\n"
             result += "".join(
                 traceback.format_exception(*self.last_exception_info))
@@ -503,9 +525,11 @@ class connect_spice_client:
                 "/sbin/ip route list", "/usr/bin/xrandr"]
 
         for cmd in cmds:
-            result += "===========================================================\n"
-            result += "    " + cmd + "\n"
-            result += "===========================================================\n"
+            result += (
+                "===========================================================\n"
+                "    " + cmd + "\n"
+                "===========================================================\n"
+            )
             try:
                 cmdlist = shlex.split(cmd)
                 output = subprocess.check_output(cmdlist, shell=False)
@@ -592,28 +616,27 @@ class connect_spice_client:
 
     def shutdown_vm_action_sequence(self):
         try:
-                self.parse_arguments()
+            self.parse_arguments()
 
-                self.read_config_file()
+            self.read_config_file()
 
-                self.adjust_logging()
+            self.adjust_logging()
 
-                logging.info("Auto-Shutdown program started...")
+            logging.info("Auto-Shutdown program started...")
 
-                self.wait_for_dhcp_lease()
+            self.wait_for_dhcp_lease()
 
-                self.connect_to_rest_api()
+            self.connect_to_rest_api()
 
-                self.get_vm_from_db()
+            self.get_vm_from_db()
 
-                if self.vm is not None and self.shutdown_vm:
-                        logging.info("Auto-Shutdown VM `{0}'".format(self.vm_name))
-                        self.vm.shutdown()
-                else:
-                        logging.info("No Auto-Shutdown.")
+            if self.vm is not None and self.shutdown_vm:
+                logging.info("Auto-Shutdown VM `{0}'".format(self.vm_name))
+                self.vm.shutdown()
+            else:
+                logging.info("No Auto-Shutdown.")
         except Exception as ex:
-                logging.info("Auto-Shutdown failed: `{0}'".format(ex))
-
+            logging.info("Auto-Shutdown failed: `{0}'".format(ex))
 
     def __init__(self):
         self.api = None
@@ -701,9 +724,11 @@ class connect_spice_client:
         # The end-user can't see the exception message.
         # The exception message is logged.
         logging.exception(ex)
-        masking_exception = MaskingException("Ein allgemeiner Fehler ist " +
-                                             "aufgetreten.\n\nDetails sind nur für Berechtigte einsehbar.\n\n" +
-                                             "Bitte kontaktieren sie den System Administrator.")
+        masking_exception = MaskingException(
+            "Ein allgemeiner Fehler ist " +
+            "aufgetreten.\n\nDetails sind nur für Berechtigte einsehbar.\n\n" +
+            "Bitte kontaktieren sie den System Administrator."
+        )
         self.handleRetryException(masking_exception)
 
     def handleExceptionHandlingError(self, ex):
@@ -782,5 +807,3 @@ class RebootInProgress(RetryException):
 
 class NetworkError(RetryException):
     pass
-
-

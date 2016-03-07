@@ -6,7 +6,5 @@ import connect_spice_client
 
 
 if __name__ == "__main__":
-    #logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.DEBUG)
     connect_spice_client.connect_spice_client().shutdown_vm_action_sequence()
-    
-
