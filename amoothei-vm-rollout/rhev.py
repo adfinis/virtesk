@@ -41,6 +41,7 @@ import string
 import logging
 import logging.config
 import sys
+import traceback
 
 # Project imports
 import constants
@@ -82,7 +83,13 @@ class rhev:
                 )
             )
         except Exception as ex:
-            raise Exception("Unexpected error: {0}".format(ex))
+            logging.error(
+                "An unknown error occoured while setting things up. "
+                "This shouldn't happen. Traceback: {0}"
+                .format(traceback.format_exception(ex))
+            )
+        
+            sys.exit(-1)
 
     def initialize_logging(self):
         try:
@@ -322,7 +329,17 @@ class rhev:
         return vm_list
 
     def connect(self, config):
-        self.api = ovirtsdk.api.API(**config)
+        try:
+            self.api = ovirtsdk.api.API(**config)
+        except Exeption as ex:
+            logging.error(
+                "Failed to connect to REST-API. "
+                "Error message: `{0}'. "
+                "Configuration: {1}. "
+                "Traceback: {2}."
+                .format(str(ex), str(config), traceback.format_exception(ex))
+            )
+            sys.exit(-1)
 
     def create_standalone_vm(self, vmconfig):
         vm_name = vmconfig['rhev_vm_name']
