@@ -231,7 +231,7 @@ Windows Autounattend:
 
 Permissons:
 
-* **tc_user**: Technical account used by TCs to access VMs. After rollout, permissions are granted to *tc_user*.
+* **tc_user**: Technical account used by TCs to access VMs. After rollout, permissions are granted to *tc_user*. Details are documented [here](amoothei-tc-connectspice.md)
 
 Snapshots:
 
