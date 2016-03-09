@@ -697,6 +697,27 @@ For console access, we do recommend ```psql```, for GUI access we do recommend `
 A list of postgres shells / tools can be found here:
 https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
 
+Console DB access on your infrastructure server:
+
+/root/.pgpass
+```
+localhost:*:vdi:vdi-dbadmin:PASSWORD
+localhost:*:vdi:vdi-readonly:PASSWORD
+```
+
+Permissions:
+```
+chmod 600 /root/.pgpass
+```
+
+Afterwards, you can access the database using:
+```
+psql -U vdi-dbadmin -h localhost vdi    # Full permissions
+
+psql -U vdi-readonly -h localhost vdi   # Read-only permission on thinclient_everything_view
+                                        # No access to other tables/views.
+```
+
 ## Troubleshooting
 
 ### TFTP
