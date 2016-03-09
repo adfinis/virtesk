@@ -694,8 +694,8 @@ There are alot of postgres shells, both console shells and graphical tools.
 
 For console access, we do recommend ```psql```, for GUI access we do recommend ```pgadmin3```.
 
-A list of postgres shells / tools can be found here:
-https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
+A list of postgres shells / tools can be found at:
+<https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools>
 
 Console DB access on your infrastructure server:
 
