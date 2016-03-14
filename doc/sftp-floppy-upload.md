@@ -230,7 +230,7 @@ A lot of mechanisms for injecting a payload into an ovirt VM were evaluated, but
     * XML(Unattended.xml) inside XML(REST API) caused problems with some characters
 * Payload mechanism through API:
     * similar problems
-    * http://www.ovirt.org/Features/VMPayload
+    * <http://www.ovirt.org/Features/VMPayload>
 
 * CDROM / ISO image for injecting payload:
 
