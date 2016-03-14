@@ -18,6 +18,7 @@ pages:
         - 'VDI software running on Thinclients': amoothei-tc-connectspice.md
         - 'USB Redirect: avoiding USB Reset': libusbredir-patching.md
         - 'Thinclient to VM mapping': tc-vm-mapping.md
+        - 'Switching virtual rooms': switching-virtual-rooms.md
 - 'Misc':
         - compatibility.md
         - 'Payload injection': sftp-floppy-upload.md
