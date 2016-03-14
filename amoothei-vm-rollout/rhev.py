@@ -699,32 +699,6 @@ class rhev:
 
         self.wait_for_vms_down(vm_names=[vm_name])
 
-    def create_rhev_pool(self, poolconfig):
-        name = poolconfig['name']
-
-        template = self.api.templates.get(poolconfig['template_name'])
-        poolconfig['template'] = template
-
-        # FIXME: OS = win7x64 setzen
-        vmpool_param = ovirtsdk.xml.params.VmPool()
-        vmpool_param.set_name(name)
-        vmpool_param.set_template(template)
-        vmpool_param.set_cluster(self.VDI_CLUSTER)
-        vmpool_param.set_size(poolconfig['initial_size'])
-        self.logger.info("Creating pool '%s'" % name)
-        self.api.vmpools.add(
-            vmpool_param,
-            expect="Expect: 201-created"
-        )
-        pool = self.api.vmpools.get(name)
-        assert not (pool is None), "not (pool is None)"
-        self.logger.info("Pool '%s' created." % name)
-
-        poolconfig['pool'] = pool
-        self.logger.info("Collecting a list of VMs in pool '%s'" % name)
-        self.get_rhev_pool_vms(poolconfig)
-        return pool
-
     def get_all_rhev_vms(self):
         vm_list = []
         vm_page_index = 1
@@ -754,53 +728,6 @@ class rhev:
         except Exception as ex:
             self.logger.fatal("Ejecting cd-rom failed: %s" % ex)
 
-    def delete_pool(self, pool_name):
-        pool = self.api.vmpools.get(pool_name)
-        if pool is None:
-            self.logger.error("Pool '%s' not found" % pool_name)
-        else:
-            self.logger.info("Found pool: '%s'" % pool_name)
-
-            vm_list = self.get_all_rhev_vms()
-            waitfor_list = []
-
-            for vm in vm_list:
-                vm_name = vm.get_name()
-                vm_pool = vm.get_vmpool()
-                if vm_pool is None:
-                    continue
-                if vm_pool.get_id() == pool.get_id():
-                    if self.api.vms.get(vm_name).status.state != 'down':
-                        vm.stop()
-                        down = False
-                        while not down:
-                            time.sleep(1)
-                            down = self.api.vms.get(
-                                vm_name).status.state == 'down'
-                    self.logger.info("Detaching VM '%s'" % vm.name)
-                    vm.detach()
-                    self.logger.info("Deleting VM '%s'" % vm.name)
-                    vm.delete()
-                    waitfor_list += vm_name
-
-            while len(waitfor_list) > 0:
-                for vm_name in waitfor_list:
-                    if self.api.vms.get(vm_name) is None:
-                        waitfor_list.remove(vm_name)
-                time.sleep(1)
-
-            self.logger.info("Deleting pool '%s'" % pool_name)
-            pool.delete()
-
-            while not (self.api.vmpools.get(pool_name) is None):
-                time.sleep(1)
-
-    def prestartAll(self, poolconfig):
-        pool = poolconfig['pool']
-        size = pool.get_size()
-        pool.set_prestarted_vms(size)
-        pool.update()
-
     def adjust_ostype(self, reference_vmconfig, target_vmconfig):
         reference_vm = reference_vmconfig['vm']
         os = reference_vm.get_os()
@@ -809,37 +736,10 @@ class rhev:
         target_vm.set_os(os)
         target_vm.update()
 
-    def pool_addgroup(self, poolconfig):
-        pool = poolconfig['pool']
-        group_name = poolconfig['univention_group']
-        if group_name == 'None':
-            return
-        role = self.api.roles.get("UserRole")
-        group = self.api.groups.get(group_name)
-        pool.permissions.add(
-            ovirtsdk.xml.params.Permission(
-                group=group,
-                role=role
-            )
-        )
-
-#     def vm_addgroup(self, vmconfig):
-#         vm = vmconfig['vm']
-#         group_name = vmconfig['univention_group']
-#
-#         if group_name == 'None':
-#             return
-#         role = self.api.roles.get("UserRole")
-#         group = self.api.groups.get(group_name)
-#         vm.permissions.add(
-#             ovirtsdk.xml.params.Permission(
-#                 group=group, role=role
-#             )
-#         )
-#
     def vm_adduser(self, vmconfig):
-        # Gives the Role <role> to the User <user> on <vm>.
-        # FIXME: user/role should be configurable.
+        # Gives the role "UserRoleWithReconnect" to the user <user> on <vm>.
+        # The role UserRoleWithReconnect must exist on your RHEV system.
+        # See doc/amoothei-tc-connectspice.md for details.
 
         vm = vmconfig['vm']
         user_name = vmconfig['tc_user']
