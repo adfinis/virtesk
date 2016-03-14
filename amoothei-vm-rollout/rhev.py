@@ -869,7 +869,6 @@ class rhev:
 
     def create_vm_snapshot(self, vmconfig):
         # creates a snapshot of a VM with a given description.
-        # returns a ovirtsdk.infrastructure.brokers.VMSnapshot object.
         #
         # Doesn't wait for the snapshot creation process to finish.
         # The VM should not be used until the snapshot is ready.
@@ -1027,7 +1026,7 @@ class rhev:
                 "reset for this vm will be skipped..."
                 .format(vm_name, vm.status.state)
             )
-            return None
+            return
 
         logging.info(
             "Trying to reset VM {} to snapshot {} ..."
