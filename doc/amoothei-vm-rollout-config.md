@@ -245,3 +245,58 @@ Starting VMs:
 
 
 
+
+## VIM: Tipps and Tricks
+amoothei-vm-rollout.conf will become large when used in real schools. The following VIM tricks should help to manage this config file efficently:
+
+### New room: Copy-Paste
+```
+vim amoothei-vm-rollout.conf
+
+(navigate to the beginning of an existing room configuration)
+
+v             # Press v to enter visual mode
+
+(navigate to the end of the configuration of this room)
+(Press $ to move to the end of a line if nessecary)
+
+y             # Press y to yank/copy the selected lines
+
+G             # Move to the end of the file
+
+O             # Press O and ESC to 
+ESC           # create a new line at the end of the file
+
+p             # Press p to insert the lines copied before
+```
+
+You might need to adjust the new room configuration afterwards; usually, the names, the IDs and the network configuration might need attention.
+
+### Switching to a new VM Template: 
+Using vim:
+```
+# Make Backup
+cp amoothei-vm-rollout.conf amoothei-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
+
+# Edit File
+vim amoothei-vm-rollout.conf
+
+# Inside VIM: Apppy regular expression
+:%s/template_name = "vdi-template-009"/template_name = "vdi-template-010"/
+
+# Inside VIM: Write File, Quit
+:wq
+```
+
+Using sed:
+```
+# Backup
+cp amoothei-vm-rollout.conf amoothei-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
+
+# Apply regular expression
+sed -i 's/template_name = "vdi-template-009"/template_name = "vdi-template-010"/' amoothei-vm-rollout.conf
+
+# Compare difference
+diff -puN amoothei-vm-rollout.conf-backup-20160314-182733 amoothei-vm-rollout.conf
+```
+
