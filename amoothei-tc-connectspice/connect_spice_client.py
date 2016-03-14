@@ -154,8 +154,7 @@ class connect_spice_client:
             time.sleep(4)
             vm_id = self.vm.id
             while self.vm.status.state not in CONSOLE_STATES:
-                # FIXME: arguments
-                self.notify_waiting_for_vm_launch(-1, -1)
+                self.notify_waiting_for_vm_launch()
                 time.sleep(2)
                 self.vm = self.api.vms.get(id=vm_id)
                 logging.info('Status of VM %s: %s', self.vm.name,
@@ -341,21 +340,21 @@ class connect_spice_client:
 
     # Called while program waits for a dhcp lease
     # Shall display a message to user, like "waiting for network..."
-    def notify_waiting_for_dhcplease(self, iteration, time):
+    def notify_waiting_for_dhcplease(self):
         logging.info("notify_waiting_for_dhcplease")
         cmd = self.config_general['notify_cmd_waiting_for_dhcplease']
         subprocess.call(cmd, shell=True)
 
     # Called while program waits for DB connection
     # Shall display a message to user, like "connecting to database..."
-    def notify_waiting_for_db_connection(self, iteration, time):
+    def notify_waiting_for_db_connection(self):
         logging.info("notify_waiting_for_db_connection")
         cmd = self.config_general['notify_cmd_waiting_for_db_connection']
         subprocess.call(cmd, shell=True)
 
     # Called while a vm is launching...
     # Shall display a message to user, like "launching vm <vm>..."
-    def notify_waiting_for_vm_launch(self, iteration, time):
+    def notify_waiting_for_vm_launch(self):
         logging.info("notify_waiting_for_vmlaunch")
         cmd = self.config_general['notify_cmd_waiting_for_vm_launch']
         subprocess.call(cmd, shell=True)
@@ -470,7 +469,6 @@ class connect_spice_client:
         # collects debug information to be shown in the support window.
         result = ""
 
-        # FIXME: Needs a generic name
         envvariables = filter(
             lambda x: re.match('^CONNECT_SPICE_CLIENT_.*', x),
             os.environ.keys()
@@ -585,7 +583,7 @@ class connect_spice_client:
             if len(leasefiles) > 0:
                 logging.info("waiting for dhcp lease file... done")
                 return
-            self.notify_waiting_for_dhcplease(iteration, -1)
+            self.notify_waiting_for_dhcplease()
             time.sleep(4)
 
         raise NetworkError(
