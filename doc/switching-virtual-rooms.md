@@ -17,7 +17,13 @@ Uses:
 + ...
 
 ## Database
-Switching virtual rooms is implemented using the postgres database. Documentation can be found [here](tc-vm-mapping.md) and [here](amoothei-infrastructure-server.md#setting-up-postgres-database).
+Switching virtual rooms is implemented using the postgres database. 
+
+Documentation:
+
++ [Database layout](tc-vm-mapping.md)
++ [Database Installation + DB Access](amoothei-infrastructure-server.md#setting-up-postgres-database)
++ [Defining virtual rooms](amoothei-vm-rollout-config.md#room-definitions-section-room-room01)
 
 ## How to switch virtual rooms
 ### How to switch virtual rooms: simple cases

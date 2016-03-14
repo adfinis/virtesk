@@ -6,6 +6,7 @@ pages:
         - 'VM rollout tools': amoothei-vm-rollout.md
         - 'Installing amoothei-vm-rollout': amoothei-vm-rollout-install.md
         - 'Configuring virtual rooms': amoothei-vm-rollout-config.md
+        - 'Switching virtual rooms': switching-virtual-rooms.md
         - stateless_and_snapshot_features.md
         - 'Quality control after rollout': quality_control.md
         - 'Windows Unattended Setup': autounattend.md
@@ -18,7 +19,6 @@ pages:
         - 'VDI software running on Thinclients': amoothei-tc-connectspice.md
         - 'USB Redirect: avoiding USB Reset': libusbredir-patching.md
         - 'Thinclient to VM mapping': tc-vm-mapping.md
-        - 'Switching virtual rooms': switching-virtual-rooms.md
 - 'Misc':
         - compatibility.md
         - 'Payload injection': sftp-floppy-upload.md

@@ -12,7 +12,7 @@ The database determines:
 * When shall it be displayed (to display different VMs for different courses, ...)
 * If the VM shall [shut down](start-and-stop-management.md) when the TC is shutting down
 
-Accessing the database is documented [here](amoothei-infrastructure-server.md#accessing-database), database setup is documented [there](amoothei-infrastructure-server.md#setting-up-postgres-database).
+Accessing the database is documented [here](amoothei-infrastructure-server.md#accessing-database), database setup is documented [there](amoothei-infrastructure-server.md#setting-up-postgres-database), and switching virtual rooms is documented [here](switching-virtual-rooms.md)
 
 ## 1:1-Mapping between TCs and VMs
 Any any given point in time, there shall be a 1:1-mapping between TCs and VMs: A thinclient needs to uniquely determine the virtual machine assigned to it, and on the other hand, one VM can only be displayed on one TC at a time.
