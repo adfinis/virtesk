@@ -39,7 +39,7 @@ EndOfHelpText
 ARGV=( $* )
 
 source_configfiles
-parse_cmdline_twoargument "$*"
+parse_cmdline_twoargument
 
 if [[ -z "${AMOOTHEI_SCREENSHOT_DIR}" ]]; then
 	error Please configure $AMOOTHEI_SCREENSHOT_DIR .

@@ -60,9 +60,11 @@ parse_cmdline_simple() {
 }
 
 parse_cmdline_twoargument() {
-	[[ $1 = "-h" ]] && display_usage
-	[[ $1 = "--help" ]] && display_usage
-	[[ $# -ne 2 ]] && display_usage
+	argc=${#ARGV[@]}
+
+	[[ ${ARGV[1]} = "-h" ]] && display_usage
+	[[ ${ARGV[1]} = "--help" ]] && display_usage
+	[[ $argc -ne 2 ]] && display_usage
 }
 
 source_configfiles(){
