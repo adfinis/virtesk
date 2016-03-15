@@ -1,15 +1,55 @@
-Introduction
-==============
+# Amoothei-tc-tools: Manageing TCs efficiently
+
+------------------------------------------------
+
+## Introduction
 amoothei-tc-tools is a collection of utilities for system administrators.
 They to help to automate the tasks that occur when managing a lot of thinclients.
 
+Features:
 
-Installation
-==============
+* Remote Access / remote control using SSH
+* Screenshots
+* Kickstart re-installation using SSH + kexec
+
+
+## Installation
 FIXME: needs to be put into git first.
 
-Configuration
-==============
+
+## Configuration
+All config file locations are relative to the environment variable
+`$AMOOTHEI_TC_TOOLS_CONF_DIR`. This variable defaults to `/etc/amoothei-vdi/`
+
+The config files are sourced by bash scripts, e.g. they have to be valid bash shell files.
+
+First, the main config file (mandatory) is sourced, and then, the individual config file (optional) is sourced as described below.
+This allows to specify default values in the main config file, and to overwrite them later if necessary. 
+
+### Main Config File
+`${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf`:
+```
+FIXME
+```
+
+### SSH Key
+FIXME
+
+### Individual config file
+After sourcing the main config file, the optional individual config file is sourced. 
+Individual configuration will override the main configuration.
+
+This allows you to create custom instances (see [below](#custom-tool-instances)) of the TC tools if nessesary, and to provide a custom configuration for them.
+
+* individual config file location: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}.conf`
+* ```PROGNAME=`basename "$BASH_SOURCE"` ```
+* Examples:
+    + Tool `tc_ssh` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_ssh.conf`
+    + Tool `tc_screenshot` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_screenshot.conf`
+    + Tool `tc_rollout_kexec` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_rollout_kexec.conf`
+    + Custom tool `tc_my_custom_tool` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_my_custom_tool.conf`
+
+
 FIXME: needs to be implemented.
 
 Tools
@@ -116,4 +156,7 @@ Run a terminal:
 DISPLAY=:0 xterm
 ```
 
+
+## Custom tool instances
+FIXME
 
