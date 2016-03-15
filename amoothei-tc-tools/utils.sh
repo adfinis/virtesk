@@ -77,7 +77,8 @@ source_configfiles(){
 		
 	source "${MAIN_CONF_FILE}"
 
-	PROGNAME=$(basename $BASH_SOURCE)
+	# PROGNAME=$(basename $BASH_SOURCE)
+	PROGNAME=$(basename $0)
 	debug PROGNAME=${PROGNAME}
 
 	IND_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}"
