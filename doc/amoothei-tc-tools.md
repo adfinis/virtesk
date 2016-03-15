@@ -15,8 +15,21 @@ Features:
 
 
 ## Installation
-FIXME: needs to be put into git first.
+Cloneing git repository:
 
+```
+cd /opt
+git clone http://path.to.git.repository/amoothei-vdi.src.git
+```
+
+<!---
+FIXME: git path above
+-->
+
+Bash search path: `/etc/profile.d/amoothei-tc-tools.sh`
+```
+pathmunge /opt/amoothei-vdi.src/amoothei-tc-tools after
+```
 
 ## Configuration
 All config file locations are relative to the environment variable
@@ -32,6 +45,8 @@ This allows to specify default values in the main config file, and to overwrite 
 ```
 FIXME
 ```
+
+Sample config file: See `sample_config/amoothei-tc-tools.conf`.
 
 ### SSH Key
 FIXME
@@ -111,8 +126,16 @@ room02-tc02
 
 Run `tc_ssh` on all thinclients:
 ```
+# sequentially
+for TC in $(cat all-thinclients.txt); do tc_ssh $TC -- systemctl poweroff ; done
+
+# parallel
 for TC in $(cat all-thinclients.txt); do tc_ssh $TC -- systemctl poweroff & done
 ```
+
+The sequential and the parallel variant differ by one character only: `";"` for the sequential variant, `"&"` for the parallel variant.
+
+
 
 Security of tc_ssh: An individual ssh private key is used for connecting to the thinclients. Only system administrators with access to this private key will be able to access thinclients. However, the thinclient identity is not validated, e.g. a man-in-the-middle could claim to be a thinclient.
 
