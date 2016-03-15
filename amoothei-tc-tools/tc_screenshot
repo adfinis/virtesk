@@ -72,6 +72,9 @@ RETCODE=$?
 
 if [[ $RETCODE -ne 0 ]]; then
 	error_msg "Taking screenshot failed with return code $RETCODE."
+else
+	echo "Successfully stored a screenshot at $SCREENSHOT_DEST."
+	ls -lh $SCREENSHOT_DEST
 fi
 
 exit $RETCODE
