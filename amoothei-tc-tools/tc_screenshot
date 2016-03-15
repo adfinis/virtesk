@@ -42,8 +42,8 @@ source_configfiles
 parse_cmdline_twoargument
 
 if [[ -z "${SCREENSHOT_DIR}" ]]; then
-	error Please configure $SCREENSHOT_DIR .
-	error
+	error_msg Please configure $SCREENSHOT_DIR .
+	error_msg
 	display_usage
 fi
 
@@ -60,8 +60,8 @@ if [[ ! -e "$SESSION_DIR" ]]; then
 	if [[ $? -eq 0 ]]; then
 		echo "Successfully created '$SESSION_DIR'."
 	else
-		error "Failed to create '$SESSION_DIR'."
-		error "Aborting."
+		error_msg "Failed to create '$SESSION_DIR'."
+		error_msg "Aborting."
 		exit -1
 	fi
 fi
@@ -71,7 +71,7 @@ tc_ssh $1 -l vdiclient -- "$SCREENSHOT_CMDLINE" > $SCREENSHOT_DEST
 RETCODE=$?
 
 if [[ $RETCODE -ne 0 ]]; then
-	error "Taking screenshot failed with return code $RETCODE."
+	error_msg "Taking screenshot failed with return code $RETCODE."
 fi
 
 exit $RETCODE
