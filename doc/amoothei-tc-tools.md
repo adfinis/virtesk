@@ -8,7 +8,8 @@ They to help to automate the tasks that occur when managing a lot of thinclients
 
 Features:
 
-* Remote Access / remote control using SSH
+* Remote access using SSH
+* Scripting
 * Screenshots
 * Kickstart re-installation using SSH + kexec
 
@@ -52,17 +53,72 @@ This allows you to create custom instances (see [below](#custom-tool-instances))
 
 FIXME: needs to be implemented.
 
-Tools
-=======
+## Tools
 
-tcssh
--------------
-Open an interactive shell on a thinclient, or run commands on a thinclient. Used by other tools like tc_screenshot and tc_kexec for accessing thinclients.
+### tc_ssh
+Open an interactive shell on a thinclient, or run commands on a thinclient.
 
-FIXME
+Syntax:
+```
+tc_ssh <thinclient> [ssh-args]                     # interactive shell
+tc_ssh <thinclient> [ssh-args] -- remote_command   # execute remote command
+```
 
-tc_screenshot
--------------
+`<thinclient>` can be specified as a short host name (myorganization.mydomain will be appended automatically),
+as a fully qualified domain name, or as an IPv4 address.
+
+
+Example: Open interactive root-shell on mytc.myorganization.mydomain:
+```
+tc_ssh myTC                               
+# or
+tc_ssh mytc.myorganization.mydomain
+# or
+tc_ssh mytc.myorganization.mydomain -l root
+# or
+tc_ssh 192.0.2.240                              # (myTC has IP 192.0.2.240)
+```
+
+Example: Open interactive shell as user vdiclient:
+```
+tc_ssh myTC -l vdiclient 
+```
+
+Example: running command(s):
+```
+# single command as root:
+tc_ssh myTC -- uname -a
+
+# single command as user vdiclient:
+tc_ssh myTC -l vdiclient -- uname -a
+
+# running multiple commands:
+tc_ssh myTC -- "killall gxmessage && sleep 20; killall remote-viewer && sleep 5; killall gxmessage"
+```
+
+The last example has the following effect on the thinclient: If not yet connected, it will connect to its assigned VM, then the connection will be terminated, and then it will connect again to the assigned VM. See [Tipps and Tricks](#manageing-thinclients-tipps-and-tricks) for details.
+
+Example: shutdown all thinclients in your organization:
+
+Put all thinclient names into a text-file `all-thinclients.txt`, one thinclient name per line:
+```
+room01-tc01
+room01-tc02
+[...]
+room02-tc01
+room02-tc02
+```
+
+Run `tc_ssh` on all thinclients:
+```
+for TC in $(cat all-thinclients.txt); do tc_ssh $TC -- systemctl poweroff & done
+```
+
+Security of tc_ssh: An individual ssh private key is used for connecting to the thinclients. Only system administrators with access to this private key will be able to access thinclients. However, the thinclient identity is not validated, e.g. a man-in-the-middle could claim to be a thinclient.
+
+
+
+### tc_screenshot
 Take a screenshot of a thinclient and store it in a PNG File.
 
 Please respect the privacy of your users and don't use this tool for hidden surveillance.
@@ -94,8 +150,7 @@ Diagnostics using thumbnails of alot of TC screenshots:
 FIXME
 
 
-tc_kexec
------------
+### tc_rollout_kexec
 Re-Install a thinclient. 
 
 Kickstarting a thinclient is so fast that there is no need for a thinclient upgrade procedure. Instead, we simply re-install thinclients whenever there is a change to configuration or to amoothei-tc-connectspice. But we don't want to touch every thinclient by hand. This tool makes re-installation really easy:
@@ -107,14 +162,15 @@ Background: This tools connect to the thinclient and then downloads kernel/initr
 
 FIXME
 
+## Custom tool instances
 
+FIXME
 
-Thinclient remote control
-=============================
-The following commands are run on a TC, using tcssh.
+## Manageing Thinclients: Tipps and Tricks
 
-Connect to assigned VM
------------------------
+The following commands are to be run on a TC, using tc_ssh.
+
+### Connect to assigned VM
 ```
 killall gxmessage
 ```
@@ -124,8 +180,7 @@ If the TC GUI (based on gxmessage) is shown, then this command terminates the GU
 If the TC is already connected to a VM, nothing happens.
 
 
-Disconnect from the VM
-----------------------
+### Disconnect from the VM
 ```
 killall remote-viewer
 ```
@@ -133,8 +188,7 @@ killall remote-viewer
 If remote-viewer is running (that is, the TC is connected), then this command forces the TC to disconnect. If the TC is not connected, nothing happens.
 
 
-Shutdown / Reboot
------------------
+### Shutdown / Reboot
 ```
 sudo systemctl poweroff
 sudo systemctl reboot
@@ -142,13 +196,14 @@ sudo systemctl reboot
 
 Initiates a TC shutdown / restart.
 
-X11 Programs
-------------
+### X11 Programs
 Create a screenshot:
 
 ```
 DISPLAY=:0 xwd -root | convert  - png:- > foo.png
 ```
+
+FIXME: vdiclient
 
 Run a terminal:
 
@@ -156,7 +211,7 @@ Run a terminal:
 DISPLAY=:0 xterm
 ```
 
+FIXME: vdiclient
 
-## Custom tool instances
-FIXME
+
 
