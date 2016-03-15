@@ -43,7 +43,29 @@ This allows to specify default values in the main config file, and to overwrite 
 ### Main Config File
 `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf`:
 ```
-FIXME
+# DEVELOPER_MODE=0 =====> quiet mode
+# DEVELOPER_MODE=1 =====> verbose debug messages
+DEVELOPER_MODE=0
+
+# Domain appended to thinclient short names
+TC_DOMAIN=myorganization.mydomain
+
+# SSH options for tc_ssh
+SSH_GLOBAL_OPTS="-q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=4 -i /etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa"
+
+# Commands to run on a thinclient in order
+# to re-install itself using kexec and kickstart
+# Please adjust the URLs to point to the correct locations
+# on your infrastructure server.
+# Kernel commandline should be the same as when doing PXE rollout.
+ROLLOUT_CMDLINE='rm vmlinuz; rm initrd.img; wget http://infrastructure-server/tftpboot/fedora22-x86_64-pxeboot/vmlinuz; wget http://infrastructure-server/tftpboot/fedora22-x86_64-pxeboot/initrd.img; kexec -l vmlinuz --initrd=initrd.img --reset-vga --append="net.ifnames=0 enforcing=0 inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_rollout.ks"; shutdown -r now'
+
+# Commands to run on a thinclient in order to generate a screenshot
+# and to write it to standart output.
+SCREENSHOT_CMDLINE="DISPLAY=:0 xwd -root | convert  - png:-"
+
+# Directory where screenshots shall be stored.
+SCREENSHOT_DIR=/screenshot
 ```
 
 Sample config file: See `sample_config/amoothei-tc-tools.conf`.
@@ -169,7 +191,21 @@ Security of tc_ssh: An individual ssh private key is used for connecting to the 
 
 
 ### tc_screenshot
-Take a screenshot of a thinclient and store it in a PNG File.
+Take a screenshot of thinclient `test01-tc01` and store it in a PNG File:
+
+```
+# tc_screenshot test01-tc01 bob-20160315
+Successfully stored a screenshot at /screenshot/bob-20160315/test01-tc01.png.
+-rw-r--r--. 1 root root 236K Mar 15 19:17 /screenshot/bob-20160315/test01-tc01.png
+```
+
+A "session identifier" (here: `bob-20160315`) is mandatory. It is used to store the screenshots
+in a well-ordered folder structure.
+
+Taking alot of screenshots:
+```
+for TC in $(cat all_thinclients.txt); do tc_screenshot $TC bob-20160315 & done
+```
 
 Please respect the privacy of your users and don't use this tool for hidden surveillance.
 
@@ -194,11 +230,6 @@ Diagnostics using thumbnails of alot of TC screenshots:
         * Disconnect and connect again.
         * Restart thinclient.
     * If it is a linux VM: The window manager inside the VM needs to react to spice resize events. So far only mutter (window manager used by GNOME) implements this.
-    
-
-
-FIXME
-
 
 ### tc_rollout_kexec
 Re-Install a thinclient. 
@@ -211,8 +242,26 @@ Kickstarting a thinclient is so fast that there is no need for a thinclient upgr
 Background: This tools connect to the thinclient and then downloads kernel/initrd of the fedora installer using http. Then, kexec is used to load the new kernel/initrd over the running kernel.
 
 ## Custom tool instances
+It is often useful to have multiple instances of a tool, each with their own configuration.
 
-FIXME
+Example situation: You have two kickstart files (The normal one, `tc_rollout.ks` and a custom one, `tc_custom_rollout.ks`). We create a second rollout tool instance and call it `tc_custom_rollout`. This can be done by simply creating a symlink:
+
+```
+ln -s /opt/amoothei-vdi.src/amoothei-tc-tools/tc_rollout_kexec /usr/local/bin/tc_custom_rollout
+```
+
+Now, we can provide a custom configuration in the individual config file, in `/etc/amoothei-vdi/amoothei-tc-tools.conf.dir/tc_custom_rollout.conf`:
+```
+ROLLOUT_CMDLINE='rm vmlinuz; rm initrd.img; wget http://infrastructure-server/tftpboot/fedora22-x86_64-pxeboot/vmlinuz; wget http://infrastructure-server/tftpboot/fedora22-x86_64-pxeboot/initrd.img; kexec -l vmlinuz --initrd=initrd.img --reset-vga --append="net.ifnames=0 enforcing=0 inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_custom_rollout.ks"; shutdown -r now'
+```
+
+The only config change is the name of the kickstart file.
+
+Now we can use our new tool exacly like the normal tool:
+
+```
+tc_custom_rollout test01-tc01
+```
 
 ## Manageing Thinclients: Tipps and Tricks
 
