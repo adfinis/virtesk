@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+# Global variables
+declare -a ARGV
+declare -a ssh_opts
+declare -a remote_cmdline
+declare -i CMDLINE_AVAILABLE=0
+
+source $(dirname $(readlink -e ${BASH_SOURCE}))/utils.sh
+
+display_usage() {
+	cat 1>&2 <<-'EndOfHelpText'
+	Usage:
+
+	tc_rollout_kexec <thinclient>
+
+	
+	tc_rollout_kexec is used to roll out thinclients
+	using ssh and kexec.
+
+	It is useful for re-installation of already
+	installed thinclients.
+
+	tc_rollout_kexec is part of the amoothei-tc-tools collection.
+
+	Amoothei-vdi is a virtual desktop infrastructure
+	solution based on RHEV / Ovirt.
+
+	Documentation: see amoothei-tc-tools.md.
+EndOfHelpText
+
+	exit 1;
+}
+
+ARGV=( $* )
+
+source_configfiles
+parse_cmdline_simple "$1"
+
+debug tc_ssh "$1" -- "$ROLLOUT_CMDLINE"
+tc_ssh "$1" -- "$ROLLOUT_CMDLINE"
+
+RETCODE=$?
+exit $RETCODE
+
