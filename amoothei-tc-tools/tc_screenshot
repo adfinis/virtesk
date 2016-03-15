@@ -23,7 +23,7 @@ display_usage() {
 	<session> is an identifier. You can choose it freely.
 
 	The screenshot will be put into the following file:
-	${AMOOTHEI_SCREENSHOT_DIR}/<session>/<thinclient>.png
+	${SCREENSHOT_DIR}/<session>/<thinclient>.png
 
 	tc_screenshot is part of the amoothei-tc-tools collection.
 
@@ -41,8 +41,8 @@ ARGV=( $* )
 source_configfiles
 parse_cmdline_twoargument
 
-if [[ -z "${AMOOTHEI_SCREENSHOT_DIR}" ]]; then
-	error Please configure $AMOOTHEI_SCREENSHOT_DIR .
+if [[ -z "${SCREENSHOT_DIR}" ]]; then
+	error Please configure $SCREENSHOT_DIR .
 	error
 	display_usage
 fi
@@ -50,7 +50,7 @@ fi
 FILENAME="$1.png"
 SESSION="$2"
 
-SESSION_DIR="${AMOOTHEI_SCREENSHOT_DIR}/${SESSION}"
+SESSION_DIR="${SCREENSHOT_DIR}/${SESSION}"
 SCREENSHOT_DEST="${SESSION_DIR}/${FILENAME}"
 
 if [[ ! -e "$SESSION_DIR" ]]; then
