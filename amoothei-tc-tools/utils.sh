@@ -54,11 +54,16 @@ parse_cmdline() {
 }
 
 parse_cmdline_simple() {
-	[[ $# -eq 0 ]] && display_usage
+	[[ $# -ne 1 ]] && display_usage
 	[[ $1 = "-h" ]] && display_usage
 	[[ $1 = "--help" ]] && display_usage
 }
 
+parse_cmdline_twoargument() {
+	[[ $1 = "-h" ]] && display_usage
+	[[ $1 = "--help" ]] && display_usage
+	[[ $# -ne 2 ]] && display_usage
+}
 
 source_configfiles(){
 	if [[ "x${AMOOTHEI_TC_TOOLS_CONF_DIR}" = "x" ]]; then
@@ -81,7 +86,7 @@ source_configfiles(){
 	PROGNAME=$(basename $0)
 	debug PROGNAME=${PROGNAME}
 
-	IND_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}"
+	IND_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}.conf"
 	[[ -r "${IND_CONF_FILE}" ]] && source "${IND_CONF_FILE}"
 
 }

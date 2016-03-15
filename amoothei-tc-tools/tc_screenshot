@@ -1,0 +1,78 @@
+#!/bin/bash
+
+
+# Global variables
+declare -a ARGV
+declare -a ssh_opts
+declare -a remote_cmdline
+declare -i CMDLINE_AVAILABLE=0
+
+source $(dirname $(readlink -e ${BASH_SOURCE}))/utils.sh
+
+display_usage() {
+	cat 1>&2 <<-'EndOfHelpText'
+	Usage:
+
+	tc_screenshot <thinclient> <session>
+	
+	tc_screenshot takes screenshots of thinclients.
+
+	It is useful for quality control after deploying new
+	VMs or after rolling out new thinclient software.
+	
+	<session> is an identifier. You can choose it freely.
+
+	The screenshot will be put into the following file:
+	${AMOOTHEI_SCREENSHOT_DIR}/<session>/<thinclient>.png
+
+	tc_screenshot is part of the amoothei-tc-tools collection.
+
+	Amoothei-vdi is a virtual desktop infrastructure
+	solution based on RHEV / Ovirt.
+
+	Documentation: see amoothei-tc-tools.md.
+EndOfHelpText
+
+	exit 1;
+}
+
+ARGV=( $* )
+
+source_configfiles
+parse_cmdline_twoargument "$*"
+
+if [[ -z "${AMOOTHEI_SCREENSHOT_DIR}" ]]; then
+	error Please configure $AMOOTHEI_SCREENSHOT_DIR .
+	error
+	display_usage
+fi
+
+FILENAME="$1.png"
+SESSION="$2"
+
+SESSION_DIR="${AMOOTHEI_SCREENSHOT_DIR}/${SESSION}"
+SCREENSHOT_DEST="${SESSION_DIR}/${FILENAME}"
+
+if [[ ! -e "$SESSION_DIR" ]]; then
+	echo "The session directory '$SESSION_DIR' does not exist."
+	echo "Trying to create it..."
+	mkdir -p "$SESSION_DIR"	
+	if [[ $? -eq 0 ]]; then
+		echo "Successfully created '$SESSION_DIR'."
+	else
+		error "Failed to create '$SESSION_DIR'."
+		error "Aborting."
+		exit -1
+	fi
+fi
+
+debug tc_ssh $1 -l vdiclient -- "$SCREENSHOT_CMDLINE" > $SCREENSHOT_DEST
+tc_ssh $1 -l vdiclient -- "$SCREENSHOT_CMDLINE" > $SCREENSHOT_DEST
+RETCODE=$?
+
+if [[ $RETCODE -ne 0 ]]; then
+	error "Taking screenshot failed with return code $RETCODE."
+fi
+
+exit $RETCODE
+

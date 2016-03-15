@@ -49,7 +49,37 @@ FIXME
 Sample config file: See `sample_config/amoothei-tc-tools.conf`.
 
 ### SSH Key
-FIXME
+The SSH private key (used by amoothei-tc-tools) and the 
+SSH public key (deployed to thinclients in the kickstart post section) must match.
+
+A new private/public ssh keypair can be created like this:
+ 
+```
+[test@testsystem ~]$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/test/.ssh/id_rsa): amoothei-thinclient-ssh-private-key-id_rsa
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in amoothei-thinclient-ssh-private-key-id_rsa.
+Your public key has been saved in amoothei-thinclient-ssh-private-key-id_rsa.pub.
+The key fingerprint is:
+5a:e2:d3:2e:be:dd:b4:ea:f7:bd:7b:a3:52:7f:a5:14 test@testsystem
+The key's randomart image is:
++--[ RSA 2048]----+
+|                 |
+|                 |
+|                 |
+|              E  |
+|      . S      . |
+|     . =     .. .|
+|      + . . .....|
+|      .+ o.o ..oo|
+|     .o+=oo.o.=+o|
++-----------------+
+```
+
+Afterwards, copy the private key to `/etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa`,
+and paste the public key into the kickstart post section (search for `authorized_keys` in the kickstart file).
 
 ### Individual config file
 After sourcing the main config file, the optional individual config file is sourced. 
@@ -64,9 +94,6 @@ This allows you to create custom instances (see [below](#custom-tool-instances))
     + Tool `tc_screenshot` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_screenshot.conf`
     + Tool `tc_rollout_kexec` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_rollout_kexec.conf`
     + Custom tool `tc_my_custom_tool` ---> individual config file: `${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_my_custom_tool.conf`
-
-
-FIXME: needs to be implemented.
 
 ## Tools
 
@@ -179,11 +206,9 @@ Re-Install a thinclient.
 Kickstarting a thinclient is so fast that there is no need for a thinclient upgrade procedure. Instead, we simply re-install thinclients whenever there is a change to configuration or to amoothei-tc-connectspice. But we don't want to touch every thinclient by hand. This tool makes re-installation really easy:
 
 1. make sure TC is running
-2. ```tc_kexec <TC>```
+2. ```tc_rollout_kexec <TC>```
 
 Background: This tools connect to the thinclient and then downloads kernel/initrd of the fedora installer using http. Then, kexec is used to load the new kernel/initrd over the running kernel.
-
-FIXME
 
 ## Custom tool instances
 
@@ -223,18 +248,15 @@ Initiates a TC shutdown / restart.
 Create a screenshot:
 
 ```
-DISPLAY=:0 xwd -root | convert  - png:- > foo.png
+tc_ssh myTC -l vdiclient -- "DISPLAY=:0 xwd -root | convert  - png:-" > screenshot.png
 ```
-
-FIXME: vdiclient
 
 Run a terminal:
 
 ```
-DISPLAY=:0 xterm
+tc_ssh myTC -l vdiclient -- "DISPLAY=:0 xterm &" 
 ```
 
-FIXME: vdiclient
 
 
 

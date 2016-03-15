@@ -231,6 +231,7 @@ fi
 
 #
 # Setup SSH-Keys for Root
+# Details: see docs/amoothei-tc-tools.md
 #
 
 mkdir /root/.ssh
