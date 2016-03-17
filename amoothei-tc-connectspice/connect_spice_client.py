@@ -85,12 +85,18 @@ import ovirtsdk.api
 class connect_spice_client:
 
     def get_vm_from_db(self):
+        logging.info("Running setup code for db connection...")
         postgres_db_connect = self.config_general['postgres_db_connect']
         sys_uuids = find_thinclient_identifier.get_dmidecode_sysuuid()
         dhcp_hostnames = find_thinclient_identifier.get_dhcp_hostnames()
+        logging.info("Running setup code for db connection... done")
 
         for i in range(1, 5):
             try:
+                logging.info(
+                    "connecting to database... (iteration {})".format(i)
+                )
+
                 # Connect to an existing database
                 conn = psycopg2.connect(postgres_db_connect)
 
@@ -109,6 +115,10 @@ class connect_spice_client:
 
                 cur.close()
                 conn.close()
+
+                logging.info(
+                    "connecting to database... done (iteration {})".format(i)
+                )
 
                 if results is None or len(results) == 0:
                     raise AssertionFailedException(
@@ -133,10 +143,23 @@ class connect_spice_client:
                     ex.message is not None
                     and ex.message.startswith("timeout expired")
                 ):
-                    print "network problem..."
+                    logging.info(
+                        "connecting to database... failed. (iteration {})"
+                        .format(i)
+                    )
+                    self.notify_waiting_for_db_connection()
+                    time.sleep(2)
                     continue
                 else:
+                    logging.exception(ex)
                     raise ex
+
+            logging.error("Connecting to database: giving up.")
+
+            raise FailedToConnectToDatabaseException(
+                "Es konnte keine Datenbank-Verbindung hergestellt werden.\n"
+                "Bitte Netzwerk überprüfen und evt. erneut probieren."
+            )
 
     def prepare_vm(self):
         # A spice-connection can only be established when the VM is running
@@ -788,6 +811,10 @@ class ToManyVMsAssignedToThisThinclientException(RetryException):
 
 
 class NotSpiceConsoleException(RetryException):
+    pass
+
+
+class FailedToConnectToDatabaseException(RetryException):
     pass
 
 
