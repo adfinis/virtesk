@@ -306,6 +306,16 @@ Run a terminal:
 tc_ssh myTC -l vdiclient -- "DISPLAY=:0 xterm &" 
 ```
 
+### For Developers
+Restart X11 + amoothei-tc-connectspice:
+```
+tc_ssh myTC -- "systemctl restart lxdm" 
+```
+
+Simulate a network error (or network delay) during startup:
+```
+tc_ssh myTC -- "systemctl restart lxdm; iptables -A OUTPUT -p udp -j DROP; sleep 6; iptables -D OUTPUT -p udp -j DROP"
+```
 
 
 
