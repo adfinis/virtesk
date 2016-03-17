@@ -46,7 +46,7 @@ def get_dmidecode_sysuuid():
     for line in dmi.splitlines():
         match_uuid = re.search('UUID:\s+([0-9A-Za-z_-]+)', line)
         if match_uuid:
-            result.append(match_uuid.group(1))
+            result.append(match_uuid.group(1).upper())
     return result
 
 

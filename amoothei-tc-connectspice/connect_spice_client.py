@@ -550,6 +550,11 @@ class connect_spice_client:
         result += "Spice-Server: " + self.last_spice_server + "\n"
         result += "Tags: " + str(self.last_vm_tags) + "\n"
         result += "Programmaufruf: " + self_process_cmdline + "\n"
+        result += (
+            "SysUUIDs: " +
+            str(find_thinclient_identifier.get_dmidecode_sysuuid()) +
+            "\n"
+        )
 
         result += "\n\n"
 
