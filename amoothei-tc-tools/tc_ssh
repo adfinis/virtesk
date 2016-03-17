@@ -49,5 +49,9 @@ ssh $SSH_GLOBAL_OPTS ${ssh_opts[@]} $TC -- "${remote_cmdline[@]}"
 
 RETCODE=$?
 
+if [[ $RETCODE -ne 0 ]]; then
+	error_msg "Thinclient $TC: SSH return code: $RETCODE"
+fi
+
 exit $RETCODE
 
