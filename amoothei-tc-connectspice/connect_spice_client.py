@@ -91,7 +91,7 @@ class connect_spice_client:
         dhcp_hostnames = find_thinclient_identifier.get_dhcp_hostnames()
         logging.info("Running setup code for db connection... done")
 
-        for i in range(1, 5):
+        for i in range(1, 5 + 1):
             try:
                 logging.info(
                     "connecting to database... (iteration {})".format(i)
@@ -484,9 +484,31 @@ class connect_spice_client:
             except Exception as ex:
                 logging.debug("Disconnecting from RHEV-REST-API: " +
                               "Silently dropped Exception: " + str(ex))
-        logging.info("connecting to RHEV-REST-API....")
-        self.api = ovirtsdk.api.API(**self.config_connect)
-        logging.info("connecting to RHEV-REST-API: successfull")
+
+        for i in range(1, 5 + 1):
+            try:
+                logging.info(
+                    "connecting to REST-API... (iteration {})".format(i)
+                )
+                self.api = ovirtsdk.api.API(**self.config_connect)
+                logging.info("connecting to REST-API: successfull")
+                return
+            except Exception as ex:
+                logging.info(
+                    "connecting to REST-API... failed. "
+                    "Error: `{}', iteration: {}".format(ex, i)
+                )
+                self.notify_waiting_for_dhcplease()
+                time.sleep(2)
+                continue
+
+            logging.exception(ex)
+            logging.error("Connecting to REST-API: giving up.")
+
+            raise FailedToConnectToRestAPIException(
+                "Es konnte keine API-Verbindung hergestellt werden.\n"
+                "Bitte Netzwerk überprüfen und evt. erneut probieren."
+            )
 
     def collect_debug_information(self):
         # collects debug information to be shown in the support window.
@@ -815,6 +837,10 @@ class NotSpiceConsoleException(RetryException):
 
 
 class FailedToConnectToDatabaseException(RetryException):
+    pass
+
+
+class FailedToConnectToRestAPIException(RetryException):
     pass
 
 
