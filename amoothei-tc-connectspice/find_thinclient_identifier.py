@@ -2,10 +2,6 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
-"""
-Logik, um thinclient-identifiers aus dhcp-lease-files zu extrahieren.
-"""
-
 # Copyright (c) 2013, Adfinis SyGroup AG
 # All rights reserved.
 #
@@ -51,12 +47,10 @@ def get_dmidecode_sysuuid():
 
 
 def find_dhclient_leasefiles():
-    """
-    Sucht nach leasefiles von dhclient.
-    Entspricht im groben dem Shell-Befehl
-        ps ax | grep dhclient
-    dann ist der Parameter zu -lf jeweils das leasefile.
-    """
+    # Finds dhclient lease files.
+    # More or less the same as:
+    #  ps ax | grep dhclient
+    #  and then looking at the -lf parameter.
 
     procdir = os.listdir('/proc')
 
@@ -83,14 +77,6 @@ def find_dhclient_leasefiles():
 
 
 def extract_identifiers_from_leasefiles(leasefilepaths):
-    """
-    Parst dhclient-leasefiles.
-    Sucht nach hostnamen und fixen IPs.
-
-    :param leasefilepaths: liste von Pfaden zu dhclient-leasefiles
-
-    """
-
     hostnames = []
     fixedips = []
     for leasefilepath in leasefilepaths:
@@ -146,12 +132,6 @@ def process_ip(ip):
 
 
 def get_thinclient_identifiers():
-    """
-    Sucht nach brauchbaren identifiers für den jeweiligen thinclient.
-
-    gibt eine Liste von identifiers zurück.
-    """
-
     leasefilepaths = find_dhclient_leasefiles()
     (hostnames, fixedips) = extract_identifiers_from_leasefiles(leasefilepaths)
     identifiers = (["thinclient-hostname-%s" % x for x in hostnames] +

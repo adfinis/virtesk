@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
+# FIXME: HEADER
+
 import connect_spice_client
 
 

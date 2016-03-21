@@ -83,8 +83,6 @@ CONTROLLER_ENABLE_USB = 22
 CONTROLLER_ENABLE_USB_AUTOSHARE = 23
 CONTROLLER_USB_FILTER = 24
 
-CONTROLLER_MENU_ITEM_CLICK = 1001,
-
 
 def ControllerValue(message_id, arg):
     result = struct.pack("=III", message_id, 12, arg)

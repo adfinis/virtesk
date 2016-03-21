@@ -63,24 +63,8 @@ import psycopg2
 
 # Project Imports
 import spice_xpi_controller
-import utils
 import find_thinclient_identifier
 import ovirtsdk.api
-
-
-# class syslog_debug_handler(logging.handlers.SysLogHandler):
-# 	def mapPriority(self, levelName):
-# 		"""
-# 		Map a logging level name to a key in the priority_names map.
-# 		This is useful in two scenarios: when custom levels are being
-# 		used, and in the case where you can't do a straightforward
-# 		mapping by lowercasing the logging level name because of locale-
-# specific issues (see SF #1524081).
-# 		"""
-# 		mapping =  self.priority_map
-# 		mapping['DEBUG']='info'
-# 		return mapping.get(levelName, "warning")
-
 
 class connect_spice_client:
 
@@ -345,11 +329,11 @@ class connect_spice_client:
             shutdown_command=None, reboot_command=None,
         )
 
-        self.config_general = utils.applyconfigdefaults(
+        self.config_general = self.applyconfigdefaults(
             self.config_parser.items('general', raw=True), defaults_general)
         defaults_connect = dict(ca_file=None, insecure=False, filter=False)
 
-        self.config_connect = utils.applyconfigdefaults(
+        self.config_connect = self.applyconfigdefaults(
             self.config_parser.items('connect', raw=True), defaults_connect)
 
         ca_file = os.path.expanduser(self.config_connect['ca_file'])
@@ -431,7 +415,7 @@ class connect_spice_client:
             usb_filter=None,
         )
 
-        self.config_spice_local = utils.applyconfigdefaults(
+        self.config_spice_local = self.applyconfigdefaults(
             self.config_parser.items('spice', raw=True), defaults_spice)
         logging.debug("Spice configuration (local): %s",
                       self.config_spice_local)
@@ -814,6 +798,13 @@ class connect_spice_client:
             raise RebootInProgress("Das System wird neu gestartet...")
         except Exception as ex:
             self.handleExceptionHandlingError(ex)
+
+    def applyconfigdefaults(self, config, defaults):
+        result = copy.copy(defaults)
+        for pair in config:
+            result[pair[0]] = pair[1]
+
+        return result
 
 
 # Exception class hierarchies. Used to classify and categorize exceptions.
