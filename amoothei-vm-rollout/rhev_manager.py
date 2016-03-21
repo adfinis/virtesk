@@ -42,7 +42,6 @@ import textwrap
 import rhev
 import utils
 import constants
-import mytemporary_directory as tmpdir
 
 
 class RhevManager():
@@ -246,7 +245,7 @@ class RhevManager():
             raise Exception('No classroom given')
 
         try:
-            with tmpdir.TemporaryDirectory("vdi_vm_rollout-") as temp_dir:
+            with utils.tempdir("amoothei-virtroom-rollout-") as temp_dir:
                 self.logger.info(
                     "Starting to roll out classroom '{0}'".format(classroom)
                 )

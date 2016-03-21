@@ -28,10 +28,15 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # System imports
+import contextlib
+import errno
 import os
+import shutil
+import tempfile
 
 # Project imports
 import constants
+
 
 class Failure:
 
@@ -68,3 +73,18 @@ def get_valid_config_file(config_file):
         "No config file specified on command line and no "
         "config file available at default locations."
     )
+
+
+@contextlib.contextmanager
+def tempdir(prefix):
+    try:
+        tempdir = tempfile.mkdtemp(prefix=prefix)
+        yield tempdir
+    finally:
+        try:
+            shutil.rmtree(tempdir)
+        except OSError as e:
+            # Reraise unless ENOENT: No such file or directory
+            # (ok if directory has already been deleted)
+            if e.errno != errno.ENOENT:
+                raise
