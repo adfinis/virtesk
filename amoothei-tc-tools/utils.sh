@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# FIXME: HEADER
+
 debug() {
 	if [[ $DEVELOPER_MODE -eq 1 ]]; then
 		echo DEBUG: $* 1>&2

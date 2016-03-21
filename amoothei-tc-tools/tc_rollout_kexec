@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# FIXME: HEADER
 
 # Global variables
 declare -a ARGV
