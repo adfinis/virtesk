@@ -498,7 +498,11 @@ class connect_spice_client:
                     "connecting to REST-API... failed. "
                     "Error: `{}', iteration: {}".format(ex, i)
                 )
-                self.notify_waiting_for_dhcplease()
+
+                # No notifications on first try..
+                if i > 1:
+                    self.notify_waiting_for_dhcplease()
+
                 time.sleep(2)
                 continue
 
