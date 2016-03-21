@@ -2,8 +2,6 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
-"""Diverse Hilfsfunktionen"""
-
 # Copyright (c) 2013, Adfinis SyGroup AG
 # All rights reserved.
 #
@@ -30,149 +28,10 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # System imports
-import copy
 import os
 
 # Project imports
 import constants
-
-
-def myslice(l, stride):
-    """
-    Die Liste l wird in 'stride' lange Teilstücke zerlegt.
-    Es wird eine Liste von Listen(alle stride lang, ausser evt. die letze)
-    zurückgegeben.
-
-        param l:            Liste, die zerstückelt wird
-        type  l:            Liste von beliebigem Typ
-        param stride:       Stückelungsgrösse
-        type stride:        int
-        rtype:              Liste von Listen
-
-    """
-
-    result = []
-    cnt = 0
-    while cnt < len(l):
-        result += [l[cnt: cnt + stride]]
-        cnt += stride
-
-    return result
-
-
-def commonstringprefix(first, second):
-    """
-    Berechnet das gemeinsame Prefix von zwei Strings.
-
-    type first: str
-    type second: str
-    rtype: str
-
-    """
-
-    l = min(len(first), len(second))
-    i = 0
-    while i < l:
-        if (first[i] != second[i]):
-            break
-        i = i + 1
-    result = first[0:i]
-    return result
-
-
-def commonstringsuffix(first, second):
-    """
-    Berechnet das gemeinsame Suffix von zwei Strings.
-
-    type first: str
-    type second: str
-    rtype: str
-
-    """
-    flen = len(first)
-    slen = len(second)
-    l = min(flen, slen)
-    i = 1
-    while i <= l:
-        if(first[flen - i] != second[slen - i]):
-            break
-        i = i + 1
-    return first[flen - i + 1:]
-
-
-def findmiddle(first, second, count=None):
-    """
-    Macht aus zwei Strings, die einen Range der Grösse count
-    repräsentieren, eine Liste, die diesen Range explizit ausdrückt.
-    """
-
-    if len(first) != len(second):
-        raise Exception(
-            "strings passed to findmiddle() have to be of equal length."
-        )
-
-    length = len(first)
-    prefix = commonstringprefix(first, second)
-    suffix = commonstringsuffix(first, second)
-
-    plen = len(prefix)
-    slen = len(suffix)
-
-    firstmiddle = first[plen: length - slen]
-    secondmiddle = second[plen:length - slen]
-
-    print firstmiddle + "|" + secondmiddle
-
-    firstint = int(firstmiddle)
-    secondint = int(secondmiddle)
-
-    assert firstint <= secondint
-
-    if count is not None:
-        if secondint - firstint != count:
-            raise Exception(
-                "findmiddle: {0} + {1} == %i violated".format(
-                    firstint, count, secondint
-                )
-            )
-
-    digits = len(str(secondint))
-    formatstring = "%s%0" + str(digits) + "i%s"
-
-    values = range(firstint, secondint + 1)
-    result = [formatstring % (prefix, val, suffix) for val in values]
-    return result
-
-
-def processrangestring(arg, count=None):
-    strings = arg.split("...")
-    assert len(strings) == 2
-
-    return findmiddle(strings[0], strings[1], count)
-
-
-def applyconfigdefaults(config, defaults):
-    """
-    Konvertiert eine Liste von pairs zu einem Dictionary
-    Das erste Element im Pair wird jeweils als key
-    genommen, das zweite als value.
-
-    param config: [('url', '[url]'), ('username', '[username]')]
-    type config: list
-    param defaults: default-werte
-    type defaults: dict
-    rtype: dict
-    """
-    result = copy.copy(defaults)
-    for pair in config:
-        result[pair[0]] = pair[1]
-
-    return result
-
-
-def escape_for_ovirt_query(query):
-    return query.replace('_', '*')
-
 
 class Failure:
 

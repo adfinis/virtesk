@@ -31,9 +31,6 @@
 
 import os
 
-MODULE_NAME = 'adsy_rhev_tools'
-LIBRARY_DIRECTORY = 'lib'
-
 DEFAULT_CONFIGURATION_FILE_NAME = 'adsy-rhev-tools.config'
 
 CONFIG_FILE_SEARCH_PATH = [

@@ -2,8 +2,6 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
-"""Documentation about the module... may be multi-line"""
-
 # Copyright (c) 2013, Adfinis SyGroup AG
 # All rights reserved.
 #
@@ -41,7 +39,6 @@ import argparse
 import textwrap
 
 # Project imports
-# import singletonmixin
 import rhev
 import utils
 import constants

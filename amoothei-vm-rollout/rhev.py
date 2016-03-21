@@ -2,8 +2,6 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
-"""Documentation about the module... may be multi-line"""
-
 # Copyright (c) 2013, Adfinis SyGroup AG
 # All rights reserved.
 #
@@ -368,11 +366,9 @@ class rhev:
             cluster=vm_cluster,
             template=vm_template,
             os=vm_os,
-            # timezone="Europe/Berlin",
-            # timezone="W. Europe Standard Time",
-            # timezone="Europe/London",
             timezone=vmconfig['workaround_timezone'],
-            description=vmconfig['description'])
+            description=vmconfig['description']
+        )
         vm = None
 
         try:
@@ -429,7 +425,6 @@ class rhev:
         vm_name = vmconfig['rhev_vm_name']
         nic_name = "nic0"
         nic_interface = "virtio"
-        # nic_network_name = "br_v" + str(vmconfig['vlan'])
         nic_network_name = vmconfig['network_name']
 
         existing_nics = vm.nics.list()
@@ -511,8 +506,6 @@ class rhev:
         self.upload_floppy(vmconfig)
         self.attach_floppy(vmconfig)
 
-        # self.create_iso(vmconfig)
-        # self.attach_iso(vmconfig)
         self.start_vm(vmconfig)
 
     def start_vm(self, vmconfig):
@@ -643,9 +636,6 @@ class rhev:
             )
             result = t.render(**vmconfig)
 
-            # with open("Autounattend.xml", "w") as text_file:
-            #    text_file.write(result)
-
             return result
 
         except:
@@ -768,7 +758,7 @@ class rhev:
         )
 
     def create_vm_snapshot(self, vmconfig):
-        # creates a snapshot of a VM with a given description.
+        # Creates a snapshot of a VM with a given description.
         #
         # Doesn't wait for the snapshot creation process to finish.
         # The VM should not be used until the snapshot is ready.
