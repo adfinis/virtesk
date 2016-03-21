@@ -2,23 +2,6 @@
 # -*- coding: UTF-8 -*-
 # vim: autoindent expandtab tabstop=4 sw=4 sts=4 filetype=python
 
-
-"""
-Dieses Script dient dazu, auf einem Thinclient in einer Redhat
-Enterprise Virtualization(RHEV) Umgebung automatisch eine Spice-Verbindung
-aufzubauen, d.h.
-* eine REST-Verbindung zu RHEV aufzubauen
-* Configuration lokal und aus RHEV-Tags zu ermitteln
-* die diesem Thinclient zugeordnete VM zu bestimmen
-* via REST die Spice-Verbindungsparameter für diese VM zu erfragen
-* den Spice-Client `remote-viewer` starten
-* dem Spice-Client über das in [0] beschriebene binäre Protokoll über ein
-  Unix-Domain-Socket die Verbindungsparameter und Config-Einstellungen zu
-  übergeben
-
-[0]: http://spice-space.org/page/Whiteboard/ControllerProtocol
-"""
-
 # Copyright (c) 2013, Adfinis SyGroup AG
 # All rights reserved.
 #
@@ -66,6 +49,7 @@ import spice_xpi_controller
 import find_thinclient_identifier
 import ovirtsdk.api
 
+
 class connect_spice_client:
 
     def get_vm_from_db(self):
@@ -105,6 +89,8 @@ class connect_spice_client:
                 )
 
                 if results is None or len(results) == 0:
+                    # TRANSLATE:
+                    # "No VM is assigned to this thinclient."
                     raise AssertionFailedException(
                         "Es konnte keine passende VM "
                         "für diesen Thinclient gefunden werden."
@@ -116,9 +102,12 @@ class connect_spice_client:
                 self.vm = self.api.vms.get(self.vm_name)
 
                 if self.vm is None:
+                    # TRANSLATE:
+                    # "The virtual machine assigned to this
+                    #  thinclient does not exist."
                     raise AssertionFailedException(
-                        "Es konnte keine passende VM "
-                        "für diesen Thinclient gefunden werden."
+                        "Die diesem Thinclient zugewiesene "
+                        "virtuelle Maschine existiert nicht."
                     )
                 return self.vm
 
@@ -140,6 +129,9 @@ class connect_spice_client:
 
             logging.error("Connecting to database: giving up.")
 
+            # TRANSLATE:
+            # "Couldn't connect to database. Please check your network
+            #  connection and try again."
             raise FailedToConnectToDatabaseException(
                 "Es konnte keine Datenbank-Verbindung hergestellt werden.\n"
                 "Bitte Netzwerk überprüfen und evt. erneut probieren."
@@ -181,6 +173,9 @@ class connect_spice_client:
         proto = self.vm.display.type_
 
         if proto != 'spice':
+            # TRANSLATE:
+            # "The virtual machine assigned to this thinclient uses
+            #  a display protocol that is not supported by this VDI solution."
             raise NotSpiceConsoleException(
                 "Die diesem Thinclient " +
                 "zugeordnete VM benützt ein nicht unterstütztes " +
@@ -193,6 +188,10 @@ class connect_spice_client:
         action = self.vm.ticket()
 
         if action.status.state != 'complete':
+            # TRANSLATE:
+            # "Couldn't get a spice ticket for the virtual machine assigned
+            #  to this thinclient. Please try again. If the issue persists,
+            #  then please contact the system administrator."
             raise GetSpiceTicketFailedException(
                 "Es konnte kein Spice-Ticket für die diesem Thinclient " +
                 "zugeordnete VM erstellt werden.\n\n" +
@@ -307,10 +306,16 @@ class connect_spice_client:
         returncode = process.wait()
 
         if returncode is 0:
+            # TRANSLATE:
+            # "Disconnected successfully."
             raise RetryException("Die Spice-Verbindung wurde ordnungsgemäss " +
                                  "beendet.")
+
+        # TRANSLATE:
+        # "The spice connection terminated abnormally."
         raise SpiceClientExitedAbnormallyException(
-            "Die Spice-Verbindung wurde unsachgemäss beendet")
+            "Die Spice-Verbindung wurde unsachgemäss beendet"
+        )
 
     def parse_arguments(self):
         # Commandline argument parsing
@@ -493,6 +498,9 @@ class connect_spice_client:
             logging.exception(ex)
             logging.error("Connecting to REST-API: giving up.")
 
+            # TRANSLATE:
+            # "Failed to connect to API.\n"
+            # "Please check the network connection and try again."
             raise FailedToConnectToRestAPIException(
                 "Es konnte keine API-Verbindung hergestellt werden.\n"
                 "Bitte Netzwerk überprüfen und evt. erneut probieren."
@@ -528,12 +536,19 @@ class connect_spice_client:
         self_process_cmdline = "\n".join(
             textwrap.wrap(self_process_cmdline.replace('\0', ' '), 60))
 
+        # TRANSLATE:
+        # "Last connection"
         result += (
             "===========================================================\n"
             "    letzte Verbindung\n"
             "===========================================================\n"
         )
 
+        # TRANSLATE:
+        # "Assigned VM(s): "
+        # "Spice server: "
+        # "Tags: "
+        # "Program command line: "
         result += "Zugewiesene VM(s): " + str(self.last_vm_names) + "\n"
         result += "Spice-Server: " + self.last_spice_server + "\n"
         result += "Tags: " + str(self.last_vm_tags) + "\n"
@@ -547,6 +562,8 @@ class connect_spice_client:
         result += "\n\n"
 
         if self.last_exception_info is not None:
+            # TRANSLATE:
+            # "Last Exception"
             result += (
                 "===========================================================\n"
                 "    letzte Exception\n"
@@ -624,8 +641,11 @@ class connect_spice_client:
             self.notify_waiting_for_dhcplease()
             time.sleep(4)
 
+        # TRANSLATE:
+        # "Network error. Please contact the system administrator."
         raise NetworkError(
-            "Netzwerk Fehler: Bitte kontaktieren Sie den System Administrator")
+            "Netzwerk Fehler: Bitte kontaktieren Sie den System Administrator"
+        )
 
     def main_action_sequence(self):
         self.raise_exception_again_in_main_action_sequence()
@@ -760,9 +780,13 @@ class connect_spice_client:
         # The end-user can't see the exception message.
         # The exception message is logged.
         logging.exception(ex)
+
+        # TRANSLATE:
+        # "A general error occured."
+        # "Please contact the system administrator."
         masking_exception = MaskingException(
             "Ein allgemeiner Fehler ist " +
-            "aufgetreten.\n\nDetails sind nur für Berechtigte einsehbar.\n\n" +
+            "aufgetreten.\n\n" +
             "Bitte kontaktieren sie den System Administrator."
         )
         self.handleRetryException(masking_exception)
@@ -783,6 +807,8 @@ class connect_spice_client:
             cmdlist = shlex.split(cmd)
             logging.debug("shutdown-command: %s", cmdlist)
             subprocess.call(cmdlist, shell=False)
+            # TRANSLATE:
+            # "Shutting down system..."
             raise ShutdownInProgress("Das System wird heruntergefahren...")
         except Exception as ex:
             self.handleExceptionHandlingError(ex)
@@ -795,6 +821,8 @@ class connect_spice_client:
             cmdlist = shlex.split(cmd)
             logging.debug("reboot-command: %s", cmdlist)
             subprocess.call(cmdlist, shell=False)
+            # TRANSLATE:
+            # "Restarting system..."
             raise RebootInProgress("Das System wird neu gestartet...")
         except Exception as ex:
             self.handleExceptionHandlingError(ex)
