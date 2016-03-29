@@ -21,7 +21,7 @@ Amoothei-VDI uses an 1:1-Mapping between virtual and physical rooms. This is wel
 ![VDI concept: virtual rooms](visio/amoothei-virtual-rooms.png)
 
 ## Thinclient: Connection setup
-How thinclients connect to their assiged virtal machine:
+How thinclients connect to their assiged virtual machine:
 
 ![Thinclient: VDI connection setup](visio/amoothei-vdi-connection-setup.png) 
 
