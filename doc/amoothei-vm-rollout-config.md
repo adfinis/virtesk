@@ -231,8 +231,8 @@ VM:
 Windows Autounattend:
 
 * **autounattend_templatefile**: Path to Mako template for [Autounattend.xml](autounattend.md).
-* **workaround_os**: [Workaround Operating System](workaround_os.md) to use during Autounattend process. Can be any valid OS available in Ovirt.
-* **workaround_timezone**: [Workaround timezone](workaround_os.md) to use during Autounattend process. Must be a timezone that is valid for the configured *workaround_os*.
+* **workaround_os**: Workaround Operating System to use during Autounattend process. Can be any valid OS available in Ovirt.
+* **workaround_timezone**: Workaround timezone to use during Autounattend process. Must be a timezone that is valid for the configured *workaround_os*.
 
 Permissons:
 

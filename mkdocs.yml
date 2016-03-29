@@ -1,7 +1,7 @@
 site_name: Amoothei-VDI
 docs_dir: doc
 pages:
-- Overview: 'index.md'
+- 'Overview': index.md
 - 'Virtual Rooms':
         - 'VM rollout tools': amoothei-vm-rollout.md
         - 'Installing amoothei-vm-rollout': amoothei-vm-rollout-install.md
