@@ -23,7 +23,6 @@ pages:
 - 'Misc':
         - compatibility.md
         - 'Payload injection': sftp-floppy-upload.md
-        - 'Workarounds': workaround_os.md
         - 'Bugs': bugs.md
         - 'Security': security.md
 
