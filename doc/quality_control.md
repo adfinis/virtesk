@@ -1,4 +1,4 @@
-# Quality Control of virtual rooms
+# Amoothei-VDI: Quality Control of virtual rooms
 
 ---------------------------------------
 

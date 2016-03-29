@@ -1,4 +1,4 @@
-# Configuring virtual rooms
+# Amoothei-VDI: Configuring virtual rooms
 
 The following steps explain the config file of amoothei-vm-rollout, focusing on how to define and configure virtual rooms.
 
@@ -47,11 +47,16 @@ Structure of `amoothei-vm-rollout.conf`:
 All configuration is mandatory. No configuration may be omitted. There are no default values.
 
 
-File locations: 
+Location of `amoothei-vm-rollout.conf`: The scripts do look for the config file in the following locations, first match wins:
+
+* Optional command line argument (`amoothei-virtroom-rollout --config /path/to/amoothei-vm-rollout.conf myroom01`)
+* `~/.config/amoothei-vdi/amoothei-vm-rollout.conf`
+* `/etc/amoothei-vdi/amoothei-vm-rollout.conf`
+
+Other configuration files (`Autounattend.xml.template`, `logging.conf`, ...):
 
 * Absolute paths are valid
 * all other paths are handled relative to the location of `amoothei-vm-rollout.conf`.
-
 
 ## General configuration: section [general]
 ```

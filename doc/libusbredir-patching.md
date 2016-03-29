@@ -1,4 +1,4 @@
-# USB Redirect: avoiding USB reset
+# Amoothei-VDI: USB Redirect: avoiding USB reset
 
 Solution to avoid problems that might occour when redirecting usb devices over spice.
 Only few devices are affected, most devices work without the patches below.

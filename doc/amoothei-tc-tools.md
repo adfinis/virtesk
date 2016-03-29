@@ -1,4 +1,4 @@
-# Amoothei-tc-tools: Manageing TCs efficiently
+# Amoothei-VDI: Manageing thinclients efficiently
 
 ------------------------------------------------
 

@@ -1,4 +1,4 @@
-# Payload mechanism
+# Amoothei-VDI: Payload mechanism
 
 Floppy payloads for VM rollout
 
@@ -14,21 +14,22 @@ This file is passed to the VM inside a floppy image. For passing floppy images, 
 * [Configuring an sftp server for hosting floppy images](#configuring-an-sftp-server-for-hosting-floppy-images)
 * (Installing mtools for floppy image generation)
 
-Please note: the following has only been tested using ovirt linux hosts (RHEL/CentOS 6.x). It never has ben tested on ovirt hypervisor hosts. SELinux has not been tested.
+Please note: the following has only been tested using Ovirt Linux hosts (RHEL/CentOS 6.x). It never has ben tested on ovirt hypervisor hosts. SELinux has not been tested.
 
-Installing vdsm-hook-floppy
-----------------------------
-Floppies are not a standard ovirt feature, however, floppy support can be added using a hook script.
+## Installing vdsm-hook-floppy
+Floppies are not a standard Ovirt feature. However, floppy support can be added using a hook script.
 
-#### Steps done on ovirt hosts:
-Install vdsm-hook-floppy on all your ovirt hosts:
+#### Steps done on Ovirt hosts:
+Install vdsm-hook-floppy on all your Ovirt hosts:
 
 ```
 [root@host ~]# yum install vdsm-hook-floppy
 ```
 
-#### Steps done on ovirt manager:
-On the ovirt manager, we need to add an custom property for floppy configuration to ovirt.
+The package `vdsm-hook-floppy` might not be available for RHEL 6.x. If this is the case, simply install the RPM from Ovirt or EPEL repositories.
+
+#### Steps done on Ovirt manager:
+On the Ovirt manager, we need to add an custom property for floppy configuration to Ovirt.
 
 ```
 # First, take a look at the existing configuration:
@@ -71,8 +72,8 @@ An engine restart is required for the setting to take effect.
 [root@manager ~]# service ovirt-engine restart
 ```
 
-#### Verification using ovirt web interface
-1. log in to ovirt web interface using an administrator account
+#### Verification using Ovirt web interface
+1. log in to Ovirt web interface using an administrator account
 2. choose a VM and edit its properties.
 3. in the edit dialog, navigate to the _custom properties_ tag
 4. Now you should be able to add the _floppy_ custom property to VMs.
@@ -82,7 +83,7 @@ If you really do want to test that floppies do work, a few more steps are necess
 
 1. Put a floppy image on a file system accessible by your ovirt hosts.
    This can be a local filesystem (then you need to pin your VM to this particular host),
-   or also an NFS share accessible by your ovirt host.
+   or also an NFS share accessible and mounted by your ovirt host.
    The floppy image needs to be accessible (read-write) by user qemu / group kvm,
    and SELinux needs to be disabled/permissive.
 2. Adjust the floppy custom property in the VM edit dialog.
@@ -90,16 +91,15 @@ If you really do want to test that floppies do work, a few more steps are necess
 3. Run the VM.
 4. Now the image should be accessible as a floppy drive inside the VM.
 
-Configuring an sftp server for hosting floppy images
-------------------------------------------------------
+## Configuring an sftp server for hosting floppy images
 The [VM rollout script](amoothei-vm-rollout.md) needs a way to upload floppy images,
-so that the images are accessible by the ovirt hosts afterwards. The [VM rollout script](amoothei-vm-rollout.md) uses sftp to upload floppy images, and the ovirt hosts use NFS to access the floppy images.
+so that the images are accessible by the ovirt hosts afterwards. The [VM rollout script](amoothei-vm-rollout.md) uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
 
 ### Choosing a floppy image location
 The image location needs to be accessible by all ovirt hosts. You can for example choose
-a location on an NFS server and then make sure that this NFS share is mounted on all ovirt hosts. 
+a location on an NFS server and then make sure that this NFS share is mounted on all Ovirt hosts. 
 
-But we don't need to create a new NFS share for this, we can reuse an existing one, the NFS share where the ISO images are stored.
+But we don't need to create a new NFS share for this, we can reuse an existing one. Here we use the NFS share where the ISO images are stored.
 
 ```
 [root@host ~]# mount | grep nfs
@@ -117,12 +117,14 @@ Now, we simply store our floppy images in a subdirectory of the ISO NFS share:
 We will need those paths later, so lets assign a name to them:
 
 ```
+# Floppy directory (as seen by all Ovirt Linux hosts)
 $FLOPPY_LOCATION_NFSCLIENT := /rhev/data-center/mnt/mountpoint/floppy
-$FLOPPY_LOCATION_NFSSERVER := /path/to/iso/share/floppy
+
+# Floppy directory (as seen by the NFS-Server and SFTP-Server)
+$FLOPPY_LOCATION_NFSSERVER := /path/to/iso/share/floppy   
 ```
 
-Both paths point to the same directory, the first from the point of view
-of the ovirt hosts, the second on the nfs server.
+Both paths point to the same directory, the directory where the floppy images shall be stored.
 
 ### Setting up sftp access to the floppy image location
 The sftp server can be any linux machine with access to nfs-server:$FLOPPY_LOCATION_NFSSERVER
@@ -156,7 +158,7 @@ Match User sftp-floppy-upload
 ```
 
 This jails the user sftp-floppy-upload into /srv/floppy_chroot/ and makes sure
-that sftp-floppy-upload can only use sftp and doesn't shell access.
+that sftp-floppy-upload can only use sftp and doesn't have shell access.
 
 Apply changes:
 
@@ -173,6 +175,7 @@ Setting up ssh-keys:
 [root@sftp-server] # chmod 700 /home/sftp-floppy-upload/.ssh
 [root@sftp-server] # chmod 600 /home/sftp-floppy-upload/.ssh/authorized_keys
 [root@sftp-server] # chown -R sftp-floppy-upload:sftp-floppy-upload /home/sftp-floppy-upload/
+[root@sftp-server] # restorecon -r -v /home/sftp-floppy-upload/.ssh/
 ```
 
 OpenSSH has some very restrictive settings regarding the ```ChrootDirectory``` directive. This prevents us from chrooting into ```$FLOPPY_LOCATION_NFSSERVER``` directly, so we have to work with bind-mounts:
@@ -201,8 +204,7 @@ Now, you should be able to list/put/remove files using the following command:
  [user@some-client] sftp -i ssh-private-key sftp-floppy-upload@sftp-server
 ```
 
-Troubleshooting
------------------
+## Troubleshooting
 ### Duplicate floppy drive
 Ovirt error message:
 ```
@@ -221,8 +223,7 @@ If a VM with a floppy configured using the custom property fails to run, careful
 * Is the path to the floppy image correct?
 
 
-Alternative payload mechanisms
--------------------------------
+## Alternative payload mechanisms
 A lot of mechanisms for injecting a payload into an ovirt VM were evaluated, but all have their problems:
 
 * Passing Unattended.xml content through API:
@@ -251,4 +252,6 @@ A lot of mechanisms for injecting a payload into an ovirt VM were evaluated, but
     This article. Complicated, but it works.
 
 
+## See also:
+* [Ovirt OSinfo settings](goldimage.md#ovirt-os-info-settings)
 

@@ -1,4 +1,4 @@
-# Start and Stop management of virtual rooms
+# Amoothei-VDI: Start and Stop management of virtual rooms
 
 ------------------------
 

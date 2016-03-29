@@ -1,9 +1,9 @@
-# Bugs in amoothei-vdi
+# Amoothei-VDI: Known bugs
 
 ----------------------
 
-
-## VMSnapshotCdroms object comparison caused infinite loop.
+## Harmless bugs
+### VMSnapshotCdroms object comparison caused infinite loop [uncritical]
 
 Error messages while rolling out a virtual room:
 
@@ -34,4 +34,4 @@ VMSnapshotCdroms object comparison caused infinite loop.
 
 Cause: unknown. Maybe a python phaenomen related to recursive object structures, like described in [https://mail.python.org/pipermail/python-dev/2003-October/039445.html](https://mail.python.org/pipermail/python-dev/2003-October/039445.html)?
 
-Impact: none, the VMs and the snapshots are created successfully.
+Impact: **none**, the VMs and the snapshots are created successfully.

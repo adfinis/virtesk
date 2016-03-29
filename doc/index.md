@@ -1,4 +1,4 @@
-# Introduction
+# Amoothei-VDI: Introduction
 amoothei-vdi is a vdi solution built around Ovirt / Spice / KVM.
 
 amoothei-vdi consists of the following parts:

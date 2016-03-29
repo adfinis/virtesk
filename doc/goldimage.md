@@ -1,4 +1,4 @@
-# Windows Goldimage
+# Amoothei-VDI: Windows Goldimage
 
 How to create and seal a windows goldimage and use it as a RHEV/Ovirt VmTemplate.
 
@@ -35,6 +35,31 @@ rem Disable TCP Task-Offloading.
 rem Useful to avoid problems with incorrect udp checksums regarding virtio-net + dhcp
 reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\TCPIP\Parameters" /v DisableTaskOffload /t REG_DWORD /d 1 /f
 ```
+
+## Ovirt OS info settings
+Amoothei-VDI puts the Unattend Setup Config file into the file `a:\sysprep.inf` on a [virtual floppy disk](sftp-floppy-upload.md). To make sure windows finds the floppy there, setting the windows registry key as described above is sufficient. However, if you wanna use the same Goldimage VmTemplate for other purposes (Ovirt UserPortal / PowerUserPortal, manual creation of VMs, manual creation of Ovirt VmPools), then the following settings on your RHEV / Ovirt Manager are needed to make sure that RHEV / Ovirt will put their version of the Unattended Setup Config file into the right location:
+
+```
+mkdir -p /etc/ovirt-engine/osinfo.conf.d/
+mkdir -p /etc/ovirt-engine/sysprep/
+cp /usr/share/ovirt-engine/conf/sysprep/sysprep.w7x64 /etc/ovirt-engine/sysprep/sysprep.w7x64
+vim /etc/ovirt-engine/sysprep/sysprep.w7x64          # adjust settings
+```
+
+/etc/ovirt-engine/osinfo.conf.d/10-sysprep.properties
+```
+os.windows_7x64.sysprepPath.value = /etc/ovirt-engine/sysprep/sysprep.w7x64
+
+## Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1192495
+os.windows_7x64.sysprepFileName.value = sysprep.inf
+```
+
+Restart ovirt-engine:
+```
+service ovirt-engine restart
+```
+
+
 
 ## Sysprep
 The following step will generalize your Goldimage VM. You will "partially loose" your Goldimage VM, so might wanna create a VM snapshot beforehand.

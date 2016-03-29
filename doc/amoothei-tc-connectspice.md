@@ -1,4 +1,4 @@
-# VDI Software running on thinclients
+# Amoothei-VDI: VDI Software running on thinclients
 
 
 ---------------------------------------

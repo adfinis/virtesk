@@ -22,9 +22,18 @@ Virtual machines can be isolated by putting them into different Ovirt networks a
 + Server verifies client identity using username/password.
 + Thinclients have only limited, read only database access.
 
+**Remote logging**: `Thinclient ---> infrastructure server (tcp/512)`
+
++ Remote logging is not secure. All logging is sent in plain-text over the network.
++ No authentication and no encryption is done.
++ The thinclients are logging sensitive data over the network.
++ Mitigation strategies:
+    + Put thinclients in a protected network (see below).
+    + Disable remote logging. Thinclients work fine with local logging only - however, remote logging is useful for problem analysis.
+
 Thinclients do need to store credentials. If those credentials leak, the security concept will break down. 
-The thinclients themself won't leak their credentials. However, common network boot techiques usually require
-all code and configuration to be accessible unauthenicated, where an attacker might retrieve them - see below.
+The thinclients themself won't leak their credentials (exception: remote logging). However, common network boot techiques usually require
+all code and configuration to be accessible unauthenticated, where an attacker might retrieve them - see below.
 
 ## PXE Rollout
 **PXE is insecure.**

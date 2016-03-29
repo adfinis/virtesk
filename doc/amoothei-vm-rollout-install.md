@@ -1,4 +1,4 @@
-# Installing VM rollout tools
+# Amoothei-VDI: Installing VM rollout tools
 
 
 ------------------
@@ -14,6 +14,12 @@ To run amoothei-vm-rollout, the system must be prepared first:
 
 ## Installation
 Installation has been tested on CentOS 7. Fedora >= 20 should work as well. RHEL 6 / CentOS 6 might not work (Code requires python 2.7)
+
+Dependencies:
+
+```
+yum install ovirt-engine-sdk-python python-mako mtools
+```
 
 Cloneing git repository:
 
