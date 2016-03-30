@@ -25,6 +25,7 @@ pages:
         - 'Payload injection': sftp-floppy-upload.md
         - 'Bugs': bugs.md
         - 'Security': security.md
+        - 'License': license.md
 
 markdown_extensions:
     - toc:
