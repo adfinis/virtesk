@@ -2,6 +2,7 @@
 Amoothei-VDI is a [Open Source](license.md) VDI solution based on 
 Red Hat Enterprise Virtualization (or Ovirt Virtualization) and
 the Spice VDI protocol.
+
 ---------------------
 
 
