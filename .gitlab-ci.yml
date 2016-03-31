@@ -1,0 +1,18 @@
+
+before_script:
+  - source /etc/profile
+  - git submodule sync
+  - git submodule update --init --recursive
+
+stages:
+  - docs
+
+make-docs:
+  stage: docs
+  script:
+    - pyenv local 2.7.11
+    - rm -rf _build
+    - make html
+  artifacts:
+    paths:
+      - html/*
