@@ -2,10 +2,13 @@
 Thinclients
 ===========
 
-.. include::    amoothei-infrastructure-server.rst
-.. include::    amoothei-tc-kickstart.rst
-.. include::    ipxe-image.rst
-.. include::    amoothei-tc-tools.rst
-.. include::    amoothei-tc-connectspice.rst
-.. include::    avoiding USB Reset'
-.. include::    tc-vm-mapping.rst
+.. toctree::
+   :maxdepth: 3
+
+   amoothei-infrastructure-server.rst
+   amoothei-tc-kickstart.rst
+   ipxe-image.rst
+   amoothei-tc-tools.rst
+   amoothei-tc-connectspice.rst
+   libusbredir-patching.rst
+   tc-vm-mapping.rst

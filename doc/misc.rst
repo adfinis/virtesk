@@ -2,9 +2,11 @@
 Misc
 ====
 
+.. toctree::
+   :maxdepth: 3
 
-.. include::   compatibility.rst
-.. include::   sftp-floppy-upload.rst
-.. include::   bugs.rst
-.. include::   security.rst
-.. include::   license.rst
+   compatibility.rst
+   sftp-floppy-upload.rst
+   bugs.rst
+   security.rst
+   license.rst
