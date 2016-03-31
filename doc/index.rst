@@ -9,7 +9,7 @@ Amoothei
 Contents:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
 
    overview.rst
    virtual_rooms.rst 

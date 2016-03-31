@@ -1,7 +1,6 @@
 Manageing thinclients efficiently
 ===============================================
 
---------------
 
 Introduction
 ------------

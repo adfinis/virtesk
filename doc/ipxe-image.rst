@@ -1,7 +1,6 @@
 iPXE image for cdroms and usb flash drives
 ========================================================
 
---------------
 
 Introduction
 ------------

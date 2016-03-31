@@ -1,3 +1,7 @@
+.. |br| raw:: html
+
+   <br />
+
 Infrastructure server
 =====================
 
@@ -7,37 +11,25 @@ Introduction
 
 A lot of infrastructure services are needed for VDI:
 
--  TFTP / HTTP / NFS4 for thinclients:
-
-   (Network installation using PXE + Fedora Kickstart)
+-  TFTP / HTTP / NFS4 for thinclients - Network installation using PXE + Fedora Kickstart
 
 -  Fedora mirror
 
--  Syslog server, accessible to LAN:
+-  Syslog server, accessible to LAN - Thinclients use syslog remote logging during kickstart installation and normal operation. This way problems can be analyzed even if thinclients are off.
 
-   | Thinclients use syslog remote logging during kickstart
-   | installation and normal operation. This way problems
-   | can be analyzed even if thinclients are off.
+-  Postgres database - Used by thinclients to determine which VM is displayed on which TC.
 
--  Postgres database:
-
-   Used by thinclients to determine which VM is displayed on which TC.
-
-| This article explains how to set up an infrastructure server based on
-  EL 7
-| hosting all those services.
+This article explains how to set up an infrastructure server based on EL 7 hosting all those services.
 
 
 
 Enterprise Linux 7 installation
 -------------------------------
 
-| Normal RHEL 7 / CentOS 7 / Scientific Linux 7 installation, as
-  documented here:
-| https://access.redhat.com/documentation/en/red-hat-enterprise-linux/
 
-This article is based on experience with a CentOS 7 infrastructure
-server.
+Normal RHEL 7 / CentOS 7 / Scientific Linux 7 installation, as documented here |br|
+https://access.redhat.com/documentation/en/red-hat-enterprise-linux/ |br|
+This article is based on experience with a CentOS 7 infrastructure server.
 
 Requirements:
 
@@ -59,8 +51,8 @@ Requirements:
    is recommended that the infrastructure server is allowed to connect
    to thinclients using ssh (port 22/tcp) and icmp.
 
-| LVM is recommended for disk space management, with the following
-| file systems on seperate logical volumes:
+LVM is recommended for disk space management, with the following file systems on seperate logical volumes:
+
 
 +----------------------+--------------+-------------------------------------------------+
 | filesystem           | size         | comment                                         |
@@ -214,12 +206,9 @@ Enabling and starting httpd:
 Fedora 22 mirror
 ----------------
 
-| First add repository definitions for fedora 22 to our infrastructure
-  server.
-| By setting ``enabled=0`` we can access those repositories, but they
-  don't
-| interfere with package installation/update on our infrastructure
-  server.
+First add repository definitions for fedora 22 to our infrastructure server. |br|
+By setting ``enabled=0`` we can access those repositories, but they don't interfere with package installation/update on our infrastructure server.
+
 
 ::
 
@@ -279,9 +268,8 @@ Mirroring Fedora 22:
     cd /var/www/mirror/public/fedora/
     for REPO in fedora22 fedora22-updates; do reposync --download-metadata -m -n -l -r $REPO; done
 
-| If reposync shows any errors, like packages that couldn't be
-  downloaded, then repeat those steps
-| until all packages are fetched successfully.
+If reposync shows any errors, like packages that couldn't be downloaded, then repeat those steps until all packages are fetched successfully.
+
 
 Creating repository metadata:
 
@@ -294,12 +282,9 @@ Creating repository metadata:
     createrepo --workers=10 -g comps.xml .
 
 Fedora 22 installation tree
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| We need to setup a bootable fedora installation tree. We are gonna use
-  an official
-| Fedora DVD image to archive this.
-
+We need to setup a bootable fedora installation tree. We are gonna use an official Fedora DVD image to archive this. |br|
 We recommend to use the "Fedora Server"-Spin.
 
 Download a Fedora Installation ISO, mount it loopback, and copy all
@@ -318,13 +303,10 @@ copied as well.
 Network boot
 ------------
 
-legacy bios versus UEFI
+Legacy bios versus UEFI
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-| This guide has only been tested with legacy bios. UEFI Thinclients
-  should work fine
-| as long as the compatibility mode / legacy mode of UEFI is used.
-
+This guide has only been tested with legacy bios. UEFI Thinclients should work fine as long as the compatibility mode / legacy mode of UEFI is used. |br|
 EFI installation of TCs has not been implemented and is not supported.
 This feature could be engineered, but so far there hasn't been any need
 for it.
@@ -332,15 +314,8 @@ for it.
 Setting up DHCP service
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-| We assume that there is already an existing DHCP service, so there is
-  no
-| need to install a new one.
-
-| Configure your existing DHCP server to allow PXE boot from our
-  infrastructure
-| server. Instructions for that can be found in the `RHEL7 Installation
-  Guide, Chapter 21, Preparing for a Network
-  Installation <https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Installation_Guide/chap-installation-server-setup.html>`__
+We assume that there is already an existing DHCP service, so there is no need to install a new one.
+Configure your existing DHCP server to allow PXE boot from our infrastructure server. Instructions for that can be found in the `RHEL7 Installation Guide, Chapter 21, Preparing for a Network Installation <https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Installation_Guide/chap-installation-server-setup.html>`__
 
 Example configuration of isc-dhcp-server:
 
@@ -377,17 +352,9 @@ of your infrastructure server.
 Setting up boot files
 ~~~~~~~~~~~~~~~~~~~~~
 
-| We do want our network bootloader to be accessible by both TFTP (for
-  PXE)
-| and HTTP (for advanced network boatloaders like iPXE).
-
-| However, existing SELinux rules makes it difficult for httpd to access
-  the
-| files in the standard location /var/lib/tftpboot/ .
-
-| So we create a new directory, /srv/tftpboot/ , and we adjust SELinux
-  rules to
-| make sure that both in.tftpd and httpd are able to access it:
+We do want our network bootloader to be accessible by both TFTP (for PXE) and HTTP (for advanced network boatloaders like iPXE).
+However, existing SELinux rules makes it difficult for httpd to access the files in the standard location /var/lib/tftpboot/ .
+So we create a new directory, /srv/tftpboot/ , and we adjust SELinux rules to make sure that both in.tftpd and httpd are able to access it:
 
 ::
 
@@ -542,7 +509,7 @@ Please adjust the kernel parameter
 ``inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_rollout.ks``
 to make sure it points to the correct loation.
 
-See also: `Kickstart <amoothei-tc-kickstart.md>`__
+See also: `Kickstart <amoothei-tc-kickstart.html>`__
 
 TFTP-Server: in.tftpd
 ~~~~~~~~~~~~~~~~~~~~~
@@ -590,7 +557,7 @@ Making the kickstart file and the amoothei thinclient software available
     cp sample_config/tc_rollout.ks /var/www/mirror/private/thinclients/kickstart/
 
 Then adapt the kickstart file to your environment as described
-`here <amoothei-tc-kickstart.md>`__
+`here <amoothei-tc-kickstart.html>`__
 
 ::
 
@@ -612,13 +579,8 @@ kickstart-post-section:
 Setting up a remote syslog server
 ---------------------------------
 
-| The thinclients use our infrastructure server for remote logging,
-| both during kickstart installation and normal operation.
-
-| Please note: remote logging is insecure (no authentication, no
-  verification,
-| no encryption, could be flooded with messages, ...). Make sure your
-  syslog server is accessible only by trusted clients.
+The thinclients use our infrastructure server for remote logging, both during kickstart installation and normal operation.
+Please note: remote logging is insecure (no authentication, no verification, no encryption, could be flooded with messages, ...). Make sure your syslog server is accessible only by trusted clients.
 
 It is recommended to put /var/log/remote/ on a seperate file system, so
 that no other services are harmed if /var/log/remote/ runs out of
@@ -713,11 +675,8 @@ We create two users, vdi-dbadmin and vdi-readonly:
     Enter it again: 
     -bash-4.2$ exit
 
-| The user vdi-dbadmin will be used by the system administrator (you!)
-  to administer the database and to change the VM-to-TC-mapping.
-| The password for the user vdi-readonly needs to be configured in
-  amoothei-tc-connectspice. It is used to determine the VM that should
-  be displayed on a TC.
+The user vdi-dbadmin will be used by the system administrator (you!) to administer the database and to change the VM-to-TC-mapping. |br|
+The password for the user vdi-readonly needs to be configured in amoothei-tc-connectspice. It is used to determine the VM that should be displayed on a TC.
 
 Creating database, grant permissions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -760,10 +719,7 @@ Permissions: The key shall only be accessible by postgres:
 
 Restart your database to let the changes take effect.
 
-| The certificate, /etc/pki/postgres/postgres\_ssl.crt , should also be
-  installed
-| on all thinclients for secure database access. This is done in the
-  kickstart post-section.
+The certificate, /etc/pki/postgres/postgres\_ssl.crt , should also be installed on all thinclients for secure database access. This is done in the kickstart post-section.
 
 Allow network access
 ~~~~~~~~~~~~~~~~~~~~
@@ -806,9 +762,11 @@ tools.
 For console access, we do recommend ``psql``, for GUI access we do
 recommend ``pgadmin3``.
 
-| A list of postgres shells / tools can be found at:
-| https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
+A list of postgres shells / tools can be found at: |br|
+https://wiki.postgresql.org/wiki/Community_Guide_to_PostgreSQL_GUI_Tools
 
+
+|br|
 Console DB access on your infrastructure server:
 
 /root/.pgpass

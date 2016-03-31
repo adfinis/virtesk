@@ -1,7 +1,6 @@
 Assigning VMs to thinclients: Database layout
 ===========================================================
 
---------------
 
 Introduction
 ------------
