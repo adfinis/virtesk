@@ -1,4 +1,4 @@
-Amoothei-VDI: VDI Software running on thinclients
+VDI Software running on thinclients
 =================================================
 
 --------------
@@ -215,7 +215,7 @@ Support message
 ::
 
     ===========================================================
-        Amoothei-VDI: Support
+        Support
     ===========================================================
 
     For support, please call ...

@@ -1,4 +1,4 @@
-Amoothei-VDI: Rollout tools for virtual rooms
+Rollout tools for virtual rooms
 =============================================
 
 Tools for creating and manageing VDI VMs, grouped into virtual rooms.

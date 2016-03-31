@@ -1,4 +1,4 @@
-Amoothei-VDI: Infrastructure server
+Infrastructure server
 ===================================
 
 --------------

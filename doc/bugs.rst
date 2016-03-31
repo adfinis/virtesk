@@ -1,4 +1,4 @@
-Amoothei-VDI: Known bugs
+Known bugs
 ========================
 
 --------------

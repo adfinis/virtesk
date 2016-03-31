@@ -1,4 +1,4 @@
-Amoothei-VDI: USB Redirect: avoiding USB reset
+USB Redirect: avoiding USB reset
 ==============================================
 
 | Solution to avoid problems that might occour when redirecting usb

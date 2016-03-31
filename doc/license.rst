@@ -1,4 +1,4 @@
-Amoothei-VDI: License information
+License information
 =================================
 
 --------------

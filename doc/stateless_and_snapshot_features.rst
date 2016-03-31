@@ -1,4 +1,4 @@
-Amoothei-VDI: Stateless and snapshot features
+Stateless and snapshot features
 =============================================
 
 Features to reset virtual rooms to a well-defined, known state

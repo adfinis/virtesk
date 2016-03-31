@@ -1,4 +1,4 @@
-Amoothei-VDI: Switching virtual rooms
+Switching virtual rooms
 =====================================
 
 --------------

@@ -1,4 +1,4 @@
-Amoothei-VDI: Payload mechanism
+Payload mechanism
 ===============================
 
 Floppy payloads for VM rollout

@@ -1,4 +1,4 @@
-Amoothei-VDI: Compatibility
+Compatibility
 ===========================
 
 Current versions:

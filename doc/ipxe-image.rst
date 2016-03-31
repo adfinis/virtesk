@@ -1,4 +1,4 @@
-Amoothei-VDI: iPXE image for cdroms and usb flash drives
+iPXE image for cdroms and usb flash drives
 ========================================================
 
 --------------

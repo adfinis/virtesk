@@ -1,4 +1,4 @@
-Amoothei-VDI: Assigning VMs to thinclients: Database layout
+Assigning VMs to thinclients: Database layout
 ===========================================================
 
 --------------

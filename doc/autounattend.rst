@@ -1,4 +1,4 @@
-Amoothei-VDI: Windows Unattended Setup
+Windows Unattended Setup
 ======================================
 
 --------------

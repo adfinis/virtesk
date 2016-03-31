@@ -1,4 +1,4 @@
-Amoothei-VDI: Installing VM rollout tools
+Installing VM rollout tools
 =========================================
 
 --------------

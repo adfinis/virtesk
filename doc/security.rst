@@ -1,4 +1,4 @@
-Amoothei-VDI: Security considerations
+Security considerations
 =====================================
 
 --------------

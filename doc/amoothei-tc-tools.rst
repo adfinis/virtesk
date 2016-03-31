@@ -1,4 +1,4 @@
-Amoothei-VDI: Manageing thinclients efficiently
+Manageing thinclients efficiently
 ===============================================
 
 --------------

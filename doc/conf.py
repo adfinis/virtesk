@@ -14,7 +14,7 @@
 
 import sys
 import os
-
+import sphinx_rtd_theme
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'amoothei'
-copyright = u'2016, simonn'
-author = u'simonn'
+copyright = u'2016, Adfinis SyGroup'
+author = u'Simon Neininger, Ueli Isch'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -63,7 +63,7 @@ release = u'1.0'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -100,7 +100,7 @@ pygments_style = 'sphinx'
 #keep_warnings = False
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -115,8 +115,7 @@ html_theme = 'adsy'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = [ 'adsy-sphinx-template.src/html' ]
-
+html_theme_path = [ 'adsy-sphinx-template.src/html', sphinx_rtd_theme.get_html_theme_path()]
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = None
@@ -234,7 +233,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'amoothei.tex', u'amoothei Documentation',
-     u'simonn', 'manual'),
+     u'Simon Neininger, Ueli Isch', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -263,7 +262,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'amoothei', u'amoothei Documentation',
+    (master_doc, 'amoothei', u'Amoothei Documentation',
      [author], 1)
 ]
 
@@ -277,8 +276,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'amoothei', u'amoothei Documentation',
-     author, 'amoothei', 'One line description of project.',
+    (master_doc, 'amoothei', u'Amoothei Documentation',
+     author, 'amoothei', 'Amoothei-VDI is a Open Source VDI solution based on Red Hat Enterprise Virtualization (or Ovirt Virtualization) and the Spice VDI protocol.',
      'Miscellaneous'),
 ]
 

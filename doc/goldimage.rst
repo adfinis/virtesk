@@ -1,4 +1,4 @@
-Amoothei-VDI: Windows Goldimage
+Windows Goldimage
 ===============================
 
 How to create and seal a windows goldimage and use it as a RHEV/Ovirt

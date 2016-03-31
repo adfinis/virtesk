@@ -1,4 +1,4 @@
-Amoothei-VDI: Configuring virtual rooms
+Configuring virtual rooms
 =======================================
 
 The following steps explain the config file of amoothei-vm-rollout,
