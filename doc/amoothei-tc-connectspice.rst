@@ -1,7 +1,6 @@
 VDI Software running on thinclients
 =================================================
 
---------------
 
 Introduction
 ------------

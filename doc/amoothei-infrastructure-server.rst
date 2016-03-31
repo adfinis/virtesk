@@ -1,7 +1,6 @@
 Infrastructure server
-===================================
+=====================
 
---------------
 
 Introduction
 ------------
@@ -27,6 +26,8 @@ A lot of infrastructure services are needed for VDI:
 | This article explains how to set up an infrastructure server based on
   EL 7
 | hosting all those services.
+
+
 
 Enterprise Linux 7 installation
 -------------------------------
@@ -328,14 +329,14 @@ EFI installation of TCs has not been implemented and is not supported.
 This feature could be engineered, but so far there hasn't been any need
 for it.
 
-Setting up dhcp service
+Setting up DHCP service
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-| We assume that there is already an existing dhcp service, so there is
+| We assume that there is already an existing DHCP service, so there is
   no
 | need to install a new one.
 
-| Configure your existing dhcp server to allow PXE boot from our
+| Configure your existing DHCP server to allow PXE boot from our
   infrastructure
 | server. Instructions for that can be found in the `RHEL7 Installation
   Guide, Chapter 21, Preparing for a Network

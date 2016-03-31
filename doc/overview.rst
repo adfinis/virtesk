@@ -1,5 +1,5 @@
 Overview
-============
+========
 
 | Amoothei-VDI is a `Open Source <license.md>`__ VDI solution based on
 | Red Hat Enterprise Virtualization (or Ovirt Virtualization) and
@@ -7,7 +7,7 @@ Overview
 
 
 
-Archidecture Overview
+Architecture Overview
 ---------------------
 
 Seemless user experience: Ready for work in just two steps

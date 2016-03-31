@@ -1,7 +1,6 @@
-Amoothei-VDI - Thinclient-Rollout using Kickstart
-=================================================
+Thinclient-Rollout using Kickstart
+==================================
 
---------------
 
 Goal - perfect rollout experience
 =================================
@@ -31,8 +30,8 @@ Goal - perfect rollout experience
 | Instead of PXE network booting, thinclients can also be re-installed
   using ssh and `kexec <amoothei-tc-tools.md#tc_kexec>`__.
 
-WARNING: DATA LOSS
-------------------
+.. warning:: WARNING: DATA LOSS
+
 
 | The provided sample kickstart file will ERASE everything on all hard
   drives and on all usb drives on any computer where
