@@ -15,7 +15,7 @@ make-docs:
     - rm -rf html
     - rm -rf doc/_build
     - make html -C doc
-    - cp doc/_build/html html
+    - cp -r doc/_build/html html
   artifacts:
     paths:
       - html/*
