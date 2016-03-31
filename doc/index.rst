@@ -11,8 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   index.rst
-   
+   overview.rst
+
    amoothei-vm-rollout.rst
    amoothei-vm-rollout-install.rst
    amoothei-vm-rollout-config.rst
