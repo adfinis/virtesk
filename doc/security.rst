@@ -1,7 +1,10 @@
+.. |br| raw:: html
+
+   <br />
+
 Security considerations
 =====================================
 
---------------
 
 Virtual machine isolation
 -------------------------
@@ -47,18 +50,13 @@ Thinclients
    -  Disable remote logging. Thinclients work fine with local logging
       only - however, remote logging is useful for problem analysis.
 
-| Thinclients do need to store credentials. If those credentials leak,
-  the security concept will break down.
-| The thinclients themself won't leak their credentials (exception:
-  remote logging). However, common network boot techiques usually
-  require
-| all code and configuration to be accessible unauthenticated, where an
-  attacker might retrieve them - see below.
+Thinclients do need to store credentials. If those credentials leak, the security concept will break down. The thinclients themself won't leak their credentials (exception: remote logging). However, common network boot techiques usually require all code and configuration to be accessible unauthenticated, where an attacker might retrieve them - see below.
+
 
 PXE Rollout
 -----------
 
-**PXE is insecure.**
+.. note:: PXE is insecure.
 
 Network booting is very convinient. However, PXE is completely insecure.
 
@@ -66,7 +64,7 @@ Recommendations for situations where both security and PXE are needed:
 
 -  **Physical network protection:** The network hardware (switches,
    servers, ...) should be physically protected. Only trusted persons
-   shall be allowed to administrate switches or to plug cables into
+   should be allowed to administrate switches or to plug cables into
    switches.
 -  **Dedicated rollout network:** A dedicated rollout network is used
    for rollout. System administrators need to switch VLANs (or cables)

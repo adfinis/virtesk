@@ -1,3 +1,7 @@
+.. |br| raw:: html
+
+   <br />
+
 Manageing thinclients efficiently
 ===============================================
 
@@ -5,11 +9,9 @@ Manageing thinclients efficiently
 Introduction
 ------------
 
-| amoothei-tc-tools is a collection of utilities for system
-  administrators.
-| They to help to automate the tasks that occur when managing a lot of
-  thinclients.
-
+amoothei-tc-tools is a collection of utilities for system administrators. |br|
+They to help to automate the tasks that occur when managing a lot of thinclients. |br|
+|br|
 Features:
 
 -  Remote access using SSH
@@ -42,17 +44,14 @@ Bash search path: ``/etc/profile.d/amoothei-tc-tools.sh``
 Configuration
 -------------
 
-| All config file locations are relative to the environment variable
-| ``$AMOOTHEI_TC_TOOLS_CONF_DIR``. This variable defaults to
-  ``/etc/amoothei-vdi/``
+All config file locations are relative to the environment variable ``$AMOOTHEI_TC_TOOLS_CONF_DIR``. |br|
+This variable defaults to ``/etc/amoothei-vdi/``
 
 The config files are sourced by bash scripts, e.g. they have to be valid
 bash shell files.
 
-| First, the main config file (mandatory) is sourced, and then, the
-  individual config file (optional) is sourced as described below.
-| This allows to specify default values in the main config file, and to
-  overwrite them later if necessary.
+First, the main config file (mandatory) is sourced, and then, the individual config file (optional) is sourced as described below. |br|
+This allows to specify default values in the main config file, and to overwrite them later if necessary.
 
 Main Config File
 ~~~~~~~~~~~~~~~~
@@ -90,10 +89,8 @@ Sample config file: See ``sample_config/amoothei-tc-tools.conf``.
 SSH Key
 ~~~~~~~
 
-| The SSH private key (used by amoothei-tc-tools) and the
-| SSH public key (deployed to thinclients in the kickstart post section)
-  must match.
-
+The SSH private key (used by amoothei-tc-tools) and the SSH public key (deployed to thinclients in the kickstart post section) must match. |br|
+|br|
 A new private/public ssh keypair can be created like this:
 
 ::
@@ -120,17 +117,14 @@ A new private/public ssh keypair can be created like this:
     |     .o+=oo.o.=+o|
     +-----------------+
 
-| Afterwards, copy the private key to
-  ``/etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa``,
-| and paste the public key into the kickstart post section (search for
-  ``authorized_keys`` in the kickstart file).
+Afterwards, copy the private key to ``/etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa``, 
+and paste the public key into the kickstart post section (search for ``authorized_keys`` in the kickstart file). |br|
+
 
 Individual config file
 ~~~~~~~~~~~~~~~~~~~~~~
 
-| After sourcing the main config file, the optional individual config
-  file is sourced.
-| Individual configuration will override the main configuration.
+After sourcing the main config file, the optional individual config file is sourced. Individual configuration will override the main configuration.
 
 This allows you to create custom instances (see
 `below <#custom-tool-instances>`__) of the TC tools if nessesary, and to
@@ -156,8 +150,7 @@ Tools
 tc\_ssh
 ~~~~~~~
 
-Open an interactive shell on a thinclient, or run commands on a
-thinclient.
+Open an interactive shell on a thinclient, or run commands on a thinclient.
 
 Syntax:
 
@@ -166,10 +159,7 @@ Syntax:
     tc_ssh <thinclient> [ssh-args]                     # interactive shell
     tc_ssh <thinclient> [ssh-args] -- remote_command   # execute remote command
 
-| ``<thinclient>`` can be specified as a short host name
-  (myorganization.mydomain will be appended automatically),
-| as a fully qualified domain name, or as an IPv4 address.
-
+``<thinclient>`` can be specified as a short host name (myorganization.mydomain will be appended automatically), as a fully qualified domain name, or as an IPv4 address. |br|
 Example: Open interactive root-shell on mytc.myorganization.mydomain:
 
 ::
@@ -251,11 +241,9 @@ File:
     Successfully stored a screenshot at /screenshot/bob-20160315/test01-tc01.png.
     -rw-r--r--. 1 root root 236K Mar 15 19:17 /screenshot/bob-20160315/test01-tc01.png
 
-| A "session identifier" (here: ``bob-20160315``) is mandatory. It is
-  used to store the screenshots
-| in a well-ordered folder structure.
+A "session identifier" (here: ``bob-20160315``) is mandatory. It is used to store the screenshots in a well-ordered folder structure.
 
-Taking alot of screenshots:
+Taking a lot of screenshots:
 
 ::
 

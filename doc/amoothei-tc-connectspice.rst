@@ -1,5 +1,9 @@
+.. |br| raw:: html
+
+   <br />
+
 VDI Software running on thinclients
-=================================================
+===================================
 
 
 Introduction
@@ -105,11 +109,10 @@ New Ovirt Role ``MinimalAdmin``:
 
     Check Boxes: leave them all unchecked
 
-| For adding new user
-  ``ovirt.thinclient@your-ovirt-authentication-domain`` to Ovirt, it
-  first needs to be created in ``your-ovirt-authentication-domain``.
-| Then, grant him the role ``MinimalAdmin`` using
-  ``Ovirt Webadmin ---> top right corner ---> configure ---> System Permissions --> Add``.
+For adding new user ``ovirt.thinclient@your-ovirt-authentication-domain`` to Ovirt, it 
+first needs to be created in ``your-ovirt-authentication-domain``. |br|
+Then, grant him the role ``MinimalAdmin`` using
+``Ovirt Webadmin ---> top right corner ---> configure ---> System Permissions --> Add``.
 
 New Ovirt Role ``UserRoleWithReconnect``:
 
@@ -206,8 +209,7 @@ into ``ovirt-manager.crt``:
 Support message
 ~~~~~~~~~~~~~~~
 
-| The following message is displayed whenever a user clicks
-| on the the support-button on a thinclient:
+The following message is displayed whenever a user clicks on the the support-button on a thinclient:
 
 /etc/connect\_spice\_client/support\_message.txt
 

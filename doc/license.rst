@@ -1,13 +1,16 @@
+.. |br| raw:: html
+
+   <br />
+
 License information
 =================================
 
---------------
 
 Source code
 -----------
 
-| All source code is available in the following git repository:
-| FIXME: git repository
+All source code is available in the following git repository: |br|
+FIXME: git repository
 
 License
 -------

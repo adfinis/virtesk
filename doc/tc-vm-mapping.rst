@@ -1,5 +1,9 @@
+.. |br| raw:: html
+
+   <br />
+
 Assigning VMs to thinclients: Database layout
-===========================================================
+=============================================
 
 
 Introduction
@@ -45,11 +49,7 @@ supported.
 Thinclient perspective: SQL Query
 ---------------------------------
 
-| The following SQL Query is executed on a thinclient whenever
-  amoothei-tc-connectspice wants to determine the virtual machine
-  assigned to the thinclient, e.g. on thinclient startup,
-| when re-connecting, and on thinclient shutdown, for shutting down the
-  assined virtual machine if configured to do so.
+The following SQL Query is executed on a thinclient whenever amoothei-tc-connectspice wants to determine the virtual machine assigned to the thinclient, e.g. on thinclient startup, when re-connecting, and on thinclient shutdown, for shutting down the assined virtual machine if configured to do so.
 
 ::
 
@@ -140,13 +140,7 @@ Defines the mapping between thinclients and VMs.
 The column ``shutdown_vm`` determines if the VM shall be shut down upon
 TC shutdown.
 
-| The column ``thinclient`` is any arbitrary name to identify the
-  thinclient. It does
-| not need to be equal to the local host name or the dhcp host name.
-  However, it is usefull if this database key
-| and the dhcp hostname are equal, see `Thinclient DNS
-  Domain <#thinclient-dns-domain>`__ and
-  `dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname_to_thinclient_auto_mapping>`__
+The column ``thinclient`` is any arbitrary name to identify the thinclient. It does not need to be equal to the local host name or the dhcp host name. However, it is usefull if this database key and the dhcp hostname are equal, see `Thinclient DNS Domain <#thinclient-dns-domain>`__ and `dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname_to_thinclient_auto_mapping>`__
 
 Table dhcphostname\_to\_thinclient\_mapping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

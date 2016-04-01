@@ -1,39 +1,30 @@
+.. |br| raw:: html
+
+   <br />
+
 USB Redirect: avoiding USB reset
-==============================================
+================================
 
-| Solution to avoid problems that might occour when redirecting usb
-  devices over spice.
-| Only few devices are affected, most devices work without the patches
-  below.
+Solution to avoid problems that might occour when redirecting usb devices over spice. |br|
+Only few devices are affected, most devices work without the patches below.
 
---------------
 
 Introduction
 ------------
 
 Spice used libusbredir to redirect usb devices.
 
-| Normally, a reset command is issued to the device before it is
-  redirected.
-| This works fine for 99% of all avaiable usb devices.
-
-| However, some problematic devices have issues with usb resets.
-  Redirect fails
-| with the following error message:
+Normally, a reset command is issued to the device before it is redirected.
+This works fine for 99% of all avaiable usb devices. |br|
+However, some problematic devices have issues with usb resets. Redirect fails with the following error message:
 
 ::
 
     Could not redirect Electronics For Imaging, Inc. [hex] 
     Device: error resetting device: LIBUSB_ERROR_NOT_FOUND.
 
-| By adding those devices to an internal blacklist of libusbredir, we
-  can prevent usb reset
-| for them. This way, amoothei-vdi can successfully redirect those
-  devices. However, libusbredir
-| must be patched on all thinclients. The following steps explain how
-  the patching is done.
+By adding those devices to an internal blacklist of libusbredir, we can prevent usb reset for them. This way, amoothei-vdi can successfully redirect those devices. However, libusbredir must be patched on all thinclients. The following steps explain how the patching is done.
 
---------------
 
 Setting up an rpm build environment
 -----------------------------------
@@ -78,7 +69,6 @@ build environment:
 -  ~/rpmbuild/SOURCES/usbredir-0.7.tar.bz2
 -  ~/rpmbuild/SPECS/usbredir.spec
 
---------------
 
 Patching libusbredir
 --------------------
@@ -153,7 +143,7 @@ To:
     Version:        0.7
     Release:        99mypackage3%{?dist}
 
---------------
+
 
 Building the RPM package:
 -------------------------

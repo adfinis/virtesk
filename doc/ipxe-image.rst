@@ -1,3 +1,7 @@
+.. |br| raw:: html
+
+   <br />
+
 iPXE image for cdroms and usb flash drives
 ========================================================
 
@@ -5,17 +9,12 @@ iPXE image for cdroms and usb flash drives
 Introduction
 ------------
 
-| In some environments, it is not feasible to do a network install of
-  thinclients
-| using PXE.
-
+In some environments, it is not feasible to do a network install of thinclients using PXE. |br|
 For this cases, an iPXE image for cdroms / usb flash drives can be
 built.
 
-| The iPXE image contains an embedded configuration file pointing to
-  your infrastructure server.
-| It will chainload the network bootloader (pxelinux) configured on your
-  infrastructure server using http.
+The iPXE image contains an embedded configuration file pointing to your infrastructure server. |br|
+It will chainload the network bootloader (pxelinux) configured on your infrastructure server using http.
 
 Creating an iPXE image:
 -----------------------
@@ -91,8 +90,6 @@ Writing image to usb flash drive
 Replace ``/dev/sdc`` with the device where the image shall be written
 to. Data on ``/dev/sdc`` will be destroyed.
 
-| When using an usb flash drive to roll out thinclients, please make
-  sure you remove it
-| as soon as the pxelinux menu is displayed. Otherwise, the kickstart
-  installation would overwrite
-| your usb flash drive.
+When using an usb flash drive to roll out thinclients, please make sure you remove it as soon as the pxelinux menu is displayed. Otherwise, the kickstart installation would overwrite your usb flash drive.
+
+

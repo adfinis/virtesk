@@ -1,3 +1,7 @@
+.. |br| raw:: html
+
+   <br />
+
 Payload mechanism
 ===============================
 
@@ -122,21 +126,12 @@ are necessary:
 Configuring an sftp server for hosting floppy images
 ----------------------------------------------------
 
-| The `VM rollout script <amoothei-vm-rollout.md>`__ needs a way to
-  upload floppy images,
-| so that the images are accessible by the ovirt hosts afterwards. The
-  `VM rollout script <amoothei-vm-rollout.md>`__ uses sftp to upload
-  floppy images, and the Ovirt hosts use NFS to access the floppy
-  images.
+The `VM rollout script <amoothei-vm-rollout.md>`__ needs a way to upload floppy images, so that the images are accessible by the ovirt hosts afterwards. The `VM rollout script <amoothei-vm-rollout.md>`__ uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
 
 Choosing a floppy image location
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-| The image location needs to be accessible by all ovirt hosts. You can
-  for example choose
-| a location on an NFS server and then make sure that this NFS share is
-  mounted on all Ovirt hosts.
-
+The image location needs to be accessible by all ovirt hosts. You can for example choose a location on an NFS server and then make sure that this NFS share is mounted on all Ovirt hosts. |br|
 But we don't need to create a new NFS share for this, we can reuse an
 existing one. Here we use the NFS share where the ISO images are stored.
 
@@ -168,7 +163,7 @@ Both paths point to the same directory, the directory where the floppy
 images shall be stored.
 
 Setting up sftp access to the floppy image location
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The sftp server can be any linux machine with access to
 nfs-server:$FLOPPY\_LOCATION\_NFSSERVER
@@ -203,10 +198,7 @@ Creating a chroot directory:
             ForceCommand internal-sftp
             ChrootDirectory /srv/floppy_chroot/
 
-| This jails the user sftp-floppy-upload into /srv/floppy\_chroot/ and
-  makes sure
-| that sftp-floppy-upload can only use sftp and doesn't have shell
-  access.
+This jails the user sftp-floppy-upload into /srv/floppy\_chroot/ and makes sure that sftp-floppy-upload can only use sftp and doesn't have shell access. |br|
 
 Apply changes:
 
@@ -267,7 +259,7 @@ Troubleshooting
 ---------------
 
 Duplicate floppy drive
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 Ovirt error message:
 
@@ -284,7 +276,7 @@ OS. If ovirt thinks the VM is running linux, then it won't insert
 floppies on its own.
 
 VM fails to run
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 If a VM with a floppy configured using the custom property fails to run,
 carefully check the floppy image:
@@ -324,8 +316,8 @@ evaluated, but all have their problems:
      on the NFS
    | server using genisoimage.
 
-   The implementation was insecure and suffered from a general security
-   problem:
+   | The implementation was insecure and suffered from a general security
+   | problem:
 
    | All ISOs are accessible to all PowerUsers. So the users of the
      PowerUserPortal
@@ -335,6 +327,7 @@ evaluated, but all have their problems:
    | Because of this, we couldn't use the self-service features of Ovirt
      if
    | it was running our VDI implementation.
+ 
 
 -  Floppy image for injecting payload:
 
@@ -343,4 +336,4 @@ evaluated, but all have their problems:
 See also:
 ---------
 
--  `Ovirt OSinfo settings <goldimage.md#ovirt-os-info-settings>`__
+-  `Ovirt OSinfo settings <goldimage.html#ovirt-os-info-settings>`__
