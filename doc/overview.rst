@@ -5,6 +5,7 @@ Amoothei-VDI is a `Open Source <license.md>`__ VDI solution based on
 Red Hat Enterprise Virtualization (or Ovirt Virtualization) and
 the Spice VDI protocol.
 
+.. todo:: Bilder skalieren noch nicht. -> http://stackoverflow.com/questions/12297493/why-does-image-scale-not-work-in-restructuredtext-when-generating-html-files
 
 Architecture Overview
 ---------------------
