@@ -480,6 +480,10 @@ class rhev:
 
         vm = vmconfig['vm']
 
+        # save existing custom properties for restoring them later
+        saved_cust_props = vm.get_custom_properties()
+        vmconfig['saved_cust_props'] = saved_cust_props
+
         cust_prop = ovirtsdk.xml.params.CustomProperty(
             name="floppy", value=ovirt_worker_floppy_path)
 
@@ -490,7 +494,14 @@ class rhev:
     def detach_and_cleanup_floppy(self, vmconfig):
         # Detaching floppy from VM Configuration
         vm = vmconfig['vm']
+
+        # Restoring custom properties:
+        # First, we set empty properties - this is necessary for the
+        # corner case where the saved properties are empty.
+        # Then we restore the saved properties.
         vm.set_custom_properties(ovirtsdk.xml.params.CustomProperties())
+        vm.update()
+        vm.set_custom_properties(vmconfig['saved_cust_props'])
 
         # Remove floppy image from SFTP server
         sftp_floppy_cleanup_cmd = self.base_configuration[
