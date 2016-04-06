@@ -733,6 +733,13 @@ Allow network access
 This line allows password-based authentication, protected with TLS/SSL,
 from everywhere.
 
+In the default configuration, postgres is listening only on localhost.
+This can be changed in /var/lib/pgsql/data/postgresql.conf:
+
+::
+
+    listen_addresses = '*'
+
 Restart your database to let the changes take effect.
 
 Import sample database layout
