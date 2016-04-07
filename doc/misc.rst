@@ -6,7 +6,7 @@ Misc
 
    compatibility.rst
    sftp-floppy-upload.rst
+   spice-disconnect-actions.rst
    bugs.rst
    security.rst
    license.rst
-   spice-disconnect-actions.rst
