@@ -111,6 +111,8 @@ todo_include_todos = True
 # The Theme MUST BE AN OPEN SOURCE SPHINX THEME. Contributors outside of
 # Adfinis SyGroup AG must be able to build the documentation.
 # Developers of Adfinis SyGroup AG can build the documentation using
+#   make html_adsy
+#      .. or ..
 #   make SPHINXOPTS="-D html_theme='adsy'" html 
 html_theme = 'sphinx_rtd_theme'
 

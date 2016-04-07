@@ -14,7 +14,7 @@ make-docs:
   script:
     - rm -rf html
     - rm -rf doc/_build
-    - make SPHINXOPTS="-D html_theme='adsy'" html -C doc
+    - make html_adsy -C doc
     - cp -r doc/_build/html html
   artifacts:
     paths:
