@@ -9,3 +9,4 @@ Misc
    bugs.rst
    security.rst
    license.rst
+   spice-disconnect-actions.rst
