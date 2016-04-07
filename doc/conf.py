@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# amoothei documentation build configuration file, created by
+# Amoothei-VDI documentation build configuration file, created by
 # sphinx-quickstart2 on Thu Mar 31 12:24:51 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -107,7 +107,12 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'adsy'
+
+# The Theme MUST BE AN OPEN SOURCE SPHINX THEME. Contributors outside of
+# Adfinis SyGroup AG must be able to build the documentation.
+# Developers of Adfinis SyGroup AG can build the documentation using
+#   make SPHINXOPTS="-D html_theme='adsy'" html 
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
