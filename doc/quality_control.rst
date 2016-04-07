@@ -1,8 +1,6 @@
 Quality Control of virtual rooms
 ==============================================
 
---------------
-
 Introduction
 ------------
 
@@ -16,18 +14,18 @@ A lot of problems can occour during Windows Unattended Setup:
    time or many CIFS-Shares are accessed at once.
 -  ...
 
-| It is important to detect those problems early, so that a solution can
-  be found before users are affected.
-| A system administrator has to deal with alot of VMs, therefore an
-  efficient way for quality control is necessary.
+It is important to detect those problems early, so that a solution can
+be found before users are affected.
+A system administrator has to deal with alot of VMs, therefore an
+efficient way for quality control is necessary.
 
 Windows Unattended Setup: Copying logfiles
 ------------------------------------------
 
-| First, we wanna introduce a ``autounattend-firstlogon.cmd``-Script
-  that will be run inside every Win7-VM that is rolled out.
-| The script is running in the *Firstlogon-Phase* in Windows Unattended
-  Setup. It will be used for mounting shares, copying logfiles, ...
+First, we wanna introduce a ``autounattend-firstlogon.cmd``-Script
+that will be run inside every Win7-VM that is rolled out.
+The script is running in the *Firstlogon-Phase* in Windows Unattended
+Setup. It will be used for mounting shares, copying logfiles, ...
 
 Parameters
 ~~~~~~~~~~
@@ -38,7 +36,7 @@ Parameters
    -  **scriptshare**: CIFS-Share, where ``autounattend-firstlogon.cmd``
       is located.
    -  **logfileshare**: CIFS-Share for putting logfiles.
-   -  **username@windowsdomain*\ \* and **password**: Credentials to
+   -  **username@windowsdomain** and **password**: Credentials to
       access those CIFS-Shares
 
 Autounattend-production.xml.template
@@ -71,13 +69,16 @@ will be called at the right time:
     </component>
     ...
 
-| ``autounattend-firstlogon.cmd`` will be called with two parameters,
-  the *scripttime* and the *ComputerName*. They will be used later for
-  storing the logfiles in a well-organized folder structure.
-| Output will be redirected to ``C:\autounattend-firstlogon.log``.
+``autounattend-firstlogon.cmd`` will be called with two parameters,
+the *scripttime* and the *ComputerName*. They will be used later for
+storing the logfiles in a well-organized folder structure.
+Output will be redirected to ``C:\autounattend-firstlogon.log``.
 
-\\\\someserver\\scriptshare\\autounattend-firstlogon.cmd
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+autounattend-firstlogon.cmd
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Location: ``\\someserver\scriptshare\autounattend-firstlogon.cmd``
 
 ::
 
@@ -103,7 +104,7 @@ will be called at the right time:
 
     net use R: /delete /yes 
 
-Remark: ``net use R: ...`` is the second time a CIFS-Share is mounted.
+**Remark:** ``net use R: ...`` is the second time a CIFS-Share is mounted.
 Windows stores Credentials, this is why we do not need to pass
 username/password.
 
@@ -113,7 +114,7 @@ Analyzing Logfiles
 Windows Domain Join
 ^^^^^^^^^^^^^^^^^^^
 
-Logfile: C:\\Windows\\panther\\UnattendGC\\setupact.log
+Logfile: ``C:\\Windows\panther\UnattendGC\setupact.log``
 
 Search terms:
 
@@ -123,7 +124,7 @@ Search terms:
     0x54a
     Unattended Join: NetJoinDomain succeeded
 
-Many VMs: commands to analyze windows domain joins using the logfiles
+Checking alot of logfiles: commands to analyze windows domain joins using the logfiles
 archived on the *logfile*-CIFS-Share:
 
 Coarse overview:

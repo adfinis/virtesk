@@ -17,12 +17,12 @@ Thinclient-Rollout using Kickstart
    and configuration is completed
 #. The thinclient reboots itself
 #. The thinclient connects to the virtual machine
-   `assigned <tc-vm-mapping.md>`__ to it
+   `assigned <tc-vm-mapping.html>`__ to it
 #. The thinclient is ready, users can work
 
 The amount of data transferred over the network is quite small (1000M - 2000M, estimated value), so its perfectly possible to roll out several hundred thinclients at a time over a single gigabit uplink. |br|
-Everything is completely scripted (no computer images!), therefore, the rollout process and the thinclient system can be flexible adapted for new needs and new features. |br|
-Experienced system administrators dont need to be on-site for thinclient rollout, remote rollout using Wake-On-Lan is possible. Instead of PXE network booting, thinclients can also be re-installed using ssh and `kexec <amoothei-tc-tools.html#tc_kexec>`__.
+Everything is completely scripted (no disk images!), therefore, the rollout process and the thinclient system can be flexible adapted for new needs and new features. |br|
+Experienced system administrators dont need to be on-site for thinclient rollout, remote rollout using Wake-On-Lan is possible. Instead of PXE network booting, thinclients can also be re-installed using ssh and `kexec <amoothei-tc-tools.html#tc-rollout-kexec>`__.
 
 
 .. warning:: WARNING: DATA LOSS |br| The provided sample kickstart file will ERASE everything on all hard drives and on all usb drives on any computer where a thinclient rollout is attempted. This is indented this way (thinclients dont contain any data, so it's ok).
@@ -59,10 +59,10 @@ All references to ``infrastructure-server`` need to be replaced with the
 actual FQDN of your infrastructure server.
 
 The thinclient software, *amoothei-tc-connectspice*, needs to be
-configured as described `here <amoothei-tc-connectspice.md>`__.
+configured as described `here <amoothei-tc-connectspice.html>`__.
 
 Adapting the sample kickstart file isn't easy, and if you are completely new to kickstart, it is actually quite hard. Don't give up, everyone can learn PXE / network installation / kickstart! |br|
-For analyzing kickstart problems, remote logging is useful. On a properly configured `infrastructure server <amoothei-infrastructure-server.md>`__, logfiles are available at ``/var/log/remote``. However, not everything is logged, because remote logging is only done in stage 2 of the Fedora installer.
+For analyzing kickstart problems, remote logging is useful. On a properly configured `infrastructure server <amoothei-infrastructure-server.html>`__, logfiles are available at ``/var/log/remote``. However, not everything is logged, because remote logging is only done in stage 2 of the Fedora installer.
 
 Kickstart literature
 --------------------

@@ -30,7 +30,7 @@ Amoothei-tc-connectspice consists of two programs:
 
 -  **amoothei-tc-connectspice-main**: Main program as described above.
 -  **amoothei-tc-connectspice-shutdown-vm**: Called by systemd on
-   thinclient `shutdown <start-and-stop-management.md>`__. Will shutdown
+   thinclient `shutdown <start-and-stop-management.html>`__. Will shutdown
    the VM asssigned to the thinclient if configured to do so.
 
 Configuration
@@ -135,7 +135,7 @@ Amoothei-virtroom-rollout will grant ``UserRoleWithReconnect`` to
 VMs.
 
 See also: config-option ``tc_user`` in
-`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.md>`__.
+`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.html>`__.
 
 Ovirt REST API: SSL CA
 ~~~~~~~~~~~~~~~~~~~~~~

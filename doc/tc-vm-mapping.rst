@@ -17,15 +17,15 @@ The database determines:
 -  The VM shall be determined on a TC
 -  When shall it be displayed (to display different VMs for different
    courses, ...)
--  If the VM shall `shut down <start-and-stop-management.md>`__ when the
+-  If the VM shall `shut down <start-and-stop-management.html>`__ when the
    TC is shutting down
 
 Accessing the database is documented
-`here <amoothei-infrastructure-server.md#accessing-database>`__,
+`here <amoothei-infrastructure-server.html#accessing-database>`__,
 database setup is documented
-`there <amoothei-infrastructure-server.md#setting-up-postgres-database>`__,
+`there <amoothei-infrastructure-server.html#setting-up-postgres-database>`__,
 and switching virtual rooms is documented
-`here <switching-virtual-rooms.md>`__
+`here <switching-virtual-rooms.html>`__
 
 1:1-Mapping between TCs and VMs
 -------------------------------
@@ -99,7 +99,7 @@ Sample database layout
 A sample database layout is provided in
 ``sample_config/database-layout.sql``. Instructions for loading the file
 are provided
-`here <amoothei-infrastructure-server.md#setting-up-postgres-database>`__.
+`here <amoothei-infrastructure-server.html#setting-up-postgres-database>`__.
 
 Thinclient DNS Domain
 ---------------------
@@ -140,7 +140,7 @@ Defines the mapping between thinclients and VMs.
 The column ``shutdown_vm`` determines if the VM shall be shut down upon
 TC shutdown.
 
-The column ``thinclient`` is any arbitrary name to identify the thinclient. It does not need to be equal to the local host name or the dhcp host name. However, it is usefull if this database key and the dhcp hostname are equal, see `Thinclient DNS Domain <#thinclient-dns-domain>`__ and `dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname_to_thinclient_auto_mapping>`__
+The column ``thinclient`` is any arbitrary name to identify the thinclient. It does not need to be equal to the local host name or the dhcp host name. However, it is usefull if this database key and the dhcp hostname are equal, see `Thinclient DNS Domain <#thinclient-dns-domain>`__ and `dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname-to-thinclient-auto-mapping>`__
 
 Table dhcphostname\_to\_thinclient\_mapping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -149,7 +149,7 @@ Manual mapping from dhcp hostname to thinclient. Use this table to deal
 with apart thinclients that do not adhere to any naming convention.
 
 See also:
-`dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname_to_thinclient_auto_mapping>`__
+`dhcphostname\_to\_thinclient\_auto\_mapping <#view-dhcphostname-to-thinclient-auto-mapping>`__
 
 Table systemuuid\_to\_thinclient\_mapping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,7 +197,7 @@ View thinclient\_everything\_view
 one view to connect them all and using Spice to bind them."*
 
 All information in the other tables and views is condensed in this one
-big view, ready for use by amoothei-tc-connectspice.
+big view, ready for use by `amoothei-tc-connectspice <amoothei-tc-connectspice.html>`__.
 
 See also: `Thinclient perspective: SQL
 Query <#thinclient-perspective-sql-query>`__

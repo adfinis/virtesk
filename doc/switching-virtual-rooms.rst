@@ -6,9 +6,7 @@ Switching virtual rooms
 Introduction
 ------------
 
-| Switching the virtual room assigned to a physical set of thinclient
-  (the physical room) is an
-| important feature of amoothei-vdi.
+Switching the virtual room assigned to a physical set of thinclient (the physical room) is an important feature of amoothei-vdi.
 
 Uses:
 
@@ -30,11 +28,11 @@ Switching virtual rooms is implemented using the postgres database.
 
 Documentation:
 
--  `Database layout <tc-vm-mapping.md>`__
+-  `Database layout <tc-vm-mapping.html>`__
 -  `Database Installation + DB
-   Access <amoothei-infrastructure-server.md#setting-up-postgres-database>`__
+   Access <amoothei-infrastructure-server.html#setting-up-postgres-database>`__
 -  `Defining virtual
-   rooms <amoothei-vm-rollout-config.md#room-definitions-section-room-room01>`__
+   rooms <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__
 
 How to switch virtual rooms
 ---------------------------
@@ -98,7 +96,7 @@ schema; In general, switching virtual rooms is alot easier when
 systematic naming is used.
 
 Please note that all examples only update records where
-start\_date/end\_date are NULL. This is useful for most cases, but it
+``start_date``/``end_date`` are ``NULL``. This is useful for most cases, but it
 might need adjustment for special cases.
 
 How to switch virtual rooms: advanced examples
@@ -133,13 +131,12 @@ generatesql-statements.sh (available in ``sample_config/``):
         echo
     done
 
-| Please adjust ``ROOMS="test01 test02 ...`` and
-  ``TC_NAME="${ROOM}-tc${ID_TWODIGIT}"`` and
-  ``VM_NAME="${ROOM}-vd${ID_TWODIGIT}"`` according to your naming
-  scheme, and ``IDs=$(seq 1 30)`` according to the number
-| of TCs in your rooms. Some rooms might have less than 30 thinclients -
-  however, the generated SQL statements for the non-existing
-| TCs won't hurt, and its easier to process all rooms in an uniform way.
+Please adjust ``ROOMS="test01 test02 ..."`` and ``TC_NAME="${ROOM}-tc${ID_TWODIGIT}"`` and
+``VM_NAME="${ROOM}-vd${ID_TWODIGIT}"`` according to your naming scheme, 
+and ``IDs=$(seq 1 30)`` according to the number of TCs in your rooms.
+Some rooms might have less than 30 thinclients - however, the generated 
+SQL statements for the non-existing TCs won't hurt, and its easier 
+to process all rooms in an uniform way.
 
 Running it directly:
 

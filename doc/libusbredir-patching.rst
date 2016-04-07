@@ -5,7 +5,7 @@
 USB Redirect: avoiding USB reset
 ================================
 
-Solution to avoid problems that might occour when redirecting usb devices over spice. |br|
+Solution to avoid problems that might occour when redirecting usb devices over Spice. |br|
 Only few devices are affected, most devices work without the patches below.
 
 

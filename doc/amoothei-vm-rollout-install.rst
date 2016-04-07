@@ -1,8 +1,6 @@
 Installing VM rollout tools
 =========================================
 
---------------
-
 Overview
 --------
 
@@ -10,7 +8,7 @@ To run amoothei-vm-rollout, the system must be prepared first:
 
 -  Installing amoothei-vm-rollout
 -  Minimal configuration
--  Setting up `payload injection mechanism <sftp-floppy-upload.md>`__
+-  Setting up `payload injection mechanism <sftp-floppy-upload.html>`__
 -  Configuring virtual rooms
 
 Installation
@@ -60,7 +58,7 @@ Minimal configuration
     # Definitions of virtual rooms:
     vim /etc/amoothei-vdi/amoothei-vm-rollout.conf
 
-Details are documented `here <amoothei-vm-rollout-config.md>`__
+Details are documented `here <amoothei-vm-rollout-config.html>`__.
 
 Setting up payload injection mechanism
 --------------------------------------
@@ -74,7 +72,7 @@ RHEV/Ovirt VMs using vdsm-hook-floppy.
 The initial setup is quite complicated, but it has to be done only once,
 afterwards it will "just work".
 
-Detailed instructions can be found `here <sftp-floppy-upload.md>`__
+Detailed instructions can be found `here <sftp-floppy-upload.html>`__.
 
 Testing
 -------

@@ -126,7 +126,7 @@ are necessary:
 Configuring an sftp server for hosting floppy images
 ----------------------------------------------------
 
-The `VM rollout script <amoothei-vm-rollout.md>`__ needs a way to upload floppy images, so that the images are accessible by the ovirt hosts afterwards. The `VM rollout script <amoothei-vm-rollout.md>`__ uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
+The `VM rollout script <amoothei-vm-rollout.html>`__ needs a way to upload floppy images, so that the images are accessible by the ovirt hosts afterwards. The `VM rollout script <amoothei-vm-rollout.html>`__ uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
 
 Choosing a floppy image location
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -244,7 +244,7 @@ floppy images.
 
 This way, both sftp-floppy-upload and qemu (though group kvm) have
 access to $FLOPPY\_LOCATION\_NFSSERVER - but nobody else. The `VM
-rollout script <amoothei-vm-rollout.md>`__ will then later put floppy
+rollout script <amoothei-vm-rollout.html>`__ will then later put floppy
 images with permissions 0666, this way qemu gets read-write access to
 the floppy images.
 
@@ -310,30 +310,24 @@ evaluated, but all have their problems:
 
 -  CDROM / ISO image for injecting payload:
 
-   | This was our old implementation. Amoothei-vm-rollout had ssh access
-     to the NFS
-   | server hosting the ISO images, and the ISOs were generated directly
-     on the NFS
-   | server using genisoimage.
+   This was our old implementation. Amoothei-vm-rollout had ssh access
+   to the NFS server hosting the ISO images, and the ISOs were generated directly on the NFS
+   server using genisoimage.
 
-   | The implementation was insecure and suffered from a general security
-   | problem:
+   The implementation was insecure and suffered from a general security
+   problem:
 
-   | All ISOs are accessible to all PowerUsers. So the users of the
-     PowerUserPortal
-   | can access the ISOs containing the Unattended.xml file, and extract
-     the
-   | secret information (Domain Join credentials, ...) from it.
-   | Because of this, we couldn't use the self-service features of Ovirt
-     if
-   | it was running our VDI implementation.
- 
+   All ISOs are accessible to all PowerUsers. So the users of the
+   PowerUserPortal can access the ISOs containing the Unattended.xml file, 
+   and extract the secret information (Domain Join credentials, ...) from it.
+   Because of this, we couldn't use the self-service features of Ovirt if
+   it was running our VDI implementation.
 
 -  Floppy image for injecting payload:
 
    This article. Complicated, but it works.
 
-See also:
----------
+See also
+--------
 
 -  `Ovirt OSinfo settings <goldimage.html#ovirt-os-info-settings>`__

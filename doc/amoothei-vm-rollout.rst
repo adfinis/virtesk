@@ -8,9 +8,8 @@ Tools for creating and manageing VDI VMs, grouped into virtual rooms.
 Introduction
 ------------
 
-| amoothei-virtroom-\* is a set of tools for creating/cloneing a lot of
-  windows 7 virtual machines.
-| Those win7 VMs can then be assigned to and displayed on thinclients.
+amoothei-virtroom-\* is a set of tools for creating/cloneing a lot of windows 7 virtual machines.
+Those win7 VMs can then be assigned to and displayed on thinclients.
 
 The script creates new VMs based on an existing Ovirt VM Template, and
 assings hostname, static IP address, ... to it and makes sure the new VM
@@ -18,7 +17,7 @@ is joined into an Active Directory (or Samba4) domain.
 
 The process is based on Windows Sysprep / Unattended.xml technologies.
 
-See also: `Compatibility <compatibility.md>`__
+See also: `Compatibility <compatibility.html>`__
 
 --------------
 
@@ -45,11 +44,11 @@ How it works:
 #. Configuration parsing and validation
 #. Create VMs from Ovirt Template
 #. Attach Network to VM
-#. Create individual Autounattend.xml using a template mechanism
-#. Generate payload floppy, containing individual Autounattend.xml
-   (filename: A:\\sysprep.inf)
+#. Create individual ``Autounattend.xml`` using a template mechanism
+#. Generate payload floppy, containing individual ``Autounattend.xml``
+   (filename: ``A:\\sysprep.inf``)
 #. Run VM with payload attached. This configures Windows according to
-   the settings in Autounattend.xml
+   the settings in ``Autounattend.xml``
 #. Wait until all VMs of a virtual room are shut down
 #. Postprocess VMs (USB settings, stateless feature, add permissions for
    technical vdi accounts, create snapshots, ...)
@@ -135,9 +134,9 @@ When manageing alot of virtual rooms, bash features can be handy:
 See also
 --------
 
--  `Installing amoothei-vm-rollout <amoothei-vm-rollout-install.md>`__
+-  `Installing amoothei-vm-rollout <amoothei-vm-rollout-install.html>`__
 -  `Defining and configuring virtual
-   rooms <amoothei-vm-rollout-config.md>`__
--  `Windows Goldimage <goldimage.md>`__
--  `Windows Unattended Setup <autounattend.md>`__
--  `Quality control after rollout <quality_control.md>`__
+   rooms <amoothei-vm-rollout-config.html>`__
+-  `Windows Goldimage <goldimage.html>`__
+-  `Windows Unattended Setup <autounattend.html>`__
+-  `Quality control after rollout <quality_control.html>`__

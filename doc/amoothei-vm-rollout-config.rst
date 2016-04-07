@@ -99,7 +99,7 @@ Ovirt REST-API connection parameters: section [general][[connect]]
 -  **username** and **password:** Credentials of some Administrator
    account in Ovirt/RHEV. This account is used for all operations on
    VMs.
--  \*\*ca\_\ file:** Path to CA certificate file. Used for validating
+-  **ca_file:** Path to CA certificate file. Used for validating
    SSL connection. Can be downloaded from RHEV/Ovirt Manager:
    ``https://ovirt-manager/ca.crt``
 
@@ -112,8 +112,8 @@ Logging: section [logging]
     config_file=logging.conf
     log_file=logs/rollout.log
 
--  \*\*config\_\ file:** Path to ``logging.conf``
--  \*\*log\_\ file:** Path to logfile
+-  **config_file:** Path to ``logging.conf``
+-  **log_file:** Path to logfile
 
 Sample ``logging.conf``:
 
@@ -226,10 +226,10 @@ Numbering and naming:
       Addresses, ...
    -  Example: ``ids = "[1,2,3,4,5]"`` - 5 VMs.
    -  Example:
-      ``ids = "range(1,5+1)" - same as``"[1,2,3,4,5]"``. Please dont forget the``\ +1\`,
+      ``ids = "range(1,5+1)"`` - same as ``ids = "[1,2,3,4,5]"``. Please dont forget the ``+1``,
       because the python range()-function does not include the end
       itself in the list.
-   -  Number of VM: ``len(ids)``
+   -  Number of VMs: ``len(ids)``
    -  Requirement: IDs must be unique with the IDs-List itself. However,
       they don't need to be unique inside the room (different
       subsections can have the same IDs). Also, it is quite common to
@@ -286,13 +286,13 @@ VM:
 -  **usb**: Shall USB be enabled for the VM? Valid values: *enabled*,
    *disabled*
 -  **stateless**: Shall the VM be
-   `stateless <stateless_and_snapshot_features.md>`__? Valid values:
+   `stateless <stateless_and_snapshot_features.html>`__? Valid values:
    *True*, *False*.
 
 Windows Autounattend:
 
 -  **autounattend\_templatefile**: Path to Mako template for
-   `Autounattend.xml <autounattend.md>`__.
+   `Autounattend.xml <autounattend.html>`__.
 -  **workaround\_os**: Workaround Operating System to use during
    Autounattend process. Can be any valid OS available in Ovirt.
 -  **workaround\_timezone**: Workaround timezone to use during
@@ -303,16 +303,16 @@ Permissons:
 
 -  **tc\_user**: Technical account used by TCs to access VMs. After
    rollout, permissions are granted to *tc\_user*. Details are
-   documented `here <amoothei-tc-connectspice.md>`__
+   documented `here <amoothei-tc-connectspice.html>`__
 
 Snapshots:
 
 -  **snapshot\_description**: If empty, no snapshot is created.
-   Otherwise, a `snapshot <stateless_and_snapshot_features.md>`__ with
+   Otherwise, a `snapshot <stateless_and_snapshot_features.html>`__ with
    the configured description is created after rolling out VMs.
 -  **reset\_to\_snapshot\_regex**: Must be a valid python regex. Used by
    amoothei-virtroom-reset to identify the
-   `snapshot <stateless_and_snapshot_features.md>`__ to reset the VM to.
+   `snapshot <stateless_and_snapshot_features.html>`__ to reset the VM to.
    The regex is applied to the snapshot description.
 
 Starting VMs:

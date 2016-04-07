@@ -1,8 +1,6 @@
 Start and Stop management of virtual rooms
 ========================================================
 
---------------
-
 Introduction
 ------------
 
@@ -10,10 +8,13 @@ Running VMs do consume ressources, in particular memory. This article
 describes start/stop behavior and ways to save ressources by shutting
 down unused VMs.
 
-This article was written with Ovirt 3.4/3.5 in mind. Ovirt 3.6
-introduces new features for shutting down VMs upon spice disconnect.
+This article was written with Ovirt 3.4/3.5 in mind.
+
+Ovirt 3.6 introduces new features for shutting down VMs upon spice disconnect.
 Those features can be used as an alternative to the approach described
 here.
+
+There is a `backport <spice-disconnect-actions.html>`__ of the spice disconnect action features for Ovirt 3.5.
 
 Start/Stop behaviour
 --------------------
@@ -58,7 +59,7 @@ Whole virtual rooms can be started and shut down using
 
 Those tools are well-suited for unattended use in cronjobs. Cronjobs can
 be configured similary to
-`vm-reset-cronjobs <stateless_and_snapshot_features.md#automatic-reset-every-night>`__.
+`vm-reset-cronjobs <stateless_and_snapshot_features.html#automatic-reset-every-night>`__.
 
 Virtual rooms: startup after rollout and after reset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,7 +67,7 @@ Virtual rooms: startup after rollout and after reset
 The startup behavior after rollout and after reset can be configured
 using the config directives ``rollout_startvm`` and ``reset_startvm`` as
 described
-`here <amoothei-vm-rollout-config.md#room-definitions-section-room-room01>`__.
+`here <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__.
 
 Thinclient remote-startup using Wake-On-LAN
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,7 +82,7 @@ Thinclient remote-shutdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Thinclient remote-shutdown is supported using
-`amoothei-tc-tools <amoothei-tc-tools.md>`__.
+`amoothei-tc-tools <amoothei-tc-tools.html>`__.
 
 Suggestions for start and stop management
 -----------------------------------------

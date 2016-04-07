@@ -1,13 +1,11 @@
 Windows Unattended Setup
 ======================================
 
---------------
-
 Introduction
 ------------
 
 Amoothei-virtroom-rollout creates several hunderds VMs by cloneing a
-single `Goldimage VM <goldimage.md>`__.
+single `Goldimage VM <goldimage.html>`__.
 
 However, simply cloneing a windows VM usually isn't enough, it needs to
 be generalized/sysprepped and then it must run though the Windows
@@ -28,11 +26,11 @@ used for templating and variable substitution.
 
 Variables:
 
--  ${ip}
--  ${netmask\_as\_suffix}
--  ${default\_gw}
--  ${ComputerName}
--  ${scripttime}
+-  ``${ip}``
+-  ``${netmask_as_suffix}``
+-  ``${default_gw}``
+-  ``${ComputerName}``
+-  ``${scripttime}``
 
 In general, all keys available in the ``vmconfig``-python-dict can be
 used as mako template variables. They can be displayed using
@@ -205,7 +203,7 @@ FirstLogonCommands, ...
 Unattended Setup...
 
 -  see also: `Quality Control: Windows Unattended
-   Setup <quality_control.md>`__.
+   Setup <quality_control.html>`__.
 
 ::
 

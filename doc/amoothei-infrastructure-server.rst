@@ -35,12 +35,12 @@ Requirements:
 
 -  1-2 vCPUs
 -  1-2GB Ram
--  100GB Diskspace (only one mirror: fedora 22 x86\_64)
+-  100GB Diskspace (for only one mirror: fedora 22 x86\_64)
 -  150-200GB (and more) Diskspace (for mirroring multiple distributions
    / multiple versions)
 -  Static IP address. Can be a private rfc1918 address. Must be
    accessible direcly by all thinclients in your LAN. It can be in a
-   different Layer 2 network than you TCs, but must be accessible by
+   different Layer 2 network than your TCs, but must be accessible by
    layer 3 routing. Technologies that tamper with layer 4 and above
    (NAT, transparent proxies, ...) will cause problems with TFTP, NFS,
    kickstart and so on. Those problems can be resolved, but this
@@ -67,7 +67,7 @@ LVM is recommended for disk space management, with the following file systems on
 +----------------------+--------------+-------------------------------------------------+
 | /var/log             | 4 GB         |                                                 |
 +----------------------+--------------+-------------------------------------------------+
-| /var/log/remote      | 2 GB         | more for large installations                    |
+| /var/log/remote      | 4 GB         | more for large installations                    |
 +----------------------+--------------+-------------------------------------------------+
 | /var/www/mirror      | 68 GB        | more for mirroring more than one distribution   |
 +----------------------+--------------+-------------------------------------------------+
@@ -747,7 +747,7 @@ Import sample database layout
 
 A sample database layout is provided in
 ``sample_config/database-layout.sql``. Please edit the `thinclient dns
-domain <tc-vm-mapping.md#thinclient-dns-domain>`__ before importing the
+domain <tc-vm-mapping.html#thinclient-dns-domain>`__ before importing the
 database layout.
 
 ::
@@ -758,7 +758,7 @@ database layout.
 
 See also:
 
--  `Thinclient - VM mapping <tc-vm-mapping.md>`__
+-  `Thinclient - VM mapping <tc-vm-mapping.html>`__
 
 Accessing database
 ~~~~~~~~~~~~~~~~~~

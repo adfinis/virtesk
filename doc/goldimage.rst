@@ -1,7 +1,7 @@
 Windows Goldimage
 ===============================
 
-How to create and seal a windows goldimage and use it as a RHEV/Ovirt
+How to create and seal a Windows Goldimage and use it as a RHEV/Ovirt
 VmTemplate.
 
 --------------
@@ -36,7 +36,7 @@ Steps:
 
    -  Using a thin-provisioned disk in RHEV/Ovirt is recommended
 
--  Install virtio + spice drivers, Install guest agent
+-  Install virtio + spice drivers, install guest agent
 -  Install all Windows Updates
 -  Configure as you like, install Programs
 
@@ -62,7 +62,7 @@ Ovirt OS info settings
 ----------------------
 
 Amoothei-VDI puts the Unattend Setup Config file into the file
-``a:\sysprep.inf`` on a `virtual floppy disk <sftp-floppy-upload.md>`__.
+``a:\sysprep.inf`` on a `virtual floppy disk <sftp-floppy-upload.html>`__.
 To make sure windows finds the floppy there, setting the windows
 registry key as described above is sufficient. However, if you wanna use
 the same Goldimage VmTemplate for other purposes (Ovirt UserPortal /
@@ -96,12 +96,12 @@ Restart ovirt-engine:
 Sysprep
 -------
 
-| The following step will generalize your Goldimage VM. You will
-  "partially loose" your Goldimage VM, so might wanna create a VM
-  snapshot beforehand.
-| Sysprep can be run as local Administrator or as a Domain
-  Administrator. Please disconnect all network shares - they might cause
-  problems when generalizing.
+The following step will generalize your Goldimage VM. You will
+"partially loose" your Goldimage VM, so might wanna create a VM
+snapshot beforehand.
+Sysprep can be run as local Administrator or as a Domain
+Administrator. Please disconnect all network shares - they might cause
+problems when generalizing.
 
 Programm: ``C:\Windows\system32\sysprep\sysprep.exe``
 
@@ -135,17 +135,17 @@ RHEV/Ovirt VmTemplate
 
 In RHEV/Ovirt WebAdmin, right-click on the VM and create a new
 VmTemplate. Then, adjust
-`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.md#room-definitions-section-room-room01>`__
+`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__
 to use the new template: ``template_name = myNewVmTemplate``.
 
 Rolling out virtual rooms
 -------------------------
 
-Now you can use the `tools for virtual rooms <amoothei-vm-rollout.md>`__
+Now you can use the `tools for virtual rooms <amoothei-vm-rollout.html>`__
 to create VMs based on this Goldimage.
 
 ``amoothei-vm-rollout`` will run `Windows Unattended
-Setup <autounattend.md>`__.
+Setup <autounattend.html>`__.
 
 Re-Use Goldimage
 ----------------
