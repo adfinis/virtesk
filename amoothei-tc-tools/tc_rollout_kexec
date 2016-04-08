@@ -43,7 +43,7 @@ display_usage() {
 	Amoothei-vdi is a virtual desktop infrastructure
 	solution based on RHEV / Ovirt.
 
-	Documentation: see amoothei-tc-tools.md.
+	Documentation: see doc/amoothei-tc-tools.rst .
 EndOfHelpText
 
 	exit 1;

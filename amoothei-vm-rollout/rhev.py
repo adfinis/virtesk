@@ -731,7 +731,7 @@ class rhev:
     def vm_adduser(self, vmconfig):
         # Gives the role "UserRoleWithReconnect" to the user <user> on <vm>.
         # The role UserRoleWithReconnect must exist on your RHEV system.
-        # See doc/amoothei-tc-connectspice.md for details.
+        # See doc/amoothei-tc-connectspice.rst for details.
 
         vm = vmconfig['vm']
         user_name = vmconfig['tc_user']
