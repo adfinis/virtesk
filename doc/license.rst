@@ -12,10 +12,24 @@ Source code
 All source code is available in the following git repository: |br|
 FIXME: git repository
 
-License
--------
+Copyright
+---------
+Copyright (c) 2013-2016, Adfinis SyGroup AG
 
-Amoothei-VDI is licensed under GPLv3:
+
+Amoothei-VDI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Amoothei-VDI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+
+GNU GENERAL PUBLIC LICENSE, Version 3
+-------------------------------------
 
 ::
     
