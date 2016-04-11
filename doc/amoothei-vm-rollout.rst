@@ -46,7 +46,7 @@ How it works:
 #. Attach Network to VM
 #. Create individual ``Autounattend.xml`` using a template mechanism
 #. Generate payload floppy, containing individual ``Autounattend.xml``
-   (filename: ``A:\\sysprep.inf``)
+   (filename: ``A:\sysprep.inf``)
 #. Run VM with payload attached. This configures Windows according to
    the settings in ``Autounattend.xml``
 #. Wait until all VMs of a virtual room are shut down
