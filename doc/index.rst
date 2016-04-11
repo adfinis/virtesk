@@ -12,7 +12,8 @@ Contents:
    :maxdepth: 4
 
    overview.rst
-   virtual_rooms.rst 
+   architecture.rst
+   virtual_rooms.rst
    thinclients.rst
    misc.rst
 
