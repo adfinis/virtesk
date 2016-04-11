@@ -11,7 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
-   overview.rst
+   README.rst
    architecture.rst
    virtual_rooms.rst
    thinclients.rst
