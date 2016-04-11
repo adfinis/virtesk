@@ -6,18 +6,22 @@
 Amoothei-VDI
 ============
 
-Amoothei-VDI is a Open Source VDI solution designed with thinclients and virtual rooms in mind.
+Amoothei-VDI is an Open Source VDI solution. It allows to run virtual desktops
+in a RHEV/Ovirt environment seamlessly. The virtual desktops are displayed on thin clients
+in physical rooms. You can manage both the virtual desktops and the physical thin clients
+efficiently using the well-aligned tool collection.
+
 
 It is well-suited to virtualize workplaces in educational environments.
 
-The technical foundation is formed by:
+The technical building blocks are:
 
 * Red Hat Enterprise Virtualization (RHEV) / Ovirt Virtualization
 * Spice VDI protocol
 * RHEL / CentOS for infrastructure services
-* Fedora Linux for thinclients 
-* Active Directory (or Samba4) for Windows Domain Services 
-* Windows 7 VDI Desktops
+* Fedora Linux for thin clients
+* Active Directory (or Samba4) for Windows domain services
+* Windows VDI desktops
 
 
 Documentation is available `here <https://docs.adfinis-sygroup.ch/adsy/amoothei/html/>`__.
@@ -25,15 +29,15 @@ Documentation is available `here <https://docs.adfinis-sygroup.ch/adsy/amoothei/
 Features
 ---------
 
-Thinclient User Experience
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Thin client user experience
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thinclients are very easy to use:
+Thin clients are very easy to use:
 
-1. Turn thinclient on
+1. Turn thin client on
 2. Login directly on virtual Windows desktop
 3. Work
-4. Turn thinclient off
+4. Turn thin client off
 
 Features:
 
@@ -41,14 +45,14 @@ Features:
 * USB redirect
 * Audio: headphones, loudspeakers, microphones
 * One single login - no need to enter credentials twice
-* Comfortable thinclient devices - small and silent
+* Comfortable thin client devices - small and silent
 
-Thinclient Administration
+Thin client administration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Amoothei-VDI features a fully automated network rollout of thinclients.
+Amoothei-VDI features a fully automated network rollout of thin clients.
 
-The following remote administration features for thinclients are available:
+The following remote administration features for thin clients are available:
 
 * Remote control / remote scripting (Tool tc_ssh)
 * Screenshots (Tool tc_screenshot)
@@ -62,20 +66,20 @@ Virtual rooms are useful for educational institutions - physical rooms are mappe
 
 Instant switching of virtual rooms is possible. For example, one set of VMs can be used for normal teaching, and a dedicated set of secure VMs can be assigned for exams.
 
-The 1:1-mapping from thinclients to desktop VMs is controlled through a postgres database.
+The 1:1-mapping from thin clients to desktop VMs is controlled through a postgres database.
 
 
 Application and desktop maintenance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A master VM (the "Goldimage") is used for Application installation and desktop configuration. This master VM can then be cloned as often as necessary.
+A master VM (the "gold image") is used for application installation and desktop configuration. This master VM can then be cloned as often as necessary.
 
-A set of tools (amoothei-virtroom-rollout and friends) helps to simplify and automate the necessary tasks. Scripting and automation features like automatic Windows Domain Join are available.
+A set of tools (amoothei-virtroom-rollout and friends) helps to simplify and automate the necessary tasks. Scripting and automation features like automatic Windows domain join are available.
 
 
 Nightly desktop reset
 ~~~~~~~~~~~~~~~~~~~~~
 
-For situations where clearly-defined centrally managed workplaces are desired, the nightly desktop reset feature comes handy:
+For situations where clearly-defined centrally managed workplaces are desired, the nightly desktop reset feature comes in handy:
 
 * A snapshot is created upon VM creation
 * Every night, the VMs is set back to snapshot state
@@ -86,24 +90,24 @@ This is useful to reduce time and effort spent by your IT support team: Desktops
 Requirements
 --------------
 
-* Virtualization Hardware (~ 4GB Ram per workplace), shared storage attached through iscsi or FibreChannel
+* Virtualization hardware (~ 4GB Ram per workplace), shared storage attached through iscsi or FibreChannel
 * RHEV/oVirt 3.5.x
-* Active Directory (or Samba 4) for Windows Domain features
+* Active Directory (or Samba 4) for Windows domain features
 * A supported OS for virtual Desktops ( stable: Windows 7; Windows 10 support is underway)
-* Thinclients: Any linux compatible (x86 or x86_64, must be supported by Fedora Linux) hardware can be used. Usually, small, silent and low power thinclient devices are used; However, it is also possible to re-use old desktop computers as thinclients
+* Thin clients: Any linux compatible (x86 or x86_64, must be supported by Fedora Linux) hardware can be used. Usually, small, silent and low power thin client devices are used; However, it is also possible to re-use old desktop computers as thin clients
 * Infrastructure server VM (part of Amoothei-VDI)
 
-Birdeye view of operation / installation
-----------------------------------------
+Bird's eye view of operation / installation
+-------------------------------------------
 
-The steps to build an Amoothei-VDI thinclient are more or less:
+The steps to introduce Amoothei-VDI are more or less:
 
 * Preparing RHEV/Ovirt for VDI operation
-* Thinclients: Seting up Amoothei-VDI infrastructure services, including a Fedora Linux mirror, a network rollout infrastructure, scripts for unattended Fedora installations based on Kickstart, and a postgres database for VM-to-thinclient-mapping.
-* Installing amoothei-tc-tools for thinclient remote management
-* Installing a Windows 7 Master VM ("Goldimage")
-* Setting up the Windows Unattended Setup process for VM creation and for automatic Windows Domain Join
+* Thin clients: Seting up Amoothei-VDI infrastructure services, including a Fedora Linux mirror, a network rollout infrastructure, scripts for unattended Fedora installations based on Kickstart, and a postgres database for VM-to-thin-client-mapping.
+* Installing amoothei-tc-tools for thin client remote management
+* Installing a Windows 7 master VM ("gold image")
+* Setting up the Windows unattended setup process for VM creation and for automatic Windows domain join
 * Setting up amoothei-virtroom-tools for virtual room management
-* Creating a network concept, including nameing standards and ip-address conventions
+* Creating a network concept, including naming standards and ip-address conventions
 
 
