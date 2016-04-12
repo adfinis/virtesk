@@ -729,6 +729,7 @@ Allow network access
 ::
 
     hostssl    all             all          0.0.0.0/0               md5
+    hostssl    all             all          ::0/0                   md5
 
 This line allows password-based authentication, protected with TLS/SSL,
 from everywhere.
