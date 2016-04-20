@@ -26,6 +26,8 @@ Syntax of ``amoothei-vm-rollout.conf``:
 For syntax details, please refer to `ConfigObj library
 documentation <http://www.voidspace.org.uk/python/configobj.html>`__
 
+A sample config file is available under ``sample_config/amoothei-vm-rollout.conf``.
+
 Structure of ``amoothei-vm-rollout.conf``:
 
 ::
@@ -189,7 +191,7 @@ Room definition:
             ip_addresses = "192.0.2.${suffix}"
             ip_addresses_suffix = 1
             netmask_suffix=24
-            default_gateway=10.165.208.1
+            default_gateway=192.0.2.1
 
             # VM
             cluster = Default
