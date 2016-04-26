@@ -686,10 +686,28 @@ class rhev:
             )
 
     def force_stop_vm(self, vm_name):
-        vm = self.api.vms.get(vm_name)
-        vm.stop()
+        # try 4 times to stop the VM
+        for attempt in range(1, 5):
+            vm = self.api.vms.get(vm_name)
+            if vm.status.state == 'down':
+                break
 
-        self.wait_for_vms_down(vm_names=[vm_name])
+            try:
+                vm.stop()
+            except Exception as ex:
+                logging.debug(
+                    "Stopping VM {} failed. Hiding exception {}."
+                    .format(vm_name, str(ex))
+                )
+
+        # last attempt, not hiding exceptions...
+        vm = self.api.vms.get(vm_name)
+        if vm.status.state == 'down':
+            logging.debug("VM {} ist down.".format(vm_name))
+        else:
+            # On grave RHEV problems, this will throw
+            # an exception and stop the program.
+            vm.stop()
 
     def get_all_rhev_vms(self):
         vm_list = []
