@@ -48,6 +48,7 @@ Minimal configuration
 ::
 
     mkdir /etc/amoothei-vdi/
+    mkdir /var/log/amoothei-vdi/
 
     # SSL Certificyte of Ovirt engine Certificate Authority 
     vim /etc/amoothei-vdi/ca.crt
