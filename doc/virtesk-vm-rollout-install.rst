@@ -4,9 +4,9 @@ Installing VM rollout tools
 Overview
 --------
 
-To run amoothei-vm-rollout, the system must be prepared first:
+To run virtesk-vm-rollout, the system must be prepared first:
 
--  Installing amoothei-vm-rollout
+-  Installing virtesk-vm-rollout
 -  Minimal configuration
 -  Setting up `payload injection mechanism <sftp-floppy-upload.html>`__
 -  Configuring virtual rooms
@@ -28,7 +28,7 @@ Cloneing git repository:
 ::
 
     cd /opt
-    git clone http://path.to.git.repository/amoothei-vdi.src.git
+    git clone http://path.to.git.repository/virtesk-vdi.src.git
 
 .. raw:: html
 
@@ -36,30 +36,30 @@ Cloneing git repository:
    FIXME: git path above
    -->
 
-Bash search path: ``/etc/profile.d/amoothei-vm-rollout.sh``
+Bash search path: ``/etc/profile.d/virtesk-vm-rollout.sh``
 
 ::
 
-    pathmunge /opt/amoothei-vdi.src/amoothei-vm-rollout after
+    pathmunge /opt/virtesk-vdi.src/virtesk-vm-rollout after
 
 Minimal configuration
 ---------------------
 
 ::
 
-    mkdir /etc/amoothei-vdi/
-    mkdir /var/log/amoothei-vdi/
+    mkdir /etc/virtesk-vdi/
+    mkdir /var/log/virtesk-vdi/
 
     # SSL Certificyte of Ovirt engine Certificate Authority 
-    vim /etc/amoothei-vdi/ca.crt
+    vim /etc/virtesk-vdi/ca.crt
     # Template File for Windows Unattended Setup configuration file
-    vim /etc/amoothei-vdi/Autounattend-production.xml.template
+    vim /etc/virtesk-vdi/Autounattend-production.xml.template
     # Logging settings
-    vim /etc/amoothei-vdi/logging.conf
+    vim /etc/virtesk-vdi/logging.conf
     # Definitions of virtual rooms:
-    vim /etc/amoothei-vdi/amoothei-vm-rollout.conf
+    vim /etc/virtesk-vdi/virtesk-vm-rollout.conf
 
-Details are documented `here <amoothei-vm-rollout-config.html>`__.
+Details are documented `here <virtesk-vm-rollout-config.html>`__.
 
 Setting up payload injection mechanism
 --------------------------------------
@@ -84,4 +84,4 @@ and if tools do work in general:
 
 ::
 
-    amoothei-virtroom-show room01
+    virtesk-virtroom-show room01

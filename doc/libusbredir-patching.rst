@@ -23,7 +23,7 @@ However, some problematic devices have issues with usb resets. Redirect fails wi
     Could not redirect Electronics For Imaging, Inc. [hex] 
     Device: error resetting device: LIBUSB_ERROR_NOT_FOUND.
 
-By adding those devices to an internal blacklist of libusbredir, we can prevent usb reset for them. This way, amoothei-vdi can successfully redirect those devices. However, libusbredir must be patched on all thinclients. The following steps explain how the patching is done.
+By adding those devices to an internal blacklist of libusbredir, we can prevent usb reset for them. This way, virtesk-vdi can successfully redirect those devices. However, libusbredir must be patched on all thinclients. The following steps explain how the patching is done.
 
 
 Setting up an rpm build environment

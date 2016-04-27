@@ -22,7 +22,7 @@ Situation in Ovirt 3.6
 
 Spice disconnect actions are a new feature of Ovirt 3.6. Ovirt Hosts must be running RHEL 7.x / CentOS 7.x - because in RHEL 6.x / CentOS 6.x, this feature is not supported.
 
-Amoothei-VDI was not tested with Ovirt 3.6 so far. 
+Virtesk-VDI was not tested with Ovirt 3.6 so far. 
 
 
 Situation in "official Ovirt 3.5 releases"
@@ -77,7 +77,7 @@ Changeing custom VM properties "ad hoc" is not supported, the VM must be stopped
 **Remark:** Sometimes, Ovirt does not save changes to custom VM properties. After changeing custom VM properties, it is recommended to save the changes (e.g. click on [OK] in the Edit window), and then to edit the VM again to check if the changes were saved.
 
 
-Spice disconnect actions can be used together with `amoothei-virtroom-rollout <amoothei-vm-rollout.html#amoothei-virtroom-rollout>`__, simply by configuring the appopriate spice disconnect action in the VmTemplate.
+Spice disconnect actions can be used together with `virtesk-virtroom-rollout <virtesk-vm-rollout.html#virtesk-virtroom-rollout>`__, simply by configuring the appopriate spice disconnect action in the VmTemplate.
 
 Installing the patch
 --------------------

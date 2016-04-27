@@ -114,7 +114,7 @@ todo_include_todos = True
 #   make html_adsy
 #      .. or ..
 #   make SPHINXOPTS="-D html_theme='adsy'" html 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'adsy'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

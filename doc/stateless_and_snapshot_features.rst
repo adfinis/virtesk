@@ -16,7 +16,7 @@ Situation:
 -  Workplace modifications and debris shall be avoided
 -  Divergence of workplaces shall be avoided
 
-Amoothei-VDI provides two solutions:
+Virtesk-VDI provides two solutions:
 
 -  Snapshots: A snapshot will be created for every VM after initial
    rollout. A cronjob resets the virtual rooms to the snapshot state
@@ -31,12 +31,12 @@ Snapshots
 
 How it works:
 
--  Virtual rooms are created using amoothei-virtroom-rollout. After
-   rollout, amoothei-virtroom-rollout automatically creates a snapshot
+-  Virtual rooms are created using virtesk-virtroom-rollout. After
+   rollout, virtesk-virtroom-rollout automatically creates a snapshot
    for every VM.
--  Every night, amoothei-virtroom-reset is run by cronjob. This tool
+-  Every night, virtesk-virtroom-reset is run by cronjob. This tool
    will stop the VMs, reset them back to the snapshot that was created
-   by amoothei-virtroom-rollout, and starts the VMs again. During the
+   by virtesk-virtroom-rollout, and starts the VMs again. During the
    reset phase at night, the VMs / Workplaces are unavailable.
 -  VMs are statefull, but they will be reset every night
 
@@ -61,7 +61,7 @@ This solutions avoids those problems:
 -  VM startup is fast, even in peak situations in a classroom where 20
    VMs might start at once.
 
-Configuration: ``amoothei-vm-rollout.conf``:
+Configuration: ``virtesk-vm-rollout.conf``:
 
 ::
 
@@ -71,10 +71,10 @@ Configuration: ``amoothei-vm-rollout.conf``:
       stateless = False 
 
       # Used for snapshot creation after initial rollout
-      snapshot_description = "Automatic snapshot after amoothei-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}"
+      snapshot_description = "Automatic snapshot after virtesk-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}"
 
       # Used for reset
-      reset_to_snapshot_regex = "Automatic snapshot after amoothei-vmrollout, .*"
+      reset_to_snapshot_regex = "Automatic snapshot after virtesk-vmrollout, .*"
 
       # Shall VMs be started after reset?
       reset_startvm = Auto
@@ -94,38 +94,38 @@ deactivate the reset cronjob.
 Automatic reset every night
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cronjob: ``/etc/cron.d/amoothei-vdi-reset-virtrooms``: Runs reset script
+Cronjob: ``/etc/cron.d/virtesk-vdi-reset-virtrooms``: Runs reset script
 at 01:00 AM every night:
 
 ::
 
     SHELL=/bin/sh
-    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/amoothei-vdi.src/amoothei-vm-rollout/
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/virtesk-vdi.src/virtesk-vm-rollout/
     # m h  dom mon dow   command
-    00 01 * * * root /etc/amoothei-vdi/reset-virtrooms-every-night.sh > /dev/zero
+    00 01 * * * root /etc/virtesk-vdi/reset-virtrooms-every-night.sh > /dev/zero
 
-Please make sure to add your amoothei installation directory to
-``$PATH``, like ``/opt/amoothei-vdi.src/amoothei-vm-rollout/`` above.
+Please make sure to add your virtesk installation directory to
+``$PATH``, like ``/opt/virtesk-vdi.src/virtesk-vm-rollout/`` above.
 
 See also: ``man 5 crontab``.
 
-Reset-Script: ``/etc/amoothei-vdi/reset-virtrooms-every-night.sh``:
+Reset-Script: ``/etc/virtesk-vdi/reset-virtrooms-every-night.sh``:
 
 ::
 
     #!/bin/bash
     # Reset virtual rooms to snapshots
 
-    amoothei-virtroom-reset test01
-    amoothei-virtroom-reset test02
-    amoothei-virtroom-reset test03
-    amoothei-virtroom-reset test04
+    virtesk-virtroom-reset test01
+    virtesk-virtroom-reset test02
+    virtesk-virtroom-reset test03
+    virtesk-virtroom-reset test04
 
-Please add ``amoothei-virtroom-reset <myroom>`` for every virtual room
+Please add ``virtesk-virtroom-reset <myroom>`` for every virtual room
 that shall be reset.
 
 Making it executable:
-``chmod +x /etc/amoothei-vdi/reset-virtrooms-every-night.sh``.
+``chmod +x /etc/virtesk-vdi/reset-virtrooms-every-night.sh``.
 
 Stateless
 ---------
@@ -134,7 +134,7 @@ Stateless VMs are a built-in feature of RHEV/Ovirt: Before starting a
 stateless VM, a snapshot is created. After VM shutdown, the snapshot is
 discarded, e.g. the VM is reset to the state before launch.
 
-Amoothei-vdi supports stateless VMs by setting the stateless flag after
+Virtesk-vdi supports stateless VMs by setting the stateless flag after
 rollout. Afterwards, RHEV/Ovirt is responsible for snapshot management.
 
 Advantages:
@@ -147,11 +147,11 @@ Drawbacks:
    opened, compared to 15-30 seconds for statefull VMs)
 -  Consumes more resources
 -  Somewhat error prone (Bugs in snapshot implementation of RHEV/Ovirt)
--  Other amoothei-vdi code (Thinclients, Start/Stop - Management, ...)
+-  Other virtesk-vdi code (Thinclients, Start/Stop - Management, ...)
    handle stateless VMs like statefull VMs. No special error handling is
    implemented for stateless VMs. This might be necessary in the
-   following areas: VM launch time, amoothei-virtroom-delete,
-   amoothei-virtroom-start, amoothei-virtroom-shutdown, VM startup upon
+   following areas: VM launch time, virtesk-virtroom-delete,
+   virtesk-virtroom-start, virtesk-virtroom-shutdown, VM startup upon
    TC startup, VM shutdown upon TC shutdown. In general, stateless VMs
    should run fine, but problems might occour when starting/stopping
    stateless VMs too fast or too often in a row.
@@ -161,7 +161,7 @@ Drawbacks:
    class to start their thinclients, startup might take longer than when
    starting a single thinclient.
 
-Configuration: ``amoothei-vm-rollout.conf``:
+Configuration: ``virtesk-vm-rollout.conf``:
 
 ::
 

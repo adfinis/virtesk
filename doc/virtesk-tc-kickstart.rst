@@ -22,7 +22,7 @@ Thinclient-Rollout using Kickstart
 
 The amount of data transferred over the network is quite small (1000M - 2000M, estimated value), so its perfectly possible to roll out several hundred thinclients at a time over a single gigabit uplink. |br|
 Everything is completely scripted (no disk images!), therefore, the rollout process and the thinclient system can be flexible adapted for new needs and new features. |br|
-Experienced system administrators dont need to be on-site for thinclient rollout, remote rollout using Wake-On-Lan is possible. Instead of PXE network booting, thinclients can also be re-installed using ssh and `kexec <amoothei-tc-tools.html#tc-rollout-kexec>`__.
+Experienced system administrators dont need to be on-site for thinclient rollout, remote rollout using Wake-On-Lan is possible. Instead of PXE network booting, thinclients can also be re-installed using ssh and `kexec <virtesk-tc-tools.html#tc-rollout-kexec>`__.
 
 
 .. warning:: WARNING: DATA LOSS |br| The provided sample kickstart file will ERASE everything on all hard drives and on all usb drives on any computer where a thinclient rollout is attempted. This is indented this way (thinclients dont contain any data, so it's ok).
@@ -38,14 +38,14 @@ operating system:
 -  **Kickstart** for Red Hat Enterprise Linux, CentOS, Fedora, ...
 
 They all use a configuration file for scripting the installation process. Normally, the goal is to make sure the operating system gets installed without any user or sysadmin interaction. |br|
-In amoothei-vdi, a network-based kickstart-installation of Fedora 22 is used to deploy and configure thinclients. |br|
+In virtesk-vdi, a network-based kickstart-installation of Fedora 22 is used to deploy and configure thinclients. |br|
 The kickstart script file contains a very large post-section, written in bash. It contains all thinclient configuration files (inlined using bash-here-documents). It also makes sure the minimalistic desktop interface is completely locked down, to make sure that students cannot do anything else besides accessing the assigned virtual machine.
 
 
 PXE-Setup, Network Boot, Fedora Mirror, ...
 -------------------------------------------
 
-Documented `here <amoothei-infrastructure-server.html>`__.
+Documented `here <virtesk-infrastructure-server.html>`__.
 
 Sample Kickstart File
 ---------------------
@@ -58,11 +58,11 @@ The sections needing adjustmend are marked with ``# ADJUST``.
 All references to ``infrastructure-server`` need to be replaced with the
 actual FQDN of your infrastructure server.
 
-The thinclient software, *amoothei-tc-connectspice*, needs to be
-configured as described `here <amoothei-tc-connectspice.html>`__.
+The thinclient software, *virtesk-tc-connectspice*, needs to be
+configured as described `here <virtesk-tc-connectspice.html>`__.
 
 Adapting the sample kickstart file isn't easy, and if you are completely new to kickstart, it is actually quite hard. Don't give up, everyone can learn PXE / network installation / kickstart! |br|
-For analyzing kickstart problems, remote logging is useful. On a properly configured `infrastructure server <amoothei-infrastructure-server.html>`__, logfiles are available at ``/var/log/remote``. However, not everything is logged, because remote logging is only done in stage 2 of the Fedora installer.
+For analyzing kickstart problems, remote logging is useful. On a properly configured `infrastructure server <virtesk-infrastructure-server.html>`__, logfiles are available at ``/var/log/remote``. However, not everything is logged, because remote logging is only done in stage 2 of the Fedora installer.
 
 Kickstart literature
 --------------------

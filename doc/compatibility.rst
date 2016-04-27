@@ -4,7 +4,7 @@ Compatibility
 Current versions:
 -----------------
 
-The current versions of amoothei-vdi are tested in the following
+The current versions of virtesk-vdi are tested in the following
 environment:
 
 -  Virtualisation: Ovirt/RHEV 3.5.x

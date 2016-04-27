@@ -126,7 +126,7 @@ are necessary:
 Configuring an sftp server for hosting floppy images
 ----------------------------------------------------
 
-The `VM rollout script <amoothei-vm-rollout.html>`__ needs a way to upload floppy images, so that the images are accessible by the ovirt hosts afterwards. The `VM rollout script <amoothei-vm-rollout.html>`__ uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
+The `VM rollout script <virtesk-vm-rollout.html>`__ needs a way to upload floppy images, so that the images are accessible by the ovirt hosts afterwards. The `VM rollout script <virtesk-vm-rollout.html>`__ uses sftp to upload floppy images, and the Ovirt hosts use NFS to access the floppy images.
 
 Choosing a floppy image location
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -244,7 +244,7 @@ floppy images.
 
 This way, both sftp-floppy-upload and qemu (though group kvm) have
 access to $FLOPPY\_LOCATION\_NFSSERVER - but nobody else. The `VM
-rollout script <amoothei-vm-rollout.html>`__ will then later put floppy
+rollout script <virtesk-vm-rollout.html>`__ will then later put floppy
 images with permissions 0666, this way qemu gets read-write access to
 the floppy images.
 
@@ -310,7 +310,7 @@ evaluated, but all have their problems:
 
 -  CDROM / ISO image for injecting payload:
 
-   This was our old implementation. Amoothei-vm-rollout had ssh access
+   This was our old implementation. Virtesk-vm-rollout had ssh access
    to the NFS server hosting the ISO images, and the ISOs were generated directly on the NFS
    server using genisoimage.
 

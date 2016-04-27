@@ -55,7 +55,7 @@ Virtual rooms: startup and shutdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Whole virtual rooms can be started and shut down using
-``amoothei-virtroom-start`` and ``amoothei-virtroom-shutdown``.
+``virtesk-virtroom-start`` and ``virtesk-virtroom-shutdown``.
 
 Those tools are well-suited for unattended use in cronjobs. Cronjobs can
 be configured similary to
@@ -67,7 +67,7 @@ Virtual rooms: startup after rollout and after reset
 The startup behavior after rollout and after reset can be configured
 using the config directives ``rollout_startvm`` and ``reset_startvm`` as
 described
-`here <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__.
+`here <virtesk-vm-rollout-config.html#room-definitions-section-room-room01>`__.
 
 Thinclient remote-startup using Wake-On-LAN
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +82,7 @@ Thinclient remote-shutdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Thinclient remote-shutdown is supported using
-`amoothei-tc-tools <amoothei-tc-tools.html>`__.
+`virtesk-tc-tools <virtesk-tc-tools.html>`__.
 
 Suggestions for start and stop management
 -----------------------------------------
@@ -94,7 +94,7 @@ Configuration:
 
 -  VM shutdown upon TC shutdown: disabled
 -  VM startup after reset: ``reset_startvm = Auto``
--  Every Friday night: shutdown VMs using ``amoothei-virtroom-shutdown``
+-  Every Friday night: shutdown VMs using ``virtesk-virtroom-shutdown``
 
 Effect:
 

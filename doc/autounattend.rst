@@ -4,7 +4,7 @@ Windows Unattended Setup
 Introduction
 ------------
 
-Amoothei-virtroom-rollout creates several hunderds VMs by cloneing a
+Virtesk-virtroom-rollout creates several hunderds VMs by cloneing a
 single `Goldimage VM <goldimage.html>`__.
 
 However, simply cloneing a windows VM usually isn't enough, it needs to
@@ -16,7 +16,7 @@ This article explains the XML-Configuration-File used to configure and
 automatize the Windows Unattended Setup phase.
 
 Please note: Windows Unattended Setup is not an easy topic. This article
-covers only the aspects important for amoothei-vdi.
+covers only the aspects important for virtesk-vdi.
 
 Mako Templating
 ---------------
@@ -34,13 +34,13 @@ Variables:
 
 In general, all keys available in the ``vmconfig``-python-dict can be
 used as mako template variables. They can be displayed using
-``amoothei-virtroom-show``:
+``virtesk-virtroom-show``:
 
 ::
 
-    $ amoothei-virtroom-show test01
+    $ virtesk-virtroom-show test01
     [...]
-    2016-03-03 15:55:08,231 - rhev_manager - DEBUG - {'ComputerName': 'test01-vd01', 'tc_user': '...', 'description': 'LehrerVM', 'rhev_vm_name': 'test01-vd01', 'ip': '...', 'default_gw': '...', 'cluster': 'Default', 'netmask_as_suffix': '21', 'snapshot_description': 'Automatic snapshot after amoothei-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}', 'scripttime': '2016-03-03-1555', 'reset_startvm': 'Always', 'timezone': 'W. Europe Standard Time', 'network_name': '...', 'reset_to_snapshot_regex': <_sre.SRE_Pattern object at 0x201d2f0>, 'workaround_os': 'rhel_7x64', 'autounattend_templatefile': '/etc/amoothei-vdi/Autounattend-production.xml.template', 'usb_enabled': True, 'rollout_startvm': True, 'template': '...', 'memory': 4294967296, 'workaround_timezone': 'Etc/GMT', 'os': 'windows_7x64', 'stateless': False}
+    2016-03-03 15:55:08,231 - rhev_manager - DEBUG - {'ComputerName': 'test01-vd01', 'tc_user': '...', 'description': 'LehrerVM', 'rhev_vm_name': 'test01-vd01', 'ip': '...', 'default_gw': '...', 'cluster': 'Default', 'netmask_as_suffix': '21', 'snapshot_description': 'Automatic snapshot after virtesk-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}', 'scripttime': '2016-03-03-1555', 'reset_startvm': 'Always', 'timezone': 'W. Europe Standard Time', 'network_name': '...', 'reset_to_snapshot_regex': <_sre.SRE_Pattern object at 0x201d2f0>, 'workaround_os': 'rhel_7x64', 'autounattend_templatefile': '/etc/virtesk-vdi/Autounattend-production.xml.template', 'usb_enabled': True, 'rollout_startvm': True, 'template': '...', 'memory': 4294967296, 'workaround_timezone': 'Etc/GMT', 'os': 'windows_7x64', 'stateless': False}
     [...]
 
 Sample Config File
@@ -232,7 +232,7 @@ IMPORTANT: Last step: VM shutdown
 
 It is very important, that after all Windows Unattened Setup tasks run
 trough, the VM will shut down. If VMs do not shutdown, then
-``amoothei-virtroom-rollout`` will wait forever.
+``virtesk-virtroom-rollout`` will wait forever.
 
 ::
 

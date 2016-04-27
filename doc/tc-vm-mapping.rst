@@ -21,9 +21,9 @@ The database determines:
    TC is shutting down
 
 Accessing the database is documented
-`here <amoothei-infrastructure-server.html#accessing-database>`__,
+`here <virtesk-infrastructure-server.html#accessing-database>`__,
 database setup is documented
-`there <amoothei-infrastructure-server.html#setting-up-postgres-database>`__,
+`there <virtesk-infrastructure-server.html#setting-up-postgres-database>`__,
 and switching virtual rooms is documented
 `here <switching-virtual-rooms.html>`__
 
@@ -49,7 +49,7 @@ supported.
 Thinclient perspective: SQL Query
 ---------------------------------
 
-The following SQL Query is executed on a thinclient whenever amoothei-tc-connectspice wants to determine the virtual machine assigned to the thinclient, e.g. on thinclient startup, when re-connecting, and on thinclient shutdown, for shutting down the assined virtual machine if configured to do so.
+The following SQL Query is executed on a thinclient whenever virtesk-tc-connectspice wants to determine the virtual machine assigned to the thinclient, e.g. on thinclient startup, when re-connecting, and on thinclient shutdown, for shutting down the assined virtual machine if configured to do so.
 
 ::
 
@@ -68,7 +68,7 @@ It is necessary to define a mapping from thinclients to virtual
 machines. For this mapping, some kind of thinclient identification is
 necessary.
 
-Amoothei-tc-connectspice supports two identifiers to uniquely identify
+Virtesk-tc-connectspice supports two identifiers to uniquely identify
 the thinclient it is running on:
 
 **dhcp\_hostname**:
@@ -99,7 +99,7 @@ Sample database layout
 A sample database layout is provided in
 ``sample_config/database-layout.sql``. Instructions for loading the file
 are provided
-`here <amoothei-infrastructure-server.html#setting-up-postgres-database>`__.
+`here <virtesk-infrastructure-server.html#setting-up-postgres-database>`__.
 
 Thinclient DNS Domain
 ---------------------
@@ -197,7 +197,7 @@ View thinclient\_everything\_view
 one view to connect them all and using Spice to bind them."*
 
 All information in the other tables and views is condensed in this one
-big view, ready for use by `amoothei-tc-connectspice <amoothei-tc-connectspice.html>`__.
+big view, ready for use by `virtesk-tc-connectspice <virtesk-tc-connectspice.html>`__.
 
 See also: `Thinclient perspective: SQL
 Query <#thinclient-perspective-sql-query>`__

@@ -436,7 +436,7 @@ Example: PXE File layout:
 
     /srv/tftpboot/pxelinux/img:
     total 8
-    -rw-r--r--. 1 root root 4705 Sep 22 17:52 splash_amoothei_vdi.png
+    -rw-r--r--. 1 root root 4705 Sep 22 17:52 splash_virtesk_vdi.png
 
     /srv/tftpboot/pxelinux/pxelinux.cfg:
     total 4
@@ -469,8 +469,8 @@ PXE Linux Config file, boot menu:
     PROMPT 0
     TIMEOUT 800
 
-    MENU BACKGROUND img/splash_amoothei_vdi.png
-    MENU TITLE Amoothei-VDI Thinclient Rollout
+    MENU BACKGROUND img/splash_virtesk_vdi.png
+    MENU TITLE Virtesk-VDI Thinclient Rollout
     MENU VSHIFT 5
     MENU ROWS 10
     MENU TABMSGROW 15
@@ -494,12 +494,12 @@ PXE Linux Config file, boot menu:
      endtext
      
     label fedora22-x86_64-ks
-     menu label Amoothei-VDI Thinclient Rollout - DELETES EVERYTHING
+     menu label Virtesk-VDI Thinclient Rollout - DELETES EVERYTHING
      text help
      Kickstart Fedora22-x86_64
      * Will ERASE all data on local hard drives and on USB flash drives
      * Fully automated Fedora 22 installation
-     * Post-Install: Setting up Amoothei-VDI Thinclient Software
+     * Post-Install: Setting up Virtesk-VDI Thinclient Software
      * Post-Install: Desktop-Lockdown
      endtext
       kernel fedora22-x86_64-pxeboot/vmlinuz
@@ -509,7 +509,7 @@ Please adjust the kernel parameter
 ``inst.ks=http://infrastructure-server/mirror/private/thinclients/kickstart/tc_rollout.ks``
 to make sure it points to the correct loation.
 
-See also: `Kickstart <amoothei-tc-kickstart.html>`__
+See also: `Kickstart <virtesk-tc-kickstart.html>`__
 
 TFTP-Server: in.tftpd
 ~~~~~~~~~~~~~~~~~~~~~
@@ -548,7 +548,7 @@ Enabling and starting xinetd service:
     systemctl enable xinetd.service
     systemctl start xinetd.service
 
-Making the kickstart file and the amoothei thinclient software available
+Making the kickstart file and the virtesk thinclient software available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
@@ -557,12 +557,12 @@ Making the kickstart file and the amoothei thinclient software available
     cp sample_config/tc_rollout.ks /var/www/mirror/private/thinclients/kickstart/
 
 Then adapt the kickstart file to your environment as described
-`here <amoothei-tc-kickstart.html>`__
+`here <virtesk-tc-kickstart.html>`__
 
 ::
 
-    git checkout url-of-amoothei-vdi.src
-    cd amoothei-vdi.src/amoothei-tc-connectspice
+    git checkout url-of-virtesk-vdi.src
+    cd virtesk-vdi.src/virtesk-tc-connectspice
     make release
 
 This will put the software into a tarball located at:
@@ -676,7 +676,7 @@ We create two users, vdi-dbadmin and vdi-readonly:
     -bash-4.2$ exit
 
 The user vdi-dbadmin will be used by the system administrator (you!) to administer the database and to change the VM-to-TC-mapping. |br|
-The password for the user vdi-readonly needs to be configured in amoothei-tc-connectspice. It is used to determine the VM that should be displayed on a TC.
+The password for the user vdi-readonly needs to be configured in virtesk-tc-connectspice. It is used to determine the VM that should be displayed on a TC.
 
 Creating database, grant permissions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

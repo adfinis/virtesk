@@ -21,14 +21,14 @@ Creating an iPXE image:
 
 Upstream documentation: http://ipxe.org/embed
 
-amoothei-vdi.ipxe:
+virtesk-vdi.ipxe:
 
 ::
 
     #!ipxe
 
     echo
-    echo Amoothei-VDI thinclient rollout iPXE compatibility image
+    echo Virtesk-VDI thinclient rollout iPXE compatibility image
 
 
     echo
@@ -62,8 +62,8 @@ Fetching source and build the image:
 
     git clone git://git.ipxe.org/ipxe.git
     cd ipxe.git/src
-    make bin/ipxe.usb EMBED=/path/to/amoothei-vdi.ipxe
-    make bin/ipxe.iso EMBED=/path/to/amoothei-vdi.ipxe
+    make bin/ipxe.usb EMBED=/path/to/virtesk-vdi.ipxe
+    make bin/ipxe.iso EMBED=/path/to/virtesk-vdi.ipxe
 
 Afterwards, the images will be available at:
 

@@ -9,7 +9,7 @@ VDI Software running on thinclients
 Introduction
 ------------
 
-Amoothei-tc-connectspice is the software running on thinclients.
+Virtesk-tc-connectspice is the software running on thinclients.
 
 It connects to the postgres database, determines the assigned VM, starts
 it if necessary, determines spice connection parameters, starts a
@@ -17,7 +17,7 @@ spice-client (``remote-viewer``), and passes the connection parameters
 to the spice client using a unix domain socket (remote-control of
 spice-clients using SPICE-XPI API).
 
-Amoothei-tc-connectspice is not designed to run standalone. It needs to
+Virtesk-tc-connectspice is not designed to run standalone. It needs to
 be run on properly configured thinclients. All necessary configuration
 is done when rolling out a thinclient using kickstart.
 
@@ -26,10 +26,10 @@ German, other languages are not available.
 
 The former name was ``connect_spice_client``.
 
-Amoothei-tc-connectspice consists of two programs:
+Virtesk-tc-connectspice consists of two programs:
 
--  **amoothei-tc-connectspice-main**: Main program as described above.
--  **amoothei-tc-connectspice-shutdown-vm**: Called by systemd on
+-  **virtesk-tc-connectspice-main**: Main program as described above.
+-  **virtesk-tc-connectspice-shutdown-vm**: Called by systemd on
    thinclient `shutdown <start-and-stop-management.html>`__. Will shutdown
    the VM asssigned to the thinclient if configured to do so.
 
@@ -130,12 +130,12 @@ New Ovirt Role ``UserRoleWithReconnect``:
     [X] Remote Log In                     (VM --> Basic Operations)
     [X] Override opened console session   (VM --> Administrative Operations)
 
-Amoothei-virtroom-rollout will grant ``UserRoleWithReconnect`` to
+Virtesk-virtroom-rollout will grant ``UserRoleWithReconnect`` to
 ``ovirt.thinclient@your-ovirt-authentication-domain`` on freshly created
 VMs.
 
 See also: config-option ``tc_user`` in
-`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.html>`__.
+`virtesk-vm-rollout.conf <virtesk-vm-rollout-config.html>`__.
 
 Ovirt REST API: SSL CA
 ~~~~~~~~~~~~~~~~~~~~~~

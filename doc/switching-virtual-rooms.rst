@@ -6,7 +6,7 @@ Switching virtual rooms
 Introduction
 ------------
 
-Switching the virtual room assigned to a physical set of thinclient (the physical room) is an important feature of amoothei-vdi.
+Switching the virtual room assigned to a physical set of thinclient (the physical room) is an important feature of virtesk-vdi.
 
 Uses:
 
@@ -17,7 +17,7 @@ Uses:
 -  **Win7 Desktops for one lesson, Linux Desktops for next lessons**
 
    -  Thinclients can dispaly Linux VMs, however, no rollout tools for
-      Linux desktops have been implemented in amoothei-vdi so far.
+      Linux desktops have been implemented in virtesk-vdi so far.
 
 -  ...
 
@@ -30,9 +30,9 @@ Documentation:
 
 -  `Database layout <tc-vm-mapping.html>`__
 -  `Database Installation + DB
-   Access <amoothei-infrastructure-server.html#setting-up-postgres-database>`__
+   Access <virtesk-infrastructure-server.html#setting-up-postgres-database>`__
 -  `Defining virtual
-   rooms <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__
+   rooms <virtesk-vm-rollout-config.html#room-definitions-section-room-room01>`__
 
 How to switch virtual rooms
 ---------------------------

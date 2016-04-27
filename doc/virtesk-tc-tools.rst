@@ -9,7 +9,7 @@ Manageing thinclients efficiently
 Introduction
 ------------
 
-amoothei-tc-tools is a collection of utilities for system administrators. |br|
+virtesk-tc-tools is a collection of utilities for system administrators. |br|
 They to help to automate the tasks that occur when managing a lot of thinclients. |br|
 |br|
 Features:
@@ -27,7 +27,7 @@ Cloneing git repository:
 ::
 
     cd /opt
-    git clone http://path.to.git.repository/amoothei-vdi.src.git
+    git clone http://path.to.git.repository/virtesk-vdi.src.git
 
 .. raw:: html
 
@@ -35,17 +35,17 @@ Cloneing git repository:
    FIXME: git path above
    -->
 
-Bash search path: ``/etc/profile.d/amoothei-tc-tools.sh``
+Bash search path: ``/etc/profile.d/virtesk-tc-tools.sh``
 
 ::
 
-    pathmunge /opt/amoothei-vdi.src/amoothei-tc-tools after
+    pathmunge /opt/virtesk-vdi.src/virtesk-tc-tools after
 
 Configuration
 -------------
 
-All config file locations are relative to the environment variable ``$AMOOTHEI_TC_TOOLS_CONF_DIR``. |br|
-This variable defaults to ``/etc/amoothei-vdi/``
+All config file locations are relative to the environment variable ``$VIRTESK_TC_TOOLS_CONF_DIR``. |br|
+This variable defaults to ``/etc/virtesk-vdi/``
 
 The config files are sourced by bash scripts, e.g. they have to be valid
 bash shell files.
@@ -56,7 +56,7 @@ This allows to specify default values in the main config file, and to overwrite 
 Main Config File
 ~~~~~~~~~~~~~~~~
 
-``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf``:
+``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf``:
 
 ::
 
@@ -68,7 +68,7 @@ Main Config File
     TC_DOMAIN=myorganization.mydomain
 
     # SSH options for tc_ssh
-    SSH_GLOBAL_OPTS="-q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=4 -i /etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa"
+    SSH_GLOBAL_OPTS="-q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=4 -i /etc/virtesk-vdi/virtesk-thinclient-ssh-private-key-id_rsa"
 
     # Commands to run on a thinclient in order
     # to re-install itself using kexec and kickstart
@@ -84,12 +84,12 @@ Main Config File
     # Directory where screenshots shall be stored.
     SCREENSHOT_DIR=/screenshot
 
-Sample config file: See ``sample_config/amoothei-tc-tools.conf``.
+Sample config file: See ``sample_config/virtesk-tc-tools.conf``.
 
 SSH Key
 ~~~~~~~
 
-The SSH private key (used by amoothei-tc-tools) and the SSH public key (deployed to thinclients in the kickstart post section) must match. |br|
+The SSH private key (used by virtesk-tc-tools) and the SSH public key (deployed to thinclients in the kickstart post section) must match. |br|
 |br|
 A new private/public ssh keypair can be created like this:
 
@@ -97,11 +97,11 @@ A new private/public ssh keypair can be created like this:
 
     [test@testsystem ~]$ ssh-keygen
     Generating public/private rsa key pair.
-    Enter file in which to save the key (/home/test/.ssh/id_rsa): amoothei-thinclient-ssh-private-key-id_rsa
+    Enter file in which to save the key (/home/test/.ssh/id_rsa): virtesk-thinclient-ssh-private-key-id_rsa
     Enter passphrase (empty for no passphrase): 
     Enter same passphrase again: 
-    Your identification has been saved in amoothei-thinclient-ssh-private-key-id_rsa.
-    Your public key has been saved in amoothei-thinclient-ssh-private-key-id_rsa.pub.
+    Your identification has been saved in virtesk-thinclient-ssh-private-key-id_rsa.
+    Your public key has been saved in virtesk-thinclient-ssh-private-key-id_rsa.pub.
     The key fingerprint is:
     5a:e2:d3:2e:be:dd:b4:ea:f7:bd:7b:a3:52:7f:a5:14 test@testsystem
     The key's randomart image is:
@@ -117,7 +117,7 @@ A new private/public ssh keypair can be created like this:
     |     .o+=oo.o.=+o|
     +-----------------+
 
-Afterwards, copy the private key to ``/etc/amoothei-vdi/amoothei-thinclient-ssh-private-key-id_rsa``, 
+Afterwards, copy the private key to ``/etc/virtesk-vdi/virtesk-thinclient-ssh-private-key-id_rsa``, 
 and paste the public key into the kickstart post section (search for ``authorized_keys`` in the kickstart file). |br|
 
 
@@ -131,18 +131,18 @@ This allows you to create custom instances (see
 provide a custom configuration for them.
 
 -  individual config file location:
-   ``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}.conf``
+   ``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/${PROGNAME}.conf``
 -  ``PROGNAME=`basename "$BASH_SOURCE"```
 -  Examples:
 
    -  Tool ``tc_ssh`` ---> individual config file:
-      ``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_ssh.conf``
+      ``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/tc_ssh.conf``
    -  Tool ``tc_screenshot`` ---> individual config file:
-      ``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_screenshot.conf``
+      ``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/tc_screenshot.conf``
    -  Tool ``tc_rollout_kexec`` ---> individual config file:
-      ``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_rollout_kexec.conf``
+      ``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/tc_rollout_kexec.conf``
    -  Custom tool ``tc_my_custom_tool`` ---> individual config file:
-      ``${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/tc_my_custom_tool.conf``
+      ``${VIRTESK_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/tc_my_custom_tool.conf``
 
 Tools
 -----
@@ -268,7 +268,7 @@ Diagnostics using thumbnails of alot of TC screenshots:
 -  Gray screen ===> This is the TC user interface.
 
    -  Try to connect, or reboot the TC.
-   -  If the problem persists, inspect logs of amoothei-tc-connectspice.
+   -  If the problem persists, inspect logs of virtesk-tc-connectspice.
 
 -  Error / image size is 0 ===> Thinclient is off, so no screenshot
    could be taken.
@@ -300,7 +300,7 @@ Re-Install a thinclient.
 Kickstarting a thinclient is so fast that there is no need for a
 thinclient upgrade procedure. Instead, we simply re-install thinclients
 whenever there is a change to configuration or to
-amoothei-tc-connectspice. But we don't want to touch every thinclient by
+virtesk-tc-connectspice. But we don't want to touch every thinclient by
 hand. This tool makes re-installation really easy:
 
 #. make sure TC is running
@@ -323,11 +323,11 @@ can be done by simply creating a symlink:
 
 ::
 
-    ln -s /opt/amoothei-vdi.src/amoothei-tc-tools/tc_rollout_kexec /usr/local/bin/tc_custom_rollout
+    ln -s /opt/virtesk-vdi.src/virtesk-tc-tools/tc_rollout_kexec /usr/local/bin/tc_custom_rollout
 
 Now, we can provide a custom configuration in the individual config
 file, in
-``/etc/amoothei-vdi/amoothei-tc-tools.conf.dir/tc_custom_rollout.conf``:
+``/etc/virtesk-vdi/virtesk-tc-tools.conf.dir/tc_custom_rollout.conf``:
 
 ::
 
@@ -354,7 +354,7 @@ Connect to assigned VM
     killall gxmessage
 
 If the TC GUI (based on gxmessage) is shown, then this command
-terminates the GUI and amoothei-tc-connectspice connects again, that is
+terminates the GUI and virtesk-tc-connectspice connects again, that is
 it connects to postgres database to determine the assigned VM, it
 connects to ovirt manager using REST API to get spice connection
 parameters, and then passes them to remote-viewer to initiate a new
@@ -401,7 +401,7 @@ Run a terminal:
 For Developers
 ~~~~~~~~~~~~~~
 
-Restart X11 + amoothei-tc-connectspice:
+Restart X11 + virtesk-tc-connectspice:
 
 ::
 

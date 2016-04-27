@@ -3,10 +3,10 @@
    <br />
 
 
-Amoothei-VDI
+Virtesk-VDI
 ============
 
-Amoothei-VDI is an Open Source VDI solution. It allows to run virtual desktops
+Virtesk-VDI is an Open Source VDI solution. It allows to run virtual desktops
 in a RHEV/Ovirt environment seamlessly. The virtual desktops are displayed on thin clients
 in physical rooms. You can manage both the virtual desktops and the physical thin clients
 efficiently using the well-aligned tool collection.
@@ -24,7 +24,7 @@ The technical building blocks are:
 * Windows VDI desktops
 
 
-Documentation is available `here <https://docs.adfinis-sygroup.ch/adsy/amoothei/html/>`__.
+Documentation is available `here <https://docs.adfinis-sygroup.ch/adsy/virtesk/html/>`__.
 
 Features
 ---------
@@ -50,7 +50,7 @@ Features:
 Thin client administration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Amoothei-VDI features a fully automated network rollout of thin clients.
+Virtesk-VDI features a fully automated network rollout of thin clients.
 
 The following remote administration features for thin clients are available:
 
@@ -60,7 +60,7 @@ The following remote administration features for thin clients are available:
 
 Virtual Rooms
 ~~~~~~~~~~~~~~
-Amoothei-VDI features virtual Windows desktops organized in virtual rooms.
+Virtesk-VDI features virtual Windows desktops organized in virtual rooms.
 
 Virtual rooms are useful for educational institutions - physical rooms are mapped to virtual rooms. This is useful when combined with 3rd party classroom management and monitoring software like iTalc, UCS\@School, MasterEye, ...
 
@@ -73,7 +73,7 @@ Application and desktop maintenance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A master VM (the "gold image") is used for application installation and desktop configuration. This master VM can then be cloned as often as necessary.
 
-A set of tools (amoothei-virtroom-rollout and friends) helps to simplify and automate the necessary tasks. Scripting and automation features like automatic Windows domain join are available.
+A set of tools (virtesk-virtroom-rollout and friends) helps to simplify and automate the necessary tasks. Scripting and automation features like automatic Windows domain join are available.
 
 
 Nightly desktop reset
@@ -95,19 +95,19 @@ Requirements
 * Active Directory (or Samba 4) for Windows domain features
 * A supported OS for virtual Desktops ( stable: Windows 7; Windows 10 support is underway)
 * Thin clients: Any linux compatible (x86 or x86_64, must be supported by Fedora Linux) hardware can be used. Usually, small, silent and low power thin client devices are used; However, it is also possible to re-use old desktop computers as thin clients
-* Infrastructure server VM (part of Amoothei-VDI)
+* Infrastructure server VM (part of Virtesk-VDI)
 
 Bird's eye view of operation / installation
 -------------------------------------------
 
-The steps to introduce Amoothei-VDI are more or less:
+The steps to introduce Virtesk-VDI are more or less:
 
 * Preparing RHEV/Ovirt for VDI operation
-* Thin clients: Seting up Amoothei-VDI infrastructure services, including a Fedora Linux mirror, a network rollout infrastructure, scripts for unattended Fedora installations based on Kickstart, and a postgres database for VM-to-thin-client-mapping.
-* Installing amoothei-tc-tools for thin client remote management
+* Thin clients: Seting up Virtesk-VDI infrastructure services, including a Fedora Linux mirror, a network rollout infrastructure, scripts for unattended Fedora installations based on Kickstart, and a postgres database for VM-to-thin-client-mapping.
+* Installing virtesk-tc-tools for thin client remote management
 * Installing a Windows 7 master VM ("gold image")
 * Setting up the Windows unattended setup process for VM creation and for automatic Windows domain join
-* Setting up amoothei-virtroom-tools for virtual room management
+* Setting up virtesk-virtroom-tools for virtual room management
 * Creating a network concept, including naming standards and ip-address conventions
 
 

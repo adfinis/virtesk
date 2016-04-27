@@ -8,7 +8,7 @@ Tools for creating and manageing VDI VMs, grouped into virtual rooms.
 Introduction
 ------------
 
-amoothei-virtroom-\* is a set of tools for creating/cloneing a lot of windows 7 virtual machines.
+virtesk-virtroom-\* is a set of tools for creating/cloneing a lot of windows 7 virtual machines.
 Those win7 VMs can then be assigned to and displayed on thinclients.
 
 The script creates new VMs based on an existing Ovirt VM Template, and
@@ -24,13 +24,13 @@ See also: `Compatibility <compatibility.html>`__
 Tools
 -----
 
-amoothei-virtroom-show
+virtesk-virtroom-show
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Parses and validates the room configuration, checks if the VMs exists,
 and lists their snapshosts.
 
-amoothei-virtroom-rollout
+virtesk-virtroom-rollout
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Roll out a virtual room.
@@ -54,12 +54,12 @@ How it works:
    technical vdi accounts, create snapshots, ...)
 #. Start VMs
 
-amoothei-virtroom-delete
+virtesk-virtroom-delete
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Deletes all VMs of a virtual room.
 
-amoothei-virtroom-reset
+virtesk-virtroom-reset
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Reset VMs of a virtual room to a snapshot state.
@@ -73,7 +73,7 @@ How it works:
 
 Reset to snapshot state is not supported for stateless VMs.
 
-amoothei-virtroom-start
+virtesk-virtroom-start
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Starts all VMs in a virtual room.
@@ -84,7 +84,7 @@ Details:
 -  No validation is done - returns as soon as the start signal has been
    sent to all VMs. Does not wait for the VMs to launch.
 
-amoothei-virtroom-shutdown
+virtesk-virtroom-shutdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Shut down all VMs in a virtual room.
@@ -105,10 +105,10 @@ Usage
 
 .. code:: bash
 
-    amoothei-virtroom-show [--config CONFIG] myroom
-    amoothei-virtroom-rollout [--config CONFIG] myroom
-    amoothei-virtroom-delete [--config CONFIG] myroom
-    amoothei-virtroom-reset [--config CONFIG] myroom
+    virtesk-virtroom-show [--config CONFIG] myroom
+    virtesk-virtroom-rollout [--config CONFIG] myroom
+    virtesk-virtroom-delete [--config CONFIG] myroom
+    virtesk-virtroom-reset [--config CONFIG] myroom
 
 ``myroom`` is the virtual room to act on, e.g. the room to
 show/rollout/delete/reset.
@@ -116,9 +116,9 @@ show/rollout/delete/reset.
 The following config file locations are used, first match wins:
 
 -  Command line argument
-   (``--config /path/to/amoothei-vm-rollout.conf``)
--  ``~/.config/amoothei-vdi/amoothei-vm-rollout.conf``
--  ``/etc/amoothei-vdi/amoothei-vm-rollout.conf``
+   (``--config /path/to/virtesk-vm-rollout.conf``)
+-  ``~/.config/virtesk-vdi/virtesk-vm-rollout.conf``
+-  ``/etc/virtesk-vdi/virtesk-vm-rollout.conf``
 
 Many virtual rooms
 ------------------
@@ -127,16 +127,16 @@ When manageing alot of virtual rooms, bash features can be handy:
 
 ::
 
-    for room in room{01..10}; do amoothei-virtroom-show $room; done
-    for room in room01 room02 room03; do amoothei-virtroom-show $room; done
-    for room in $(cat room-list.txt); do amoothei-virtroom-show $room; done
+    for room in room{01..10}; do virtesk-virtroom-show $room; done
+    for room in room01 room02 room03; do virtesk-virtroom-show $room; done
+    for room in $(cat room-list.txt); do virtesk-virtroom-show $room; done
 
 See also
 --------
 
--  `Installing amoothei-vm-rollout <amoothei-vm-rollout-install.html>`__
+-  `Installing virtesk-vm-rollout <virtesk-vm-rollout-install.html>`__
 -  `Defining and configuring virtual
-   rooms <amoothei-vm-rollout-config.html>`__
+   rooms <virtesk-vm-rollout-config.html>`__
 -  `Windows Goldimage <goldimage.html>`__
 -  `Windows Unattended Setup <autounattend.html>`__
 -  `Quality control after rollout <quality_control.html>`__

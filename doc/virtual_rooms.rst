@@ -4,9 +4,9 @@ Virtual Rooms
 .. toctree::
    :maxdepth: 3
 
-   amoothei-vm-rollout.rst
-   amoothei-vm-rollout-install.rst
-   amoothei-vm-rollout-config.rst
+   virtesk-vm-rollout.rst
+   virtesk-vm-rollout-install.rst
+   virtesk-vm-rollout-config.rst
    switching-virtual-rooms.rst
    stateless_and_snapshot_features.rst
    quality_control.rst

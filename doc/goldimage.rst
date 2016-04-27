@@ -47,7 +47,7 @@ Registry Keys:
 
 ::
 
-    rem Tell Windows where to find its Unattended Setup Config file. Common values include a:\sysprep.inf,  a:\Autounattend.xml, a:\Unattend.xml. For amoothei-vdi, a:\sysprep.inf should be used.
+    rem Tell Windows where to find its Unattended Setup Config file. Common values include a:\sysprep.inf,  a:\Autounattend.xml, a:\Unattend.xml. For virtesk-vdi, a:\sysprep.inf should be used.
     rem See also:
     rem     * /etc/ovirt-engine/osinfo.conf.d/ on RHEV/Ovirt Manager
     rem       os.windows_7.sysprepFileName.value = sysprep.inf
@@ -61,7 +61,7 @@ Registry Keys:
 Ovirt OS info settings
 ----------------------
 
-Amoothei-VDI puts the Unattend Setup Config file into the file
+Virtesk-VDI puts the Unattend Setup Config file into the file
 ``a:\sysprep.inf`` on a `virtual floppy disk <sftp-floppy-upload.html>`__.
 To make sure windows finds the floppy there, setting the windows
 registry key as described above is sufficient. However, if you wanna use
@@ -135,16 +135,16 @@ RHEV/Ovirt VmTemplate
 
 In RHEV/Ovirt WebAdmin, right-click on the VM and create a new
 VmTemplate. Then, adjust
-`amoothei-vm-rollout.conf <amoothei-vm-rollout-config.html#room-definitions-section-room-room01>`__
+`virtesk-vm-rollout.conf <virtesk-vm-rollout-config.html#room-definitions-section-room-room01>`__
 to use the new template: ``template_name = myNewVmTemplate``.
 
 Rolling out virtual rooms
 -------------------------
 
-Now you can use the `tools for virtual rooms <amoothei-vm-rollout.html>`__
+Now you can use the `tools for virtual rooms <virtesk-vm-rollout.html>`__
 to create VMs based on this Goldimage.
 
-``amoothei-vm-rollout`` will run `Windows Unattended
+``virtesk-vm-rollout`` will run `Windows Unattended
 Setup <autounattend.html>`__.
 
 Re-Use Goldimage

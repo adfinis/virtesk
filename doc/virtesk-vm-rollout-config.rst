@@ -1,7 +1,7 @@
 Configuring virtual rooms
 =======================================
 
-The following steps explain the config file of amoothei-vm-rollout,
+The following steps explain the config file of virtesk-vm-rollout,
 focusing on how to define and configure virtual rooms.
 
 --------------
@@ -9,7 +9,7 @@ focusing on how to define and configure virtual rooms.
 Config structure
 ----------------
 
-Syntax of ``amoothei-vm-rollout.conf``:
+Syntax of ``virtesk-vm-rollout.conf``:
 
 ::
 
@@ -26,9 +26,9 @@ Syntax of ``amoothei-vm-rollout.conf``:
 For syntax details, please refer to `ConfigObj library
 documentation <http://www.voidspace.org.uk/python/configobj.html>`__
 
-A sample config file is available under ``sample_config/amoothei-vm-rollout.conf``.
+A sample config file is available under ``sample_config/virtesk-vm-rollout.conf``.
 
-Structure of ``amoothei-vm-rollout.conf``:
+Structure of ``virtesk-vm-rollout.conf``:
 
 ::
 
@@ -57,20 +57,20 @@ Structure of ``amoothei-vm-rollout.conf``:
 All configuration is mandatory. No configuration may be omitted. There
 are no default values.
 
-Location of ``amoothei-vm-rollout.conf``: The scripts do look for the
+Location of ``virtesk-vm-rollout.conf``: The scripts do look for the
 config file in the following locations, first match wins:
 
 -  Optional command line argument
-   (``amoothei-virtroom-rollout --config /path/to/amoothei-vm-rollout.conf myroom01``)
--  ``~/.config/amoothei-vdi/amoothei-vm-rollout.conf``
--  ``/etc/amoothei-vdi/amoothei-vm-rollout.conf``
+   (``virtesk-virtroom-rollout --config /path/to/virtesk-vm-rollout.conf myroom01``)
+-  ``~/.config/virtesk-vdi/virtesk-vm-rollout.conf``
+-  ``/etc/virtesk-vdi/virtesk-vm-rollout.conf``
 
 Other configuration files (``Autounattend.xml.template``,
 ``logging.conf``, ...):
 
 -  Absolute paths are valid
 -  all other paths are handled relative to the location of
-   ``amoothei-vm-rollout.conf``.
+   ``virtesk-vm-rollout.conf``.
 
 General configuration: section [general]
 ----------------------------------------
@@ -212,8 +212,8 @@ Room definition:
             tc_user = "ovirt.thinclient@ourdomain"
 
             # Snapshots
-            snapshot_description = "Automatic snapshot after amoothei-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}"
-            reset_to_snapshot_regex = "Automatic snapshot after amoothei-vmrollout, .*"
+            snapshot_description = "Automatic snapshot after virtesk-vmrollout, IP=${ip}/${netmask_as_suffix}, scripttime=${scripttime}"
+            reset_to_snapshot_regex = "Automatic snapshot after virtesk-vmrollout, .*"
 
             # Starting VM
             rollout_startvm = True
@@ -251,7 +251,7 @@ Network:
 -  **network\_name:** Name of Ovirt network to attach to VM.
 -  **ip\_adresses** and **ip\_adresses\_suffix:** Used to define IP
    addresses for the VMs. IPs are computed, but not used, by
-   amoothei-vm-rollout. IPs can be used inside Autounattend.xml to
+   virtesk-vm-rollout. IPs can be used inside Autounattend.xml to
    configure static IP adresses for VMs.
 
    -  last IP octet = ip\_adresses\_suffix + id - 1
@@ -305,7 +305,7 @@ Permissons:
 
 -  **tc\_user**: Technical account used by TCs to access VMs. After
    rollout, permissions are granted to *tc\_user*. Details are
-   documented `here <amoothei-tc-connectspice.html>`__
+   documented `here <virtesk-tc-connectspice.html>`__
 
 Snapshots:
 
@@ -313,7 +313,7 @@ Snapshots:
    Otherwise, a `snapshot <stateless_and_snapshot_features.html>`__ with
    the configured description is created after rolling out VMs.
 -  **reset\_to\_snapshot\_regex**: Must be a valid python regex. Used by
-   amoothei-virtroom-reset to identify the
+   virtesk-virtroom-reset to identify the
    `snapshot <stateless_and_snapshot_features.html>`__ to reset the VM to.
    The regex is applied to the snapshot description.
 
@@ -328,7 +328,7 @@ Starting VMs:
 VIM: Tipps and Tricks
 ---------------------
 
-amoothei-vm-rollout.conf will become large when used in real schools.
+virtesk-vm-rollout.conf will become large when used in real schools.
 The following VIM tricks should help to manage this config file
 efficently:
 
@@ -337,7 +337,7 @@ New room: Copy-Paste
 
 ::
 
-    vim amoothei-vm-rollout.conf
+    vim virtesk-vm-rollout.conf
 
     (navigate to the beginning of an existing room configuration)
 
@@ -366,10 +366,10 @@ Using vim:
 ::
 
     # Make Backup
-    cp amoothei-vm-rollout.conf amoothei-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
+    cp virtesk-vm-rollout.conf virtesk-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
 
     # Edit File
-    vim amoothei-vm-rollout.conf
+    vim virtesk-vm-rollout.conf
 
     # Inside VIM: Apppy regular expression
     :%s/template_name = "vdi-template-009"/template_name = "vdi-template-010"/
@@ -382,10 +382,10 @@ Using sed:
 ::
 
     # Backup
-    cp amoothei-vm-rollout.conf amoothei-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
+    cp virtesk-vm-rollout.conf virtesk-vm-rollout.conf-backup-$(date +"%Y%m%d-%H%M%S")
 
     # Apply regular expression
-    sed -i 's/template_name = "vdi-template-009"/template_name = "vdi-template-010"/' amoothei-vm-rollout.conf
+    sed -i 's/template_name = "vdi-template-009"/template_name = "vdi-template-010"/' virtesk-vm-rollout.conf
 
     # Compare difference
-    diff -puN amoothei-vm-rollout.conf-backup-20160314-182733 amoothei-vm-rollout.conf
+    diff -puN virtesk-vm-rollout.conf-backup-20160314-182733 virtesk-vm-rollout.conf
