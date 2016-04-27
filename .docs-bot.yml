@@ -1,5 +1,5 @@
 docs:
-  extract_to: /var/www/html/adsy/amoothei
+  extract_to: /var/www/html/public/virtesk
   download_delay: 20
   stages:
     - docs

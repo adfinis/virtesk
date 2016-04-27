@@ -24,7 +24,7 @@ The technical building blocks are:
 * Windows VDI desktops
 
 
-Documentation is available `here <https://docs.adfinis-sygroup.ch/adsy/virtesk/html/>`__.
+Documentation is available `here <https://docs.adfinis-sygroup.ch/public/virtesk/>`__.
 
 Features
 ---------
