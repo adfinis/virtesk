@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Amoothei-VDI documentation build configuration file, created by
+# Virtesk-VDI documentation build configuration file, created by
 # sphinx-quickstart2 on Thu Mar 31 12:24:51 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Amoothei-VDI'
+project = u'Virtesk-VDI'
 copyright = u'2016, Adfinis SyGroup'
 author = u'Simon Neininger, Ueli Isch'
 
@@ -205,7 +205,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'amoothei-vdi-doc'
+htmlhelp_basename = 'virtesk-vdi-doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -239,7 +239,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'amoothei-vdi.tex', u'Amoothei-VDI Documentation',
+    (master_doc, 'virtesk-vdi.tex', u'Virtesk-VDI Documentation',
      u'Simon Neininger, Ueli Isch', 'manual'),
 ]
 
@@ -269,7 +269,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'Amoothei-VDI', u'Amoothei-VDI Documentation',
+    (master_doc, 'Virtesk-VDI', u'Virtesk-VDI Documentation',
      [author], 1)
 ]
 
@@ -283,8 +283,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'amoothei-vdi', u'Amoothei-VDI Documentation',
-     author, 'amoothei-vdi', 'Amoothei-VDI is a Open Source VDI solution based on Red Hat Enterprise Virtualization (or Ovirt Virtualization) and the Spice VDI protocol.',
+    (master_doc, 'virtesk-vdi', u'Virtesk-VDI Documentation',
+     author, 'virtesk-vdi', 'Virtesk-VDI is a Open Source VDI solution based on Red Hat Enterprise Virtualization (or Ovirt Virtualization) and the Spice VDI protocol.',
      'Miscellaneous'),
 ]
 
