@@ -2,20 +2,20 @@
 
 # Copyright (c) 2013-2016, Adfinis SyGroup AG
 #
-# This file is part of Amoothei-VDI.
+# This file is part of Virtesk VDI.
 #
-# Amoothei-VDI is free software: you can redistribute it and/or modify
+# Virtesk VDI is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Amoothei-VDI is distributed in the hope that it will be useful,
+# Virtesk VDI is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Amoothei-VDI.  If not, see <http://www.gnu.org/licenses/>.
+# along with Virtesk VDI.  If not, see <http://www.gnu.org/licenses/>.
 
 
 debug() {
@@ -87,11 +87,11 @@ parse_cmdline_twoargument() {
 
 source_configfiles(){
 	if [[ "x${AMOOTHEI_TC_TOOLS_CONF_DIR}" = "x" ]]; then
-		AMOOTHEI_TC_TOOLS_CONF_DIR="/etc/amoothei-vdi"
+		AMOOTHEI_TC_TOOLS_CONF_DIR="/etc/virtesk-vdi"
 	fi
 
 	# Sourcing main configuration file
-	MAIN_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf"
+	MAIN_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf"
 	
 	[[ -r "${MAIN_CONF_FILE}" ]] || {
 		error_msg Cannot read main config file "${MAIN_CONF_FILE}"
@@ -106,7 +106,7 @@ source_configfiles(){
 	PROGNAME=$(basename $0)
 	debug PROGNAME=${PROGNAME}
 
-	IND_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/amoothei-tc-tools.conf.dir/${PROGNAME}.conf"
+	IND_CONF_FILE="${AMOOTHEI_TC_TOOLS_CONF_DIR}/virtesk-tc-tools.conf.dir/${PROGNAME}.conf"
 	[[ -r "${IND_CONF_FILE}" ]] && source "${IND_CONF_FILE}"
 
 }

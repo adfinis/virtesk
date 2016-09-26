@@ -26,8 +26,8 @@ import os
 DEFAULT_CONFIGURATION_FILE_NAME = 'adsy-rhev-tools.config'
 
 CONFIG_FILE_SEARCH_PATH = [
-    os.path.expanduser('~/.config/amoothei-vdi/amoothei-vm-rollout.conf'),
-    '/etc/amoothei-vdi/amoothei-vm-rollout.conf'
+    os.path.expanduser('~/.config/virtesk-vdi/virtesk-vm-rollout.conf'),
+    '/etc/virtesk-vdi/virtesk-vm-rollout.conf'
 ]
 
 # Wait time in seconds after creating a new VM.

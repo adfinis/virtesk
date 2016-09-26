@@ -248,7 +248,7 @@ fi
 
 #
 # Setup SSH-Keys for Root
-# Details: see docs/amoothei-tc-tools.rst
+# Details: see docs/virtesk-tc-tools.rst
 #
 
 mkdir /root/.ssh
@@ -343,7 +343,7 @@ cat > /etc/sudoers.d/vdiclient << 'EOF'
 # User vdiclient can start all programs as root
 # tty is not required
 #
-# Needed for amoothei-vdi 
+# Needed for virtesk-vdi 
 vdiclient       ALL=(ALL)       NOPASSWD: ALL
 Defaults:vdiclient                      !requiretty
 EOF
@@ -582,7 +582,7 @@ if [[ $REBOOT_TARGET_ACTIVE -eq 0 ]]; then
         logger -s -t vmshutdown "Rebooting ==> NOT Running VM shutdown code..."
 elif [[ $HALT_TARGET_ACTIVE -eq 0 || $POWEROFF_TARGET_ACTIVE -eq 0 ]]; then
         logger -s -t vmshutdown "Running VM shutdown code..."
-        /opt/amoothei-tc-connectspice/amoothei-tc-connectspice-shutdown-vm --config /etc/connect_spice_client/connect_spice_client.conf
+        /opt/virtesk-tc-connectspice/virtesk-tc-connectspice-shutdown-vm --config /etc/connect_spice_client/connect_spice_client.conf
 else
         logger -s -t vmshutdown "Dont know what to do ==> NOT Running VM shutdown code..."
 fi
@@ -763,7 +763,7 @@ useradd -G wheel,audio,video,floppy vdiclient
 # VDI software installation
 #
 
-echo Installing amoothei vdi thinclient software...
+echo Installing virtesk vdi thinclient software...
 cd /home/vdiclient
 mkdir logs
 
@@ -777,7 +777,7 @@ echo wget result: $?
 tar -C /opt -xvzf $RELEASE.tar.gz
 
 cat > /etc/profile.d/connect_spice_client_path.sh << 'EOF'
-pathmunge /opt/amoothei-tc-connectspice after
+pathmunge /opt/virtesk-tc-connectspice after
 EOF
 
 # Remote-Viewer settings...
@@ -855,7 +855,7 @@ pacmd load-module module-switch-on-connect
 
 # starting VDI software
 
-amoothei-tc-connectspice-main --config /etc/connect_spice_client/connect_spice_client.conf &
+virtesk-tc-connectspice-main --config /etc/connect_spice_client/connect_spice_client.conf &
 
 # uncomment for debugging purposes...
 # xterm &

@@ -9,13 +9,13 @@ clean:
 #	mv -f /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-dev.tar.gz
 
 release: clean
-	tar --transform 's,^,amoothei-tc-connectspice/,S' -czf /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz *.py amoothei-tc-connectspice-shutdown-vm amoothei-tc-connectspice-main
+	tar --transform 's,^,virtesk-tc-connectspice/,S' -czf /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz *.py virtesk-tc-connectspice-shutdown-vm virtesk-tc-connectspice-main
 	echo mv -f /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-new.tar.gz /var/www/mirror/private/thinclients/thinclient-software/connect_spice_client-dev.tar.gz
 
 flake8: 
-	flake8 --doctests -j auto --ignore=E221,E222,E251,E272,E241,E203 *.py amoothei-tc-connectspice-*
+	flake8 --doctests -j auto --ignore=E221,E222,E251,E272,E241,E203 *.py virtesk-tc-connectspice-*
 flake8-strict: 
-	flake8 --doctests -j auto *.py amoothei-tc-connectspice-*
+	flake8 --doctests -j auto *.py virtesk-tc-connectspice-*
 indention_report:
 	autopep8 . --recursive --select=E101,E121 --diff
 indention_fix:

@@ -2,20 +2,20 @@
 
 # Copyright (c) 2013-2016, Adfinis SyGroup AG
 #
-# This file is part of Amoothei-VDI.
+# This file is part of Virtesk VDI.
 #
-# Amoothei-VDI is free software: you can redistribute it and/or modify
+# Virtesk VDI is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Amoothei-VDI is distributed in the hope that it will be useful,
+# Virtesk VDI is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Amoothei-VDI.  If not, see <http://www.gnu.org/licenses/>.
+# along with Virtesk VDI.  If not, see <http://www.gnu.org/licenses/>.
 
 # Global variables
 declare -a ARGV
@@ -38,12 +38,12 @@ display_usage() {
 	It is useful for re-installation of already
 	installed thinclients.
 
-	tc_rollout_kexec is part of the amoothei-tc-tools collection.
+	tc_rollout_kexec is part of the virtesk-tc-tools collection.
 
 	Amoothei-vdi is a virtual desktop infrastructure
 	solution based on RHEV / Ovirt.
 
-	Documentation: see doc/amoothei-tc-tools.rst .
+	Documentation: see doc/virtesk-tc-tools.rst .
 EndOfHelpText
 
 	exit 1;

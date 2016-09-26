@@ -4,20 +4,20 @@
 
 # Copyright (c) 2013-2016, Adfinis SyGroup AG
 #
-# This file is part of Amoothei-VDI.
+# This file is part of Virtesk VDI.
 #
-# Amoothei-VDI is free software: you can redistribute it and/or modify
+# Virtesk VDI is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Amoothei-VDI is distributed in the hope that it will be useful,
+# Virtesk VDI is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Amoothei-VDI.  If not, see <http://www.gnu.org/licenses/>.
+# along with Virtesk VDI.  If not, see <http://www.gnu.org/licenses/>.
 
 
 # System Imports
@@ -56,8 +56,8 @@ class RhevManager():
         epilog = textwrap.dedent('''
         The following config file locations are used, first match wins:
             * Command line argument
-            * ~/.config/amoothei-vdi/amoothei-vm-rollout.conf
-            * /etc/amoothei-vdi/amoothei-vm-rollout.conf
+            * ~/.config/virtesk-vdi/virtesk-vm-rollout.conf
+            * /etc/virtesk-vdi/virtesk-vm-rollout.conf
         ''')
 
         parser = argparse.ArgumentParser(
@@ -237,7 +237,7 @@ class RhevManager():
             raise Exception('No classroom given')
 
         try:
-            with utils.tempdir("amoothei-virtroom-rollout-") as temp_dir:
+            with utils.tempdir("virtesk-virtroom-rollout-") as temp_dir:
                 self.logger.info(
                     "Starting to roll out classroom '{0}'".format(classroom)
                 )
