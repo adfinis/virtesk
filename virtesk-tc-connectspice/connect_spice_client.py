@@ -104,10 +104,7 @@ class connect_spice_client:
                 return self.vm
 
             except Exception as ex:
-                if (
-                    ex.message is not None
-                    and ex.message.startswith("timeout expired")
-                ):
+                if ex.message and ex.message.startswith("timeout expired"):
                     logging.info(
                         "connecting to database... failed. (iteration {})"
                         .format(i)
