@@ -93,14 +93,3 @@ ORDER BY
     c.prio DESC,
     c.start_date,
     c.id;
-
-
-ALTER TABLE public.thinclient_everything_view OWNER TO "vdi-dbadmin";
-
-REVOKE ALL ON TABLE thinclient_everything_view FROM PUBLIC;
-
-REVOKE ALL ON TABLE thinclient_everything_view FROM "vdi-dbadmin";
-
-GRANT ALL ON TABLE thinclient_everything_view TO "vdi-dbadmin";
-
-GRANT SELECT ON TABLE thinclient_everything_view TO "vdi-readonly";

@@ -1,43 +1,4 @@
 --
--- PostgreSQL database dump
---
-
-SET statement_timeout = 0;
-
-
-SET client_encoding = 'UTF8';
-
-
-SET standard_conforming_strings = ON;
-
-
-SET check_function_bodies = FALSE;
-
-
-SET client_min_messages = warning;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
---
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
-SET search_path = PUBLIC,
-                  pg_catalog;
-
-
-SET default_tablespace = '';
-
-
-SET default_with_oids = FALSE;
-
---
 -- Name: timed_thinclient_to_vm_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
 --
 
@@ -51,8 +12,6 @@ CREATE TABLE timed_thinclient_to_vm_mapping (
     shutdown_vm boolean DEFAULT FALSE NOT NULL
 );
 
-
-ALTER TABLE public.timed_thinclient_to_vm_mapping OWNER TO "vdi-dbadmin";
 
 --
 -- Name: current_thinclient_to_vm_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
@@ -122,9 +81,6 @@ ORDER BY
     f.start_date,
     f.id;
 
-
-ALTER TABLE public.current_thinclient_to_vm_mapping OWNER TO "vdi-dbadmin";
-
 --
 -- Name: dhcphostname_to_thinclient_auto_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
 --
@@ -141,9 +97,6 @@ UNION SELECT DISTINCT
 FROM
     timed_thinclient_to_vm_mapping;
 
-
-ALTER TABLE public.dhcphostname_to_thinclient_auto_mapping OWNER TO "vdi-dbadmin";
-
 --
 -- Name: dhcphostname_to_thinclient_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
 --
@@ -153,9 +106,6 @@ CREATE TABLE dhcphostname_to_thinclient_mapping (
     thinclient character varying NOT NULL
 );
 
-
-ALTER TABLE public.dhcphostname_to_thinclient_mapping OWNER TO "vdi-dbadmin";
-
 --
 -- Name: systemuuid_to_thinclient_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
 --
@@ -164,9 +114,6 @@ CREATE TABLE systemuuid_to_thinclient_mapping (
     systemuuid character varying NOT NULL,
     thinclient character varying NOT NULL
 );
-
-
-ALTER TABLE public.systemuuid_to_thinclient_mapping OWNER TO "vdi-dbadmin";
 
 --
 -- Name: sysinfo_to_thinclient_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
@@ -204,9 +151,6 @@ FROM (
 ORDER BY
     f.prio DESC;
 
-
-ALTER TABLE public.sysinfo_to_thinclient_mapping OWNER TO "vdi-dbadmin";
-
 --
 -- Name: thinclient_everything_view; Type: VIEW; Schema: public; Owner: vdi-dbadmin
 --
@@ -233,28 +177,12 @@ ORDER BY
     c.start_date,
     c.id;
 
-
-ALTER TABLE public.thinclient_everything_view OWNER TO "vdi-dbadmin";
-
 --
 -- Name: timed_thinclient_to_vm_mapping_id_seq; Type: SEQUENCE; Schema: public; Owner: vdi-dbadmin
 --
 
 CREATE SEQUENCE timed_thinclient_to_vm_mapping_id_seq
 START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
-
-
-ALTER TABLE public.timed_thinclient_to_vm_mapping_id_seq OWNER TO "vdi-dbadmin";
-
---
--- Name: timed_thinclient_to_vm_mapping_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vdi-dbadmin
---
-
-ALTER SEQUENCE timed_thinclient_to_vm_mapping_id_seq OWNED BY timed_thinclient_to_vm_mapping.id;
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: vdi-dbadmin
---
 
 ALTER TABLE ONLY timed_thinclient_to_vm_mapping
 ALTER COLUMN id
@@ -277,34 +205,3 @@ ALTER TABLE ONLY systemuuid_to_thinclient_mapping ADD CONSTRAINT systemuuid_to_t
 --
 
 ALTER TABLE ONLY timed_thinclient_to_vm_mapping ADD CONSTRAINT timed_thinclient_to_vm_mapping_pkey PRIMARY KEY (id);
-
---
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-REVOKE ALL ON SCHEMA PUBLIC
-FROM PUBLIC;
-
-REVOKE ALL ON SCHEMA PUBLIC
-FROM postgres;
-
-GRANT ALL ON SCHEMA PUBLIC TO postgres;
-
-GRANT ALL ON SCHEMA PUBLIC TO PUBLIC;
-
---
--- Name: thinclient_everything_view; Type: ACL; Schema: public; Owner: vdi-dbadmin
---
- REVOKE ALL ON TABLE thinclient_everything_view
-FROM PUBLIC;
-
-REVOKE ALL ON TABLE thinclient_everything_view
-FROM "vdi-dbadmin";
-
-GRANT ALL ON TABLE thinclient_everything_view TO "vdi-dbadmin";
-
-GRANT
-SELECT ON TABLE thinclient_everything_view TO "vdi-readonly";
-
---
--- PostgreSQL database dump complete
---
