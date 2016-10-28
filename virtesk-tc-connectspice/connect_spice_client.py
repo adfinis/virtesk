@@ -88,6 +88,7 @@ class connect_spice_client:
                         "für diesen Thinclient gefunden werden."
                     )
 
+                # TODO: Use a row factory that supports dict-like access
                 self.vm_name = results[0][0]
                 self.shutdown_vm = results[0][4]
                 self.resolution = results[0][5]
