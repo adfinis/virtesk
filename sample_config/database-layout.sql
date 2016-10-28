@@ -1,5 +1,5 @@
 --
--- Name: timed_thinclient_to_vm_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
+-- This is the main table containing configuration of thin clients
 --
 
 CREATE TABLE timed_thinclient_to_vm_mapping (
@@ -14,7 +14,8 @@ CREATE TABLE timed_thinclient_to_vm_mapping (
 
 
 --
--- Name: current_thinclient_to_vm_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
+-- mapping between thinclient and vm depending
+-- on start time and priority
 --
 
 CREATE VIEW current_thinclient_to_vm_mapping AS
@@ -82,7 +83,7 @@ ORDER BY
     f.id;
 
 --
--- Name: dhcphostname_to_thinclient_auto_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
+-- add domain to thinclient dhcp hostname
 --
 
 CREATE VIEW dhcphostname_to_thinclient_auto_mapping AS
@@ -98,7 +99,7 @@ FROM
     timed_thinclient_to_vm_mapping;
 
 --
--- Name: dhcphostname_to_thinclient_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
+-- assign dhcp hostname to thinclient
 --
 
 CREATE TABLE dhcphostname_to_thinclient_mapping (
@@ -107,7 +108,7 @@ CREATE TABLE dhcphostname_to_thinclient_mapping (
 );
 
 --
--- Name: systemuuid_to_thinclient_mapping; Type: TABLE; Schema: public; Owner: vdi-dbadmin; Tablespace:
+-- assign systemuid to thinclient
 --
 
 CREATE TABLE systemuuid_to_thinclient_mapping (
@@ -116,7 +117,7 @@ CREATE TABLE systemuuid_to_thinclient_mapping (
 );
 
 --
--- Name: sysinfo_to_thinclient_mapping; Type: VIEW; Schema: public; Owner: vdi-dbadmin
+-- view combining dhcp host, system id and thinclient
 --
 
 CREATE VIEW sysinfo_to_thinclient_mapping AS
@@ -152,7 +153,7 @@ ORDER BY
     f.prio DESC;
 
 --
--- Name: thinclient_everything_view; Type: VIEW; Schema: public; Owner: vdi-dbadmin
+-- View combining all tables concerning thin client
 --
 
 CREATE VIEW thinclient_everything_view AS
@@ -177,10 +178,6 @@ ORDER BY
     c.start_date,
     c.id;
 
---
--- Name: timed_thinclient_to_vm_mapping_id_seq; Type: SEQUENCE; Schema: public; Owner: vdi-dbadmin
---
-
 CREATE SEQUENCE timed_thinclient_to_vm_mapping_id_seq
 START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
@@ -188,20 +185,11 @@ ALTER TABLE ONLY timed_thinclient_to_vm_mapping
 ALTER COLUMN id
 SET DEFAULT nextval('timed_thinclient_to_vm_mapping_id_seq'::regclass);
 
---
--- Name: dhcphostname_to_thinclient_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: vdi-dbadmin; Tablespace:
---
+ALTER TABLE ONLY dhcphostname_to_thinclient_mapping
+ADD CONSTRAINT dhcphostname_to_thinclient_mapping_pkey PRIMARY KEY (dhcp_hostname);
 
-ALTER TABLE ONLY dhcphostname_to_thinclient_mapping ADD CONSTRAINT dhcphostname_to_thinclient_mapping_pkey PRIMARY KEY (dhcp_hostname);
+ALTER TABLE ONLY systemuuid_to_thinclient_mapping
+ADD CONSTRAINT systemuuid_to_thinclient_mapping_pkey PRIMARY KEY (systemuuid);
 
---
--- Name: systemuuid_to_thinclient_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: vdi-dbadmin; Tablespace:
---
-
-ALTER TABLE ONLY systemuuid_to_thinclient_mapping ADD CONSTRAINT systemuuid_to_thinclient_mapping_pkey PRIMARY KEY (systemuuid);
-
---
--- Name: timed_thinclient_to_vm_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: vdi-dbadmin; Tablespace:
---
-
-ALTER TABLE ONLY timed_thinclient_to_vm_mapping ADD CONSTRAINT timed_thinclient_to_vm_mapping_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY timed_thinclient_to_vm_mapping
+ADD CONSTRAINT timed_thinclient_to_vm_mapping_pkey PRIMARY KEY (id);
