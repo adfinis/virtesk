@@ -65,7 +65,7 @@ class connect_spice_client:
 
                 # Query the database and obtain data as Python objects
                 cur.execute(
-                    "SELECT vm, thinclient, prio, id, shutdown_vm "
+                    "SELECT vm, thinclient, prio, id, shutdown_vm, resolution "
                     "FROM thinclient_everything_view WHERE "
                     "dhcp_hostname = ANY (%s) OR systemuuid = ANY (%s);",
                     (dhcp_hostnames, sys_uuids)
@@ -88,8 +88,10 @@ class connect_spice_client:
                         "für diesen Thinclient gefunden werden."
                     )
 
+                # TODO: Use a row factory that supports dict-like access
                 self.vm_name = results[0][0]
                 self.shutdown_vm = results[0][4]
+                self.resolution = results[0][5]
 
                 self.vm = self.api.vms.get(self.vm_name)
 
@@ -104,10 +106,7 @@ class connect_spice_client:
                 return self.vm
 
             except Exception as ex:
-                if (
-                    ex.message is not None
-                    and ex.message.startswith("timeout expired")
-                ):
+                if ex.message and ex.message.startswith("timeout expired"):
                     logging.info(
                         "connecting to database... failed. (iteration {})"
                         .format(i)
@@ -270,6 +269,15 @@ class connect_spice_client:
                     return True
         return False
 
+    def change_resolution(self):
+        # If there is a custom resolution set for thinclient
+        # change such with xrandr command
+        if self.resolution:
+            xrandr_command = self.config_spice['xrandr_command'] % (
+                self.resolution
+            )
+            subprocess.check_output(shlex.split(xrandr_command))
+
     def execute_spice_client_program(self):
         # Starts the spice-client program in a subprocess.
         # Talks to the client though a unix-dommain-socket.
@@ -400,6 +408,7 @@ class connect_spice_client:
         defaults_spice = dict(
             socket='/tmp/spice_controll_socket',
             spice_client_command='/usr/bin/remote-viewer --spice-controller',
+            xrandr_command='/usr/bin/xrandr -s %s',
             secure_channels=None,
             disable_channels=None,
             tls_ciphers=None,
@@ -660,6 +669,8 @@ class connect_spice_client:
 
         self.get_vm_ticket()
 
+        self.change_resolution()
+
         self.execute_spice_client_program()
 
     def shutdown_vm_action_sequence(self):
@@ -689,6 +700,7 @@ class connect_spice_client:
     def __init__(self):
         self.api = None
         self.vm = None
+        self.resolution = None
         self.last_vm_names = []
         self.last_spice_server = "-"
         self.last_vm_tags = []
