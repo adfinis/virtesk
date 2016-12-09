@@ -1,6 +1,7 @@
 language: python
 # Python Version
 python:
+  - "2.6"
   - "2.7"
 # Install requirements
 install: "pip install -r requirements.txt"
