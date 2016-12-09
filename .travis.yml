@@ -1,0 +1,11 @@
+language: python
+# Python Version
+python:
+  - "2.7"
+# Ignore submodules
+git:
+  submodules: false
+# Install requirements
+install: "pip install -r requirements.txt"
+# Run pytests
+script: pytest

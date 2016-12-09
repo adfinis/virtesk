@@ -39,6 +39,7 @@ import psycopg2
 # Project Imports
 import spice_xpi_controller
 import find_thinclient_identifier
+import find_thinclient_identifier_nmcli
 import ovirtsdk.api
 
 
@@ -632,16 +633,15 @@ class connect_spice_client:
             self.raise_again = None
             raise ex
 
-    def wait_for_dhcp_lease(self):
-        logging.info("waiting for dhcp lease file...")
-        for iteration in range(1, 5 + 1):
-            leasefiles = find_thinclient_identifier.find_dhclient_leasefiles()
-            if len(leasefiles) > 0:
-                logging.info("waiting for dhcp lease file... done")
+    def wait_for_active_connection(self):
+        logging.info("waiting for active connection")
+        for iteration in range(0, 5):
+            active_connections = find_thinclient_identifier_nmcli.get_active_connections()
+            if active_connections > 0:
+                logging.info("found an active connection")
                 return
             self.notify_waiting_for_dhcplease()
             time.sleep(4)
-
         # TRANSLATE:
         # "Network error. Please contact the system administrator."
         raise NetworkError(
@@ -657,7 +657,7 @@ class connect_spice_client:
 
         self.adjust_logging()
 
-        self.wait_for_dhcp_lease()
+        self.wait_for_active_connection()
 
         self.connect_to_rest_api()
 
@@ -683,7 +683,7 @@ class connect_spice_client:
 
             logging.info("Auto-Shutdown program started...")
 
-            self.wait_for_dhcp_lease()
+            self.wait_for_active_connection()
 
             self.connect_to_rest_api()
 

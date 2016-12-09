@@ -1,0 +1,48 @@
+GENERAL.DEVICE:                         docker0
+GENERAL.TYPE:                           bridge
+GENERAL.HWADDR:                         8A:7F:3B:20:49:AE
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     docker0
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/0
+IP4.ADDRESS[1]:                         172.17.0.1/16
+IP4.GATEWAY:
+IP4.ROUTE[1]:                           dst = 169.254.0.0/16, nh = 0.0.0.0, mt = 1000
+IP6.GATEWAY:
+
+GENERAL.DEVICE:                         wlp3s0
+GENERAL.TYPE:                           wifi
+GENERAL.HWADDR:                         28:B2:BD:E6:35:7A
+GENERAL.MTU:                            0
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     ADSY-EAP
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/7
+IP4.ADDRESS[1]:                         10.9.5.185/16
+IP4.GATEWAY:                            10.9.1.1
+IP4.DNS[1]:                             10.9.2.1
+IP4.DNS[2]:                             10.1.2.8
+IP4.DNS[3]:                             10.1.2.22
+IP4.DOMAIN[1]:                          adfinis-int.ch
+IP6.ADDRESS[1]:                         fe80::db41:83ec:a6e7:a7a4/64
+IP6.GATEWAY:
+
+GENERAL.DEVICE:                         enp0s25
+GENERAL.TYPE:                           ethernet
+GENERAL.HWADDR:                         54:EE:75:2C:E4:D5
+GENERAL.MTU:                            1500
+GENERAL.STATE:                          20 (unavailable)
+GENERAL.CONNECTION:                     --
+GENERAL.CON-PATH:                       --
+WIRED-PROPERTIES.CARRIER:               off
+
+GENERAL.DEVICE:                         lo
+GENERAL.TYPE:                           loopback
+GENERAL.HWADDR:                         00:00:00:00:00:00
+GENERAL.MTU:                            65536
+GENERAL.STATE:                          10 (unmanaged)
+GENERAL.CONNECTION:                     --
+GENERAL.CON-PATH:                       --
+IP4.ADDRESS[1]:                         127.0.0.1/8
+IP4.GATEWAY:
+IP6.ADDRESS[1]:                         ::1/128
+IP6.GATEWAY:
