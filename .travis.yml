@@ -1,7 +1,6 @@
 language: python
 # Python Version
 python:
-  - "2.6"
   - "2.7"
 # Ignore submodules
 git:
