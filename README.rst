@@ -6,6 +6,8 @@
 Virtesk-VDI
 ============
 
+.. image:: https://api.travis-ci.org/adfinis-sygroup/virtesk.svg?branch=master
+
 Virtesk-VDI is an Open Source VDI solution. It allows to run virtual desktops
 in a RHEV/Ovirt environment seamlessly. The virtual desktops are displayed on thin clients
 in physical rooms. You can manage both the virtual desktops and the physical thin clients
