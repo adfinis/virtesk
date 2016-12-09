@@ -9,7 +9,7 @@ def test_extract_identifiers_from_nmcli(mock, nmcli_device_show, nmcli_con_show,
             return nmcli_con_show_empty
         elif cmd[:3] == ['nmcli', 'device', 'show']:
             return nmcli_device_show
-    mock.patch('subprocess.check_output', my_check_output)
+    mock.patch('find_thinclient_identifier_nmcli.subprocess.check_output', my_check_output)
     return_value = find_nmcli.extract_identifiers_from_nmcli()
 
     assert return_value == (['a-hostname-appeared'], ['172.17.0.1', '10.9.5.185', '127.0.0.1'])
