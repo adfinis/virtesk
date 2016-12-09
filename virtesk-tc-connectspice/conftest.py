@@ -24,7 +24,7 @@ import pytest
 import os.path
 
 
-MOCK_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_mock_data/")
+MOCK_DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_mock_data')
 
 
 @pytest.yield_fixture(scope='module')
@@ -53,5 +53,5 @@ def nmcli_device_show():
 
 
 def readfile(filename):
-    with open(MOCK_DATA_PATH + filename, 'r') as f:
+    with open(os.path.join(MOCK_DATA_PATH, filename), 'r') as f:
         return f.read()
