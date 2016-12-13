@@ -168,11 +168,10 @@ SELECT DISTINCT
     c.end_date,
     c.prio,
     c.shutdown_vm
-FROM
+FROM (
     sysinfo_to_thinclient_mapping s
-    LEFT JOIN (
-        current_thinclient_to_vm_mapping c ON (((s.thinclient)::text = (c.thinclient)::text))
-    )
+    LEFT JOIN current_thinclient_to_vm_mapping c ON (((s.thinclient)::text = (c.thinclient)::text))
+)
 ORDER BY
     c.prio DESC,
     c.start_date,
