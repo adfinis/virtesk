@@ -277,7 +277,12 @@ class connect_spice_client:
             xrandr_command = self.config_spice['xrandr_command'] % (
                 self.resolution
             )
-            subprocess.check_output(shlex.split(xrandr_command))
+            try:
+                subprocess.check_output(shlex.split(xrandr_command))
+            except subprocess.CalledProcessError as ex:
+                logging.exception(ex)
+                logging.debug("Error trying to change the resolution: %s",
+                              ex.cmd)
 
     def execute_spice_client_program(self):
         # Starts the spice-client program in a subprocess.
