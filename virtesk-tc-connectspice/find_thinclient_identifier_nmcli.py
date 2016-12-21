@@ -38,6 +38,11 @@ def extract_identifiers_from_nmcli():
             dhcp_hostname = get_dhcp_hostname_from_connection(value)
             if dhcp_hostname:
                 hostnames.append(dhcp_hostname)
+    hostnamectl_output = subprocess.check_output('hostnamectl', env={'LC_ALL': 'C'})
+    for line in hostnamectl_output.splitlines():
+        if re.match('^Transient', line):
+            key, value = get_line_key_value( line )
+            hostnames.append(value)
     return (hostnames, fixedips)
 
 
