@@ -432,31 +432,8 @@ class connect_spice_client:
         logging.debug("Spice configuration (local): %s",
                       self.config_spice_local)
 
-        logging.debug("getting configuration from RHEV-Tags...")
-
-        config_tags_user_query = self.config_general['config_tags_user_query']
-        query = "usrname=%s" % config_tags_user_query
-        users = self.api.users.list(query=query)
-        user = users[0]
-        tags = user.tags.list()
-
         self.config_spice_tags = {}
-        for tag in tags:
-            match = re.match("config_thinclient_spice_(.+)", tag.name)
-            if match:
-                key = match.group(1)
-                rest_id = tag.id
-                tag = self.api.tags.get(id=rest_id)
-                value = tag.description
-
-                if value is not None and not re.match("\s*\Z", value):
-                    logging.debug("Config via rhev-tag: %s = %s", key, value)
-                    self.config_spice_tags[key] = value
-
-        # RHEV-Tags (if present) are always overriding the local configuration
         self.config_spice = copy.copy(self.config_spice_local)
-        for key in self.config_spice_tags.keys():
-            self.config_spice[key] = self.config_spice_tags[key]
 
         # spice_ca_file is tilde expanded and, if it is a relative path,
         # interpreted as a path relative to the main configuration file.
