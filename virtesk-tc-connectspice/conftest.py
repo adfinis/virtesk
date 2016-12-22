@@ -52,6 +52,14 @@ def nmcli_device_show():
     yield readfile('nmcli_device_show')
 
 
+@pytest.yield_fixture(scope='module')
+def hostnamectl_transient():
+    yield readfile('hostnamectl_transient')
+
+@pytest.yield_fixture(scope='module')
+def hostnamectl_transient_empty():
+    yield readfile('hostnamectl_transient_empty')
+
 def readfile(filename):
     with open(os.path.join(MOCK_DATA_PATH, filename), 'r') as f:
         return f.read()
