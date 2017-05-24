@@ -412,3 +412,25 @@ Simulate a network error (or network delay) during startup:
 ::
 
     tc_ssh myTC -- "systemctl restart lxdm; iptables -A OUTPUT -p udp -j DROP; sleep 6; iptables -D OUTPUT -p udp -j DROP"
+
+Known issues and workarounds
+-----------------------------
+
+Graphics corruption and partial rollout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Situation: During a rollout some systems may end up hanging in an X session with grey screen and frozen mouse pointer.
+This was seen somewhat consistently seen on HP Elite Desk 800 G1 SFF desktop systems running Intel Q87 chipset,
+Intel i5-4570 processors using the integrated HD Graphics 4600 on Fedora 25 with Linux kernel 4.8.5.
+
+In this case a known-good workaround is to force the Anaconda installer into text-only mode which avoided
+graphics corruption and resulted in reliable deployment. Add a line 'text' early in the Kickstart file for this.
+
+Kernel panic during kexec
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Situation: During a rollout through kexec certain client types may end up with kernel panics.
+This was seen consistently on a combination with systems running on Intel H55 chipsets, Intel i5 650 processors
+using the integrated HD Graphics on Fedora 25 with Linux kernel 4.8.5.
+
+In this case a known workaround was to append "--real-mode" to the kexec loading parameter (kexec -l).
