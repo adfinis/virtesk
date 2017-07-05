@@ -434,3 +434,16 @@ This was seen consistently on a combination with systems running on Intel H55 ch
 using the integrated HD Graphics on Fedora 25 with Linux kernel 4.8.5.
 
 In this case a known workaround was to append "--real-mode" to the kexec loading parameter (kexec -l).
+
+Inadequate screensaver timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Situation: Depending on the used versions of Fluxbox, LXDM and X.org, the
+default timeout for screen powerdown may not equal your requirements. - Also
+default values do vary in between disttribution versions thus you might want
+to adapt it to your needs.
+
+A reliable to customize that timeout is to add the following line in the
+kickstart file in the section where /home/vdiclient/.fluxbox/init gets created
+and as the last xset command add i.e. "/usr/bin/xset s 3600" which will ensure,
+the display gets dark after 1 hour.
